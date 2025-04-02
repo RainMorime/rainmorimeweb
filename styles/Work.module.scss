@@ -1,0 +1,298 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #f8f8f8;
+  color: #111;
+}
+
+.main {
+  flex: 1;
+  padding: 100px 0 60px;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    padding: 80px 0 40px;
+  }
+}
+
+.hero {
+  padding: 60px 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1f1f1;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #eaeaea;
+    opacity: 0.05;
+    z-index: 1;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 40px 0;
+  }
+}
+
+.hero_content {
+  width: 90%;
+  max-width: 1200px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  
+  h1 {
+    font-size: 4rem;
+    font-weight: 300;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+  
+  p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.8;
+    line-height: 1.6;
+    
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+.work_grid {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+.filter_bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 30px;
+    gap: 10px;
+  }
+}
+
+.filter_btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1rem;
+  padding: 8px 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background-color: #111;
+    transition: width 0.3s ease;
+  }
+  
+  &:hover {
+    color: #111;
+    
+    &::after {
+      width: 50%;
+    }
+  }
+  
+  &.active {
+    color: #111;
+    
+    &::after {
+      width: 70%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    margin: 0;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+.projects_container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.project_card {
+  background-color: #fff;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  border-radius: 5px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    
+    .project_overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.project_image {
+  width: 100%;
+  height: 250px;
+  position: relative;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  &::after {
+    content: '暂无图片';
+    color: #888;
+    font-size: 1rem;
+  }
+}
+
+.project_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  
+  span {
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: #fff;
+      color: #000;
+    }
+  }
+}
+
+.project_info {
+  padding: 20px;
+  
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+}
+
+.project_meta {
+  display: flex;
+  justify-content: space-between;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.year {
+  opacity: 0.7;
+}
+
+.footer {
+  background-color: #f1f1f1;
+  padding: 30px 0;
+  text-align: center;
+  
+  .footer_content {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    
+    p {
+      color: #888;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 4rem 5%;
+  }
+  
+  .categories,
+  .projects_grid {
+    padding: 0 5%;
+  }
+  
+  .footer {
+    padding: 3rem 5%;
+    
+    .footer_content {
+      flex-direction: column;
+      text-align: center;
+      
+      .footer_links {
+        justify-content: center;
+      }
+    }
+  }
+} 

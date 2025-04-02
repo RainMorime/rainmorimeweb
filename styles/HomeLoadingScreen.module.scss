@@ -1,0 +1,314 @@
+@font-face {
+  font-family: 'Dosis';
+  src: url('/fonts/Dosis/Dosis-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+.loading_screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: hidden;
+  transform-origin: center;
+  will-change: filter, opacity, transform;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+
+// 背景层样式
+.loading_screen_background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #222222;
+  z-index: 999;
+  will-change: clip-path, opacity;
+}
+
+// 第一层雨幕
+.rain_layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.rain_drop {
+  position: absolute;
+  width: 2.5px;
+  height: 40px;
+  background: linear-gradient(to bottom, 
+    rgba(255,255,255,0.5) 0%,
+    rgba(255,255,255,0.2) 100%);
+  opacity: 0.5;
+  transform: rotate(15deg);
+  filter: blur(0.3px);
+  animation: rainFall linear infinite;
+  
+  // 避免在顶部形成一排整齐的雨滴
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}n) {
+      animation-delay: #{$i * 0.3}s;
+      top: random(100) * -1%; // 随机起始位置
+    }
+  }
+}
+
+@keyframes rainFall {
+  0% {
+    transform: rotate(15deg) translateY(0);
+  }
+  100% {
+    transform: rotate(15deg) translateY(150vh);
+  }
+}
+
+// 条格背景
+.stripe_background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0.08;
+}
+
+.stripe {
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 25px;
+  
+  @for $i from 0 through 19 {
+    &:nth-child(#{$i + 1}) {
+      top: #{$i * 30}px;
+    }
+  }
+  
+  &:nth-child(odd) {
+    opacity: 0.7;
+  }
+  
+  &:nth-child(even) {
+    opacity: 0.4;
+  }
+}
+
+// 闪电效果覆盖层
+.thunder_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.03) 0%, 
+    rgba(255,255,255,0.15) 50%, 
+    rgba(255,255,255,0.03) 100%);
+  z-index: 9;
+  pointer-events: none;
+  backdrop-filter: blur(0.5px);
+}
+
+// 加载内容
+.loading_content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+// LOGO设计
+.logo_container {
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.logo_design {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 2px;
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+}
+
+.logo_rain {
+  font-family: 'Dosis', sans-serif;
+  font-weight: 300;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.logo_morime {
+  font-family: 'Dosis', sans-serif;
+  font-weight: 300;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.logo_circle {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// 添加点缀元素
+.logo_dots {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+  }
+  
+  &::before {
+    top: 0;
+    right: 0;
+  }
+  
+  &::after {
+    bottom: 0;
+    left: 0;
+  }
+}
+
+// 现代风格进度条
+.loading_progress {
+  width: 100%;
+  max-width: 300px;
+  position: relative;
+}
+
+.progress_container {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1.5rem;
+  // 移除像素风格的边框，使用更简约的设计
+  box-shadow: none;
+  
+  // 简化细节
+  &::before {
+    content: none;
+  }
+}
+
+.progress_bar {
+  height: 100%;
+  background: linear-gradient(to right, 
+    rgba(255, 255, 255, 0.5) 0%, 
+    rgba(255, 255, 255, 0.9) 100%);
+  position: relative;
+  z-index: 1;
+  // 移除像素风格
+  image-rendering: auto;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.progress_glow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+// 移除进度标记点，采用更简约的设计
+.progress_mark {
+  display: none;
+}
+
+.progress_text {
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  margin-top: 1.2rem;
+  letter-spacing: 3px;
+  font-family: sans-serif;
+  text-transform: uppercase;
+}
+
+// 水渍反光效果
+.water_reflections {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 8;
+}
+
+.reflection {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 0 7px rgba(255, 255, 255, 0.4);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+  }
+} 
