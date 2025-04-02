@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ShinyText from './ShinyText';
 import styles from '../styles/HomeLoadingScreen.module.scss';
 
-const HomeLoadingScreen = ({ onLoadingComplete }) => {
+const HomeLoadingScreen = ({ onComplete }) => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [isThundering, setIsThundering] = useState(false);
@@ -109,8 +109,8 @@ const HomeLoadingScreen = ({ onLoadingComplete }) => {
             // 然后在动画完成后调用回调
             setTimeout(() => {
               setLoading(false);
-              if (onLoadingComplete) {
-                onLoadingComplete();
+              if (onComplete) {
+                onComplete();
               }
             }, 1200); // 减少退场动画等待时间
             
@@ -124,7 +124,7 @@ const HomeLoadingScreen = ({ onLoadingComplete }) => {
     }, 100); // 减少进度更新间隔，加快整体速度
     
     return () => clearInterval(interval);
-  }, [onLoadingComplete]);
+  }, [onComplete]);
 
   // 闪电效果样式
   const thunderStyle = {

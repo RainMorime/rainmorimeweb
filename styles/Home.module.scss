@@ -9,6 +9,7 @@
 .container {
   width: 100%;
   min-height: 100vh;
+  height: 100vh; /* 明确设置高度 */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -87,214 +88,58 @@
   z-index: 2;
 }
 
-.hero {
-  height: 100vh;
-  width: 100%;
+.mainLayout {
+  flex: 1; // 占据剩余空间
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #151515;
-    opacity: 0.1;
-    mix-blend-mode: overlay;
-  }
-}
-
-.hero_content {
-  width: 90%;
-  max-width: 1200px;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-}
-
-.hero_text {
-  h1 {
-    font-size: 4rem;
-    font-weight: 300;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
-    
-    span {
-      display: block;
-      margin-bottom: 10px;
-    }
-    
-    @media (max-width: 768px) {
-      font-size: 2.5rem;
-    }
-  }
-}
-
-.chinese_char {
-  color: #f0f0f0;
-  margin-bottom: 10px;
-}
-
-.latin_name {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.rain_text {
-  font-family: 'Dosis', sans-serif;
-  font-weight: 300;
-  letter-spacing: 8px;
-  text-transform: uppercase;
-  font-size: 3rem;
-  margin-bottom: 5px;
-}
-
-.morime_text {
-  font-family: 'Dosis', sans-serif;
-  font-weight: 300;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  font-size: 2.4rem;
-}
-
-.forest_char {
-  position: relative;
-  color: #f0f0f0;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-    transform-origin: center;
-    animation: leafGrow 4s ease-out forwards;
-    animation-delay: 1s;
-  }
-}
-
-.rain_char {
-  position: relative;
-  color: #f0f0f0;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    width: 2px;
-    height: 20px;
-    background: rgba(200,200,200,0.4);
-    transform-origin: bottom;
-    animation: dropFall 2s ease-in infinite;
-    animation-delay: 1.5s;
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    width: 30px;
-    height: 3px;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.5) 0%, transparent 70%);
-    border-radius: 50%;
-    transform: translateX(-50%) scale(0);
-    animation: ripple 2s ease-out infinite;
-    animation-delay: 1.8s;
-  }
-}
-
-.hero_image {
-  flex: 1 1 400px;
-  padding: 2rem;
-  will-change: transform;
-}
-
-.image_container {
-  position: relative;
   width: 100%;
-  padding-top: 100%; // Square aspect ratio
-  
-  .placeholder {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #202020 0%, #101010 100%);
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    will-change: transform, opacity;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #151515;
-      opacity: 0.1;
-      mix-blend-mode: overlay;
-    }
-  }
+  height: 100%; /* 确保它填满容器的剩余空间 */
+  overflow: hidden; /* 防止滚动条 */
 }
 
-.btn_container {
-  will-change: transform, opacity;
+.leftPanel {
+  flex: 1; /* 占据约 1 / (1 + 1.618) ≈ 38.2% */
+  background-color: #000; /* 左侧纯黑 */
 }
 
-.scroll_indicator {
+.rightPanel {
+  flex: 1.618; /* 占据约 1.618 / (1 + 1.618) ≈ 61.8% */
+  display: flex;
+  height: 100%;
+  background-color: #000; /* 右侧背景也为黑色 */
+  position: relative; /* 为绝对定位的线条添加定位上下文 */
+}
+
+.column {
   position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  opacity: 0.6;
-  will-change: opacity, transform;
-  
+  height: 100%;
+  width: 20%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 2; /* 确保列在线条上面，可以被点击 */
+  background-color: transparent;
+
+  &:nth-child(6) { left: 0%; }
+  &:nth-child(7) { left: 20%; }
+  &:nth-child(8) { left: 40%; }
+  &:nth-child(9) { left: 60%; }
+  &:nth-child(10) { left: 80%; }
+
   &:hover {
-    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.15); /* 增强悬停效果可见性 */
   }
 }
 
-.mouse {
-  width: 30px;
-  height: 50px;
-  border: 2px solid rgba(255,255,255,0.6);
-  border-radius: 15px;
-  display: flex;
-  justify-content: center;
-  padding-top: 10px;
-}
-
-.wheel {
-  width: 4px;
-  height: 10px;
-  background: white;
-  border-radius: 2px;
-  animation: scrollWheel 2s ease-out infinite;
-}
-
-.arrow {
-  width: 10px;
-  height: 10px;
-  margin-top: 5px;
-  border-right: 2px solid rgba(255,255,255,0.6);
-  border-bottom: 2px solid rgba(255,255,255,0.6);
-  transform: rotate(45deg);
-  animation: arrowBounce 2s ease-out infinite;
+/* 添加垂直线条样式 */
+.verticalLine {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background-color: #ffffff; /* 确保线条是白色 */
+  z-index: 3; /* 确保线条在上层可见 */
+  pointer-events: none; /* 确保线条不会阻挡点击事件 */
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 1); /* 增强发光效果 */
+  opacity: 0.9; /* 增加不透明度 */
 }
 
 // General section styles
