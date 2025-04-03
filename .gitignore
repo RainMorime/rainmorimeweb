@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-**/node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -43,7 +42,4 @@ next-env.d.ts
 *.sublime-workspace
 
 # OS generated files
-Thumbs.db
-
-# Next.js dist files
-**/dist/ 
+Thumbs.db 

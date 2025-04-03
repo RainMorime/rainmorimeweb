@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: #0d0d0d;
+  background-color: #1a1a1a; /* 深灰色背景 */
   color: #fff;
 }
 
@@ -97,32 +97,48 @@
 }
 
 .leftPanel {
-  flex: 1; /* 占据约 1 / (1 + 1.618) ≈ 38.2% */
-  background-color: #000; /* 左侧纯黑 */
+  flex: 1; /* 占据约 1 / (1 + 0.618) ≈ 61.8% */
+  background-color: #1a1a1a; /* 深灰色背景 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-image: url('/pictures/RM2.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+  filter: grayscale(100%) brightness(1.2);
+  pointer-events: none; /* 禁止用户交互 */
 }
 
 .rightPanel {
-  flex: 1.618; /* 占据约 1.618 / (1 + 1.618) ≈ 61.8% */
+  flex: 0.618; /* 占据约 0.618 / (1 + 0.618) ≈ 38.2% */
   display: flex;
   height: 100%;
-  background-color: #000; /* 右侧背景也为黑色 */
+  background-color: #1a1a1a; /* 深灰色背景 */
   position: relative; /* 为绝对定位的线条添加定位上下文 */
+  transform: skewX(-15deg); /* 修改为15度倾斜效果 */
+  transform-origin: left center; /* 从左侧开始倾斜 */
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 .column {
   position: absolute;
   height: 100%;
-  width: 20%;
   cursor: pointer;
   transition: background-color 0.3s ease;
   z-index: 2; /* 确保列在线条上面，可以被点击 */
   background-color: transparent;
-
-  &:nth-child(6) { left: 0%; }
-  &:nth-child(7) { left: 20%; }
-  &:nth-child(8) { left: 40%; }
-  &:nth-child(9) { left: 60%; }
-  &:nth-child(10) { left: 80%; }
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.15); /* 增强悬停效果可见性 */
@@ -140,6 +156,43 @@
   pointer-events: none; /* 确保线条不会阻挡点击事件 */
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 1); /* 增强发光效果 */
   opacity: 0.9; /* 增加不透明度 */
+}
+
+/* 垂直文字容器 */
+.verticalText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none; /* 确保文字不会阻挡点击事件 */
+  transform: skewX(15deg); /* 文字反向倾斜，使字母保持正直 */
+}
+
+/* 横向文字容器 */
+.horizontalText {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none; /* 确保文字不会阻挡点击事件 */
+  transform: rotate(90deg); /* 旋转文字容器 */
+  white-space: nowrap;
+  width: 100%;
+}
+
+/* 单个字符样式 */
+.charItem {
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  margin: 2px 0;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  font-family: 'Dosis', sans-serif;
+  /* 移除闪光效果，由VerticalShinyText组件提供 */
 }
 
 // General section styles
@@ -682,6 +735,16 @@
   100% {
     transform: translateX(-50%) scale(3);
     opacity: 0;
+  }
+}
+
+/* 添加闪光动画关键帧 */
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
   }
 }
 
