@@ -1,43 +1,43 @@
 .verticalShinyText {
-  color: #bbbbbb; /* 提高基础色亮度 */
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 35%,
-    rgba(255, 255, 255, 1) 50%, /* 100%亮度中间点 */
-    rgba(255, 255, 255, 0) 65%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  background-size: 100% 250%; /* 缩小范围让闪烁更集中 */
-  -webkit-background-clip: text;
-  background-clip: text;
+  color: var(--ark-text); /* 使用全局文本颜色 */
+  background-size: 100% 250%;
   display: inline-block;
-  animation: shineVertical 3s linear infinite; /* 缩短动画时间到3秒 */
   font-family: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
-  text-shadow: none; /* 移除文字阴影 */
   position: relative;
+  transition: transform 0.2s ease-out, color 0.2s ease-out, text-shadow 0.2s ease-out; /* For hover */
   
-  /* 移除伪元素的模糊效果 */
+  /* Initial state for fade-in */
+  opacity: 0;
+  transform: scale(1) translateY(5px); /* Start slightly down */
+
+  &.startAnimation {
+    animation-name: fadeInChar;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+    /* animation-delay is set inline via style prop */
+  }
+  
+  /* 移除噪点效果 */
+  &::before {
+    content: none;
+  }
+  
+  /* 移除横向闪光效果 */
   &::after {
-    content: '';
-    display: none;
+    content: none;
   }
 }
 
-@keyframes shineVertical {
-  0% {
-    background-position: 0 100%;
-  }
-  50% {
-    background-position: 0 0%;
-  }
-  100% {
-    background-position: 0 -100%;
+@keyframes fadeInChar {
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
 .verticalShinyText.disabled {
-  animation: none;
+  opacity: 0.5; /* 可以为禁用状态设置不同样式，例如降低透明度 */
 } 

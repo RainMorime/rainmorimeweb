@@ -6,20 +6,115 @@
   font-display: swap;
 }
 
+// 明日方舟风格变量已移至globals.scss
+
 .container {
   width: 100%;
   min-height: 100vh;
-  height: 100vh; /* 明确设置高度 */
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: #1a1a1a; /* 深灰色背景 */
-  color: #fff;
+  background-color: var(--ark-dark-blue);
+  color: var(--ark-text);
+  overflow: hidden; /* 确保溢出内容被裁剪 */
 }
 
 .main {
   flex: 1;
   width: 100%;
+}
+
+// 明日方舟风格网格背景
+.gridBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(9, 22, 40, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(9, 22, 40, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: 1;
+  opacity: 0.5;
+  pointer-events: none;
+  
+  // 添加六边形网格叠加
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(150, 150, 150, 0.03) 20px, rgba(150, 150, 150, 0.03) 21px),
+      repeating-linear-gradient(60deg, transparent, transparent 20px, rgba(150, 150, 150, 0.03) 20px, rgba(150, 150, 150, 0.03) 21px),
+      repeating-linear-gradient(120deg, transparent, transparent 20px, rgba(150, 150, 150, 0.03) 20px, rgba(150, 150, 150, 0.03) 21px);
+    opacity: 0.7;
+  }
+}
+
+// 中央光效
+.glowEffect {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 220vh;
+  height: 220vh;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(200, 200, 200, 0.03) 40%,
+    rgba(0, 0, 0, 0) 80%
+  );
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+  // 添加脉冲动画
+  animation: pulse 8s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  100% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+// 添加明日方舟风格扫描线
+.scanLines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    transparent, 
+    transparent 49.9%, 
+    rgba(200, 200, 200, 0.1) 50%, 
+    transparent 50.1%, 
+    transparent
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.3;
+  animation: scanMove 10s linear infinite;
+}
+
+@keyframes scanMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100px;
+  }
 }
 
 .rain_background {
@@ -43,7 +138,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(40,40,40,0.2) 0%, rgba(15,15,15,0.6) 70%);
+  background: radial-gradient(circle at center, rgba(9, 22, 40, 0.2) 0%, rgba(5, 15, 30, 0.6) 70%);
   transition: transform 0.5s ease-out;
   will-change: transform, background-position;
 }
@@ -52,9 +147,9 @@
   position: absolute;
   top: -50px;
   background: linear-gradient(to bottom, 
-    rgba(255,255,255,0.05) 0%, 
-    rgba(200,200,200,0.15) 50%, 
-    rgba(150,150,150,0.05) 100%);
+    rgba(255, 255, 255, 0.05) 0%, 
+    rgba(200, 200, 255, 0.15) 50%, 
+    rgba(150, 200, 255, 0.05) 100%);
   border-radius: 50% 50% 25% 25%;
   will-change: transform, opacity;
   
@@ -65,7 +160,7 @@
     bottom: 0;
     width: 100%;
     height: 40%;
-    background: rgba(255,255,255,0.08);
+    background: rgba(200, 220, 255, 0.08);
     border-radius: 50%;
     transform: scale(1.3, 0.35) translateY(70%);
     opacity: 0.7;
@@ -80,28 +175,110 @@
   width: 100%;
   height: 100%;
   background: radial-gradient(circle at center, 
-    rgba(20,20,20,0) 0%, 
-    rgba(15,15,15,0.3) 70%, 
-    rgba(10,10,10,0.5) 100%);
+    rgba(9, 22, 40, 0) 0%, 
+    rgba(5, 15, 30, 0.3) 70%, 
+    rgba(3, 10, 20, 0.5) 100%);
   opacity: 0.8;
   pointer-events: none;
   z-index: 2;
 }
 
 .mainLayout {
-  flex: 1; // 占据剩余空间
+  flex: 1;
   display: flex;
   width: 100%;
-  height: 100%; /* 确保它填满容器的剩余空间 */
-  overflow: hidden; /* 防止滚动条 */
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+  /* 添加 user-select */
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
 }
 
 .leftPanel {
-  flex: 1; /* 占据约 1 / (1 + 0.618) ≈ 61.8% */
-  background-color: #1a1a1a; /* 深灰色背景 */
+  flex: 1;
+  background-color: transparent; 
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  
+  // 添加.animated类用于触发动画
+  &.animated {
+    &::after {
+      animation: expandBorder 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    }
+    &::before {
+      animation: fadeInCorner 0.8s ease-out 0.6s forwards; // 延迟0.6s开始
+    }
+    .logoContainer {
+      animation: revealLogo 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.1s;
+    }
+  }
+
+  // 修改：边框初始状态为中心点
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: 0px solid var(--ark-border);
+    z-index: 1;
+    pointer-events: none;
+    background-color: transparent;
+    transform: translate(-50%, -50%); // 确保从中心扩展
+  }
+  
+  // 修改：角标初始状态为透明
+  &::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 25px;
+    height: 25px;
+    border-top: 2px solid var(--ark-primary);
+    border-left: 2px solid var(--ark-primary);
+    z-index: 2;
+    background-color: transparent;
+    opacity: 0; // 初始透明
+  }
+}
+
+// 新增边框展开动画
+@keyframes expandBorder {
+  0% {
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-width: 0px;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 70%;
+    border-width: 1px;
+    transform: translate(0, 0); // 恢复正常位置
+  }
+}
+
+// 新增角标淡入动画
+@keyframes fadeInCorner {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .logoContainer {
@@ -114,85 +291,290 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: 60%;
-  filter: grayscale(100%) brightness(1.2);
-  pointer-events: none; /* 禁止用户交互 */
+  filter: grayscale(100%) brightness(1.2) drop-shadow(0 0 10px rgba(200, 200, 200, 0.3));
+  pointer-events: none;
+  position: relative;
+  z-index: 3;
+  // 修改：添加clip-path实现遮罩效果
+  clip-path: inset(45% 45% 45% 45%); // 初始为中心小区域
+  opacity: 0; // 初始透明
+  
+  // 移除之前的扫描线效果，避免冲突
+  // &::after { ... }
+}
+
+// 修改Logo展开动画，使其更平滑
+@keyframes revealLogo {
+  0% {
+    clip-path: inset(45% 45% 45% 45%);
+    opacity: 0;
+    transform: scale(0.95); // 轻微缩小
+  }
+  100% {
+    clip-path: inset(0% 0% 0% 0%);
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .rightPanel {
-  flex: 0.618; /* 占据约 0.618 / (1 + 0.618) ≈ 38.2% */
+  flex: 0.618;
   display: flex;
   height: 100%;
-  background-color: #1a1a1a; /* 深灰色背景 */
-  position: relative; /* 为绝对定位的线条添加定位上下文 */
-  transform: skewX(-15deg); /* 修改为15度倾斜效果 */
-  transform-origin: left center; /* 从左侧开始倾斜 */
-  overflow: hidden; /* 防止内容溢出 */
+  background-color: transparent;
+  position: relative;
+  transform: skewX(-15deg);
+  transform-origin: left center;
+  overflow: hidden;
 }
 
 .column {
   position: absolute;
   height: 100%;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  z-index: 2; /* 确保列在线条上面，可以被点击 */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 2;
   background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.15); /* 增强悬停效果可见性 */
+    // 仅当交互启用时应用悬停效果
+    &:not(.nonInteractive) {
+
+      // 默认悬停效果 (排除 worksColumn)
+      &:not(.worksColumn) {
+        background-color: rgba(178, 242, 187, 0.08);
+
+        &::after,
+        &::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30%;
+            height: 2px;
+            background: var(--ark-highlight-green);
+        }
+        &::after { bottom: 0; }
+        &::before { top: 0; }
+
+        .verticalText .charItem > div {
+          transform: scale(1.15);
+          color: var(--ark-highlight-green);
+          text-shadow: 0 0 8px var(--ark-highlight-green);
+        }
+      }
+    }
+  }
+
+  /* 新增：禁用交互时的样式 */
+  &.nonInteractive {
+    pointer-events: none;
+    cursor: default;
   }
 }
 
-/* 添加垂直线条样式 */
+@keyframes textPulse {
+  0% {
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: 0 0 5px rgba(150, 150, 150, 0.3);
+  }
+  100% {
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 0 0 8px rgba(200, 200, 200, 0.7);
+  }
+}
+
+/* 垂直线条样式 - 添加辉光 */
 .verticalLine {
   position: absolute;
   top: 0;
-  width: 2px;
+  width: 1px;
   height: 100%;
-  background-color: #ffffff; /* 确保线条是白色 */
-  z-index: 3; /* 确保线条在上层可见 */
-  pointer-events: none; /* 确保线条不会阻挡点击事件 */
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 1); /* 增强发光效果 */
-  opacity: 0.9; /* 增加不透明度 */
+  background-color: var(--ark-primary); // Should be white now
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0; // 初始隐藏
+  // 添加轻微辉光
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.3), 0 0 1px rgba(255, 255, 255, 0.5);
+
+  &.animated {
+    // 公共设置
+    animation-duration: 0.8s; // 出现动画时长
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation-iteration-count: 1; // 只播放一次
+
+    // 交错动画延迟（所有线条共享）
+    @for $i from 0 through 5 {
+      &:nth-child(#{$i + 1}) {
+        animation-delay: #{$i * 0.15}s;
+      }
+    }
+    
+    // 第一条到第三条：从上到下
+    &:nth-child(-n+3) {
+      animation-name: lineAppearTopDown;
+      transform-origin: top; 
+    }
+    
+    // 第四条到第六条：从下到上
+    &:nth-child(n+4) {
+      animation-name: lineAppearBottomUp;
+      transform-origin: bottom;
+    }
+  }
 }
 
-/* 垂直文字容器 */
+// 从上到下动画
+@keyframes lineAppearTopDown {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 0.5; // 保持浅色
+    transform: scaleY(1);
+  }
+}
+
+// 新增：从下到上动画
+@keyframes lineAppearBottomUp {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 0.5; // 保持浅色
+    transform: scaleY(1);
+  }
+}
+
 .verticalText {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 100%;
-  color: rgba(255, 255, 255, 0.7);
-  pointer-events: none; /* 确保文字不会阻挡点击事件 */
-  transform: skewX(15deg); /* 文字反向倾斜，使字母保持正直 */
+  justify-content: center;
+  transform: translateY(10px);
+  transition: transform 0.3s ease;
+  
+  .charItem {
+    margin: 10px 0;
+    transform: skewX(15deg); // 抵消父元素的倾斜
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    text-shadow: 0 0 3px rgba(0, 150, 255, 0.2);
+  }
 }
 
-/* 横向文字容器 */
-.horizontalText {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: rgba(255, 255, 255, 0.7);
-  pointer-events: none; /* 确保文字不会阻挡点击事件 */
-  transform: rotate(90deg); /* 旋转文字容器 */
-  white-space: nowrap;
-  width: 100%;
-}
-
-/* 单个字符样式 */
-.charItem {
-  font-size: 16px;
-  font-weight: 300;
-  letter-spacing: 2px;
-  margin: 2px 0;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-  font-family: 'Dosis', sans-serif;
-  /* 移除闪光效果，由VerticalShinyText组件提供 */
+// 明日方舟风格HUD元素 - 修改为每个角只有一个对应位置的边框装饰
+.hudElement {
+  position: fixed;
+  font-family: 'Dosis', monospace;
+  font-size: 0.7rem;
+  color: var(--ark-primary);
+  padding: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background-color: transparent;
+  border: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  
+  &.visible {
+    opacity: 1;
+  }
+  
+  // 通用装饰元素
+  &::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--ark-border);
+    border-style: solid;
+    border-width: 0;
+    background-color: transparent;
+  }
+  
+  &.topLeft {
+    top: 20px;
+    left: 20px;
+    transform: translateY(-10px);
+    opacity: 0;
+    
+    &.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    &::before {
+      top: -1px;
+      left: -1px;
+      border-top-width: 1px;
+      border-left-width: 1px;
+    }
+  }
+  
+  &.topRight {
+    top: 20px;
+    right: 20px;
+    transform: translateY(-10px);
+    opacity: 0;
+    
+    &.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    &::before {
+      top: -1px;
+      right: -1px;
+      border-top-width: 1px;
+      border-right-width: 1px;
+    }
+  }
+  
+  &.bottomLeft {
+    bottom: 20px;
+    left: 20px;
+    transform: translateY(10px);
+    opacity: 0;
+    
+    &.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    &::before {
+      bottom: -1px;
+      left: -1px;
+      border-bottom-width: 1px;
+      border-left-width: 1px;
+    }
+  }
+  
+  &.bottomRight {
+    bottom: 20px;
+    right: 20px;
+    transform: translateY(10px);
+    opacity: 0;
+    
+    &.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    &::before {
+      bottom: -1px;
+      right: -1px;
+      border-bottom-width: 1px;
+      border-right-width: 1px;
+    }
+  }
 }
 
 // General section styles
@@ -787,4 +1169,442 @@
   .social_links {
     justify-content: center;
   }
-} 
+}
+
+// --- 全局列和 HUD 样式 --- 
+
+// HUD 覆盖层容器 (在每个列内)
+.hudOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  &::before, // Main canvas for unique hover animations
+  &::after { // Scanlines (common animation)
+    content: '';
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.2s ease-out; // Fade out on hover exit
+  }
+
+  // 共享的扫描线样式 (保持不变)
+  &::after { // Scanlines
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 2px,
+      rgba(178, 242, 187, 0.2) 2px,
+      rgba(178, 242, 187, 0.2) 3px
+    );
+    background-size: 100% 6px;
+    filter: blur(0.3px);
+    background-position: 0 0;
+    // Ensure scanlines are behind the main animation
+    z-index: 1; 
+  }
+
+  // 清除旧的 ::before 基础方框样式 
+  // 新的基础样式将在具体动画中按需设置 
+  &::before { 
+    // Basic positioning/transform origin if needed, otherwise animation sets all
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    // Ensure main animation is above scanlines
+    z-index: 2; 
+  }
+}
+
+// 共享的角标样式
+.cornerHudTopLeft,
+.cornerHudBottomRight {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--ark-highlight-green);
+    border-style: solid;
+    border-width: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out; // Fade out on hover exit
+    filter: drop-shadow(0 0 3px var(--ark-highlight-green));
+    z-index: 3; // Above main animation
+}
+
+.cornerHudTopLeft { top: 8px; left: 8px; border-top-width: 2px; border-left-width: 2px; }
+.cornerHudBottomRight { bottom: 8px; right: 8px; border-bottom-width: 2px; border-right-width: 2px; }
+
+.imageHud {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 5; // Highest z-index
+    opacity: 0;
+    transform: translateY(5px); // Initial offset for animation
+    pointer-events: none;
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out; // Fade out
+}
+
+.imageHudSquare {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: var(--ark-highlight-green);
+    filter: drop-shadow(0 0 2px var(--ark-highlight-green));
+}
+
+.imageHudText {
+    font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--ark-highlight-green);
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(178, 242, 187, 0.5);
+}
+
+// --- 通用列悬停效果 (保持不变) --- 
+.column:hover:not(.nonInteractive) {
+  background-color: rgba(178, 242, 187, 0.08); 
+
+  .verticalText .charItem > div {
+    transform: scale(1.15);
+    color: var(--ark-highlight-green);
+    text-shadow: 0 0 8px var(--ark-highlight-green);
+  }
+
+  // 触发共享的扫描线动画
+  .hudOverlay::after { 
+      animation: scanHud 1.5s linear infinite,
+                 fadeInScanlines 0.2s ease-out forwards;
+  }
+
+  // 触发共享的角标动画
+  .cornerHudTopLeft,
+  .cornerHudBottomRight {
+    animation: fadeInArkCorner 0.4s ease-out 0.2s forwards;
+  }
+
+  // 触发共享的图片HUD淡入动画 (位置由具体规则决定)
+  .imageHud {
+      animation: fadeInImageHud 0.4s ease-out 0.3s forwards;
+  }
+}
+
+// --- 特定列的悬停效果 (应用新动画) --- 
+
+// Column 0 (WORKS - Revert to Skewed Box)
+.column0:hover:not(.nonInteractive) {
+  .hudOverlay::before { 
+    // Revert to the original skewed box animation
+    animation: hudExpandBox0 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+  }
+  .imageHud { // Unique Position
+    bottom: 15px;
+    left: 15px;
+  }
+}
+
+// Column 1 (EXPERIENCE - Timeline)
+.column1:hover:not(.nonInteractive) {
+  .hudOverlay::before { 
+     animation: experienceTimeline 0.9s ease-out forwards;
+  }
+  .imageHud { // Unique Position
+    top: 15px;
+    right: 15px;
+  }
+}
+
+// Column 2 (LIFE - Pulse)
+.column2:hover:not(.nonInteractive) {
+  .hudOverlay::before { 
+    animation: lifePulse 1.2s ease-in-out infinite;
+  }
+  .imageHud { // Unique Position
+    bottom: 15px;
+    right: 15px;
+  }
+}
+
+// Column 3 (CONTACT - Center Scan + 3 Scattered Shadow Ripples)
+.column3:hover:not(.nonInteractive) {
+  .hudOverlay::before { 
+    // Central scan line - no change
+    animation: radarScan 2.5s linear infinite; 
+    width: 65%; 
+    height: 65%;
+    border-radius: 50%; 
+    background: conic-gradient(from 0deg, 
+        rgba(178, 242, 187, 0.4) 0deg 15deg, 
+        transparent 15.1deg 360deg);
+    border: none; 
+    opacity: 1; 
+  }
+  
+  // Position and animate the individual ripples with the SHADOW expand animation
+  .ripple1, .ripple2, .ripple3 {
+      // Use the new shadow ripple animation
+      animation-name: contactRippleExpandShadow;
+      animation-duration: 1.8s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-out;
+  }
+
+  .ripple1 { /* position, size, delay unchanged */
+    top: 20%; left: 15%; width: 40px; height: 40px; animation-delay: 0s;
+  }
+  .ripple2 { /* position, size, delay unchanged */
+    top: 65%; left: 70%; width: 60px; height: 60px; animation-delay: 0.4s;
+  }
+  .ripple3 { /* position, size, delay unchanged */
+    top: 40%; left: 40%; width: 80px; height: 80px; animation-delay: 0.8s;
+  }
+
+  .imageHud { /* position unchanged */
+    top: 15px; left: 15px;
+  }
+}
+
+// Column 4 (ABOUT - Focus + 5 Random HUDs)
+.column4:hover:not(.nonInteractive) {
+  .hudOverlay::before { 
+    animation: aboutFocus 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  // Main centered image HUD - no change to position, but adjust animation name if needed
+  > .imageHud { // Use direct child selector '>' to target the main one
+    bottom: 50%;
+    left: 15px;
+    transform: translateY(50%); 
+    animation: fadeInImageHudCentered 0.4s ease-out 0.3s forwards; 
+  }
+
+  // Style and position the 5 random HUDs on hover
+  .randomHud {
+    // Apply the standard fade-in animation (slightly delayed)
+    animation: fadeInImageHud 0.4s ease-out forwards;
+  }
+
+  .randomHud1 { top: 10%; left: 25%; animation-delay: 0.35s; }
+  .randomHud2 { top: 30%; left: 80%; animation-delay: 0.45s; transform: scale(0.9); } // Slightly smaller
+  .randomHud3 { top: 75%; left: 10%; animation-delay: 0.4s; transform: scale(1.1); } // Slightly larger
+  .randomHud4 { top: 85%; left: 60%; animation-delay: 0.5s; }
+  .randomHud5 { top: 5%; left: 55%; animation-delay: 0.55s; transform: scale(0.95); } 
+}
+
+// --- Keyframes --- 
+
+// 共享动画 (保持不变)
+@keyframes scanHud { 0% { background-position: 0 0; } 100% { background-position: 0 6px; } }
+@keyframes fadeInScanlines { from { opacity: 0; } to { opacity: 0.8; } }
+@keyframes fadeInArkCorner { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInImageHud { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInImageHudCentered { from { opacity: 0; transform: translateY(calc(50% + 5px)); } to { opacity: 1; transform: translateY(50%); } }
+
+// --- 独特的悬停动画 --- 
+
+// Restore hudExpandBox0 for WORKS
+@keyframes hudExpandBox0 {
+  0% { transform: translate(-50%, -50%) scale(0.7) rotate(0deg) skewX(0deg); border-color: transparent; opacity: 0; width: 75%; height: 75%; border-radius: 0; background: transparent; }
+  50% { transform: translate(-50%, -50%) scale(1.05) rotate(7deg) skewX(-12deg); border: 1px solid var(--ark-highlight-green); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.05) rotate(7deg) skewX(-12deg); border: 1px solid var(--ark-highlight-green); opacity: 1; width: 75%; height: 75%; border-radius: 0; background: transparent; }
+}
+
+// WORKS: Blueprint Draw (using border) - No longer used by default for column 0
+@keyframes worksBlueprint {
+  0% {
+    width: 0%;
+    height: 0%;
+    border: 2px solid var(--ark-highlight-green);
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    opacity: 0;
+  }
+  30% { // Draw top and left border
+    width: 70%;
+    height: 80%;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    opacity: 1;
+  }
+  60% { // Draw right border
+    width: 70%;
+    height: 80%;
+    border-bottom-color: transparent;
+    border-right-color: var(--ark-highlight-green);
+    opacity: 1;
+  }
+  100% { // Draw bottom border
+    width: 70%;
+    height: 80%;
+    border-color: var(--ark-highlight-green);
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(178, 242, 187, 0.4); // Add glow at the end
+  }
+}
+
+// EXPERIENCE: Timeline (line + nodes via box-shadow)
+@keyframes experienceTimeline {
+  0% {
+    width: 2px;
+    height: 0%;
+    background-color: var(--ark-highlight-green);
+    box-shadow: none; // No nodes yet
+    opacity: 0;
+  }
+  40% { // Line grows
+    height: 80%;
+    opacity: 1;
+    box-shadow: none;
+  }
+  60% { // First node appears (top)
+    height: 80%;
+    opacity: 1;
+    box-shadow: 0 -30px 0 0px var(--ark-highlight-green); 
+  }
+  80% { // Second node appears (middle)
+    height: 80%;
+    opacity: 1;
+    box-shadow: 0 -30px 0 0px var(--ark-highlight-green), 
+                0 0px 0 0px var(--ark-highlight-green); 
+  }
+  100% { // Third node appears (bottom) + glow
+    height: 80%;
+    opacity: 1;
+    background-color: var(--ark-highlight-green);
+    box-shadow: 0 -30px 0 0px var(--ark-highlight-green), 
+                0 0px 0 0px var(--ark-highlight-green), 
+                0 30px 0 0px var(--ark-highlight-green), 
+                0 0 8px 2px rgba(178, 242, 187, 0.5); // Glow effect
+  }
+}
+
+// LIFE: Pulse (horizontal line scaling)
+@keyframes lifePulse {
+  0%, 100% {
+    width: 50%;
+    height: 1px;
+    background-color: var(--ark-highlight-green);
+    transform: translate(-50%, -50%) scaleX(1);
+    opacity: 1;
+    box-shadow: 0 0 5px rgba(178, 242, 187, 0.7);
+  }
+  50% {
+    width: 50%;
+    height: 1px;
+    background-color: var(--ark-highlight-green);
+    transform: translate(-50%, -50%) scaleX(1.4);
+    opacity: 0.7;
+    box-shadow: 0 0 10px rgba(178, 242, 187, 0.5);
+  }
+}
+
+// CONTACT: Radar Scan Line (rotating conic gradient)
+@keyframes radarScan {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+// NEW CONTACT: Single Ripple Expand Animation with Shadow (like original concept)
+@keyframes contactRippleExpandShadow {
+  0% {
+    transform: scale(0.1);
+    opacity: 1;
+    border: 1px solid rgba(178, 242, 187, 0.9);
+    box-shadow: 0 0 0 0px rgba(178, 242, 187, 0.5); // Start shadow at size 0
+
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+    border: 1px solid rgba(178, 242, 187, 0); // Fade border
+    box-shadow: 0 0 0 20px rgba(178, 242, 187, 0); // Expanding shadow ring fades out
+  }
+}
+
+// ABOUT: Focus (corner lines moving inwards)
+@keyframes aboutFocus {
+  0% {
+    width: 60%;
+    height: 70%;
+    border: 0 solid var(--ark-highlight-green);
+    opacity: 0;
+  }
+  30% { // Corners appear far out
+    width: 80%;
+    height: 90%;
+    border-width: 0px;
+    opacity: 1;
+    // Simulate corners using box-shadow trick
+    box-shadow: inset 10px 10px 0 -8px var(--ark-highlight-green),  /* Top-Left */
+                inset -10px 10px 0 -8px var(--ark-highlight-green), /* Top-Right */
+                inset 10px -10px 0 -8px var(--ark-highlight-green), /* Bottom-Left */
+                inset -10px -10px 0 -8px var(--ark-highlight-green);/* Bottom-Right */
+  }
+  100% { // Corners move inwards
+    width: 60%;
+    height: 70%;
+    border-width: 0px;
+    opacity: 1;
+    box-shadow: inset 10px 10px 0 -8px var(--ark-highlight-green),
+                inset -10px 10px 0 -8px var(--ark-highlight-green),
+                inset 10px -10px 0 -8px var(--ark-highlight-green),
+                inset -10px -10px 0 -8px var(--ark-highlight-green),
+                0 0 10px rgba(178, 242, 187, 0.4); // Final glow
+  }
+}
+
+// --- Add base styles for the new ripple elements --- 
+.radarRipple {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0; // Start hidden
+  pointer-events: none;
+  // Border will be set by the animation
+  // Ensure ripples are above the scan line (::before is z-index 2)
+  z-index: 3; 
+}
+
+// --- Column 默认上下线 --- (保持不变)
+// 默认隐藏非 worksColumn 的上下线
+.column:not(.worksColumn)::before,
+.column:not(.worksColumn)::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    height: 2px;
+    background: var(--ark-highlight-green);
+    opacity: 0; // 默认隐藏
+    transition: opacity 0.2s ease-out;
+}
+.column:not(.worksColumn)::before { top: 0; }
+.column:not(.worksColumn)::after { bottom: 0; }
+
+// 在 hover 时显示非 worksColumn 的上下线
+.column:not(.worksColumn):hover:not(.nonInteractive) {
+  &::before,
+  &::after {
+    opacity: 1;
+  }
+}
+
+// --- Add base styles for the new random HUD elements --- 
+.randomHud {
+  // Inherits .imageHud styles, just need initial state if different
+  // Already position: absolute from .imageHud
+  opacity: 0; // Start hidden
+  // Use fixed positions defined in hover rule, override any default positioning from .imageHud if necessary
+}
