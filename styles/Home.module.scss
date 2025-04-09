@@ -363,7 +363,7 @@
         .verticalText .charItem > div {
           transform: scale(1.15);
           color: var(--ark-highlight-green);
-          text-shadow: 0 0 8px var(--ark-highlight-green);
+          text-shadow: 0 0 24px var(--ark-highlight-green);
         }
       }
     }
@@ -397,7 +397,6 @@
   z-index: 3;
   pointer-events: none;
   opacity: 0; // 初始隐藏
-  // 添加轻微辉光
   box-shadow: 0 0 3px rgba(255, 255, 255, 0.3), 0 0 1px rgba(255, 255, 255, 0.5);
 
   &.animated {
@@ -425,6 +424,34 @@
       animation-name: lineAppearBottomUp;
       transform-origin: bottom;
     }
+  }
+
+  // --- Pulsing Effect --- 
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%; 
+    top: 0; 
+    width: 2px; 
+    height: 100px; 
+    background-color: var(--ark-highlight-green); 
+    opacity: 0; 
+    transform: translateX(-50%); 
+    // Add glow effect using box-shadow
+    box-shadow: 0 0 8px var(--ark-highlight-green), 0 0 12px rgba(178, 242, 187, 0.6); 
+  }
+
+  // Apply NORMAL (Top->Bottom) animation
+  &.pulsing::after {
+    animation: pulseWave 2s ease-out forwards; 
+  }
+  
+  // Apply REVERSE (Bottom->Top) animation
+  &.pulsingReverse::after {
+    // Start at the bottom for reverse animation
+    top: auto;
+    bottom: 0;
+    animation: pulseWaveReverse 2s ease-out forwards; 
   }
 }
 
@@ -609,7 +636,7 @@
   
   .line {
     width: 80px;
-    height: 1px;
+    height: 2px;
     background: rgba(255,255,255,0.5);
     
     &::after {
@@ -1250,6 +1277,8 @@
     transform: translateY(5px); // Initial offset for animation
     pointer-events: none;
     transition: opacity 0.2s ease-out, transform 0.2s ease-out; // Fade out
+    // Add white-space nowrap to prevent text wrapping
+    white-space: nowrap; 
 }
 
 .imageHudSquare {
@@ -1313,21 +1342,68 @@
 
 // Column 1 (EXPERIENCE - Timeline)
 .column1:hover:not(.nonInteractive) {
-  .hudOverlay::before { 
-     animation: experienceTimeline 0.9s ease-out forwards;
+  .hudOverlay::before {
+    // 删除以下样式以移除光柱动画
+    /*
+    position: absolute;
+    bottom: 15%; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px; 
+    height: 0; 
+    background-color: var(--ark-highlight-green);
+    border: none;
+    border-radius: 0;
+    opacity: 0; 
+    transform-origin: bottom center; 
+
+    animation: buildTower 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    animation-delay: 0.1s; 
+    */
   }
-  .imageHud { // Unique Position
+  .imageHud { // 位置保持不变
     top: 15px;
     right: 15px;
   }
 }
 
-// Column 2 (LIFE - Pulse)
+// Column 2 (LIFE - Pulse) - Replaced with ECG
 .column2:hover:not(.nonInteractive) {
-  .hudOverlay::before { 
-    animation: lifePulse 1.2s ease-in-out infinite;
+  // Remove base pulse style if any was applied to ::before directly before
+  .hudOverlay::before, .hudOverlay::after {
+    content: ''; // Ensure pseudo-elements are generated
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 40px; // Height of the ECG line area
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 100 50'%3E%3Cpath d='M0,25 L20,25 L25,10 L35,40 L40,25 L60,25 L65,15 L75,35 L80,25 L100,25' stroke='%23B2F2BB' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-size: 50px 40px; // Reduced width to increase density
+    opacity: 0; // Start hidden
+    animation-name: ecgScroll, fadeInEcg; // Combine scroll and fade-in
+    animation-duration: 1.5s, 0.4s;      // Faster scroll duration (halved) to match density, fade-in same
+    animation-timing-function: linear, ease-out; // Timing for scroll, fade-in
+    animation-iteration-count: infinite, 1; // Repeat scroll, play fade-in once
+    animation-fill-mode: none, forwards;     // Fill mode for fade-in
+    animation-delay: 0s, 0.1s; // Delay fade-in slightly
+    filter: drop-shadow(0 0 2px var(--ark-highlight-green));
   }
-  .imageHud { // Unique Position
+
+  .hudOverlay::before { // Top line
+    top: 50%; 
+    transform: translateY(-75px); // Increased upward shift
+    background-position-x: 0;
+    animation-direction: normal, normal; // Scroll direction normal
+  }
+
+  .hudOverlay::after { // Bottom line - reuse scanlines ::after for this
+    top: 50%; 
+    transform: translateY(35px) scaleY(-1); // Increased downward shift
+    background-position-x: 100px; // Start at end for reverse effect
+    animation-direction: reverse, normal; // Scroll direction reverse
+  }
+
+  .imageHud { // Unique Position (keep from original)
     bottom: 15px;
     right: 15px;
   }
@@ -1336,40 +1412,31 @@
 // Column 3 (CONTACT - Center Scan + 3 Scattered Shadow Ripples)
 .column3:hover:not(.nonInteractive) {
   .hudOverlay::before { 
-    // Central scan line - no change
+    // Restore 15deg conic-gradient scan
     animation: radarScan 2.5s linear infinite; 
-    width: 65%; 
-    height: 65%;
+    width: 70%; 
+    height: 70%;
     border-radius: 50%; 
+    // Restore 15 degree angle
     background: conic-gradient(from 0deg, 
-        rgba(178, 242, 187, 0.4) 0deg 15deg, 
+        rgba(178, 242, 187, 0.5) 0deg 15deg, // 15 degrees beam
         transparent 15.1deg 360deg);
     border: none; 
-    opacity: 1; 
+    opacity: 0.8; 
   }
   
-  // Position and animate the individual ripples with the SHADOW expand animation
+  // Ripples animation and positions remain unchanged
   .ripple1, .ripple2, .ripple3 {
-      // Use the new shadow ripple animation
       animation-name: contactRippleExpandShadow;
-      animation-duration: 1.8s;
+      animation-duration: 1.8s; 
       animation-iteration-count: infinite;
       animation-timing-function: ease-out;
   }
+  .ripple1 { top: 20%; left: 15%; width: 40px; height: 40px; animation-delay: 0s; }
+  .ripple2 { top: 65%; left: 70%; width: 60px; height: 60px; animation-delay: 0.4s; }
+  .ripple3 { top: 40%; left: 40%; width: 80px; height: 80px; animation-delay: 0.8s; }
 
-  .ripple1 { /* position, size, delay unchanged */
-    top: 20%; left: 15%; width: 40px; height: 40px; animation-delay: 0s;
-  }
-  .ripple2 { /* position, size, delay unchanged */
-    top: 65%; left: 70%; width: 60px; height: 60px; animation-delay: 0.4s;
-  }
-  .ripple3 { /* position, size, delay unchanged */
-    top: 40%; left: 40%; width: 80px; height: 80px; animation-delay: 0.8s;
-  }
-
-  .imageHud { /* position unchanged */
-    top: 15px; left: 15px;
-  }
+  .imageHud { /* position unchanged */ top: 15px; left: 15px; }
 }
 
 // Column 4 (ABOUT - Focus + 5 Random HUDs)
@@ -1450,63 +1517,7 @@
   }
 }
 
-// EXPERIENCE: Timeline (line + nodes via box-shadow)
-@keyframes experienceTimeline {
-  0% {
-    width: 2px;
-    height: 0%;
-    background-color: var(--ark-highlight-green);
-    box-shadow: none; // No nodes yet
-    opacity: 0;
-  }
-  40% { // Line grows
-    height: 80%;
-    opacity: 1;
-    box-shadow: none;
-  }
-  60% { // First node appears (top)
-    height: 80%;
-    opacity: 1;
-    box-shadow: 0 -30px 0 0px var(--ark-highlight-green); 
-  }
-  80% { // Second node appears (middle)
-    height: 80%;
-    opacity: 1;
-    box-shadow: 0 -30px 0 0px var(--ark-highlight-green), 
-                0 0px 0 0px var(--ark-highlight-green); 
-  }
-  100% { // Third node appears (bottom) + glow
-    height: 80%;
-    opacity: 1;
-    background-color: var(--ark-highlight-green);
-    box-shadow: 0 -30px 0 0px var(--ark-highlight-green), 
-                0 0px 0 0px var(--ark-highlight-green), 
-                0 30px 0 0px var(--ark-highlight-green), 
-                0 0 8px 2px rgba(178, 242, 187, 0.5); // Glow effect
-  }
-}
-
-// LIFE: Pulse (horizontal line scaling)
-@keyframes lifePulse {
-  0%, 100% {
-    width: 50%;
-    height: 1px;
-    background-color: var(--ark-highlight-green);
-    transform: translate(-50%, -50%) scaleX(1);
-    opacity: 1;
-    box-shadow: 0 0 5px rgba(178, 242, 187, 0.7);
-  }
-  50% {
-    width: 50%;
-    height: 1px;
-    background-color: var(--ark-highlight-green);
-    transform: translate(-50%, -50%) scaleX(1.4);
-    opacity: 0.7;
-    box-shadow: 0 0 10px rgba(178, 242, 187, 0.5);
-  }
-}
-
-// CONTACT: Radar Scan Line (rotating conic gradient)
+// CONTACT: Radar Scan (rotating the ::before element) - Ensure this is active
 @keyframes radarScan {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
@@ -1516,20 +1527,21 @@
   }
 }
 
-// NEW CONTACT: Single Ripple Expand Animation with Shadow (like original concept)
+// CONTACT: Single Ripple Expand Animation with Shadow - Remains the same
 @keyframes contactRippleExpandShadow {
   0% {
     transform: scale(0.1);
     opacity: 1;
     border: 1px solid rgba(178, 242, 187, 0.9);
-    box-shadow: 0 0 0 0px rgba(178, 242, 187, 0.5); // Start shadow at size 0
-
+    box-shadow: 0 0 0 0px rgba(178, 242, 187, 0.5); 
   }
   100% {
-    transform: scale(1);
+    // Increase scale for wider expansion
+    transform: scale(1.8); 
     opacity: 0;
-    border: 1px solid rgba(178, 242, 187, 0); // Fade border
-    box-shadow: 0 0 0 20px rgba(178, 242, 187, 0); // Expanding shadow ring fades out
+    border: 1px solid rgba(178, 242, 187, 0); 
+    // Adjust shadow expansion if needed, maybe slightly larger max size
+    box-shadow: 0 0 0 25px rgba(178, 242, 187, 0); 
   }
 }
 
@@ -1607,4 +1619,270 @@
   // Already position: absolute from .imageHud
   opacity: 0; // Start hidden
   // Use fixed positions defined in hover rule, override any default positioning from .imageHud if necessary
+}
+
+// --- Task List Animation for Column 0 (WORKS) ---
+
+.taskContainer {
+  position: absolute;
+  top: 80px; // Increased top value to shift down (30px + ~50px for one task cycle)
+  left: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  opacity: 0;
+  transition: opacity 0.2s ease-out 0.1s; // Slight delay on fade-in/out
+  pointer-events: none; // Ensure it doesn't interfere with column click
+  z-index: 4; // Above corners, below image HUD maybe
+}
+
+.taskItem {
+  display: flex;
+  align-items: center;
+  // Individual item fade-in handled by animation delay
+}
+
+.taskSquare {
+  width: 8px;
+  height: 8px;
+  background-color: var(--ark-highlight-green);
+  filter: drop-shadow(0 0 2px var(--ark-highlight-green));
+  margin-right: 8px;
+  flex-shrink: 0; // Prevent shrinking
+  opacity: 0; // Initially hidden
+}
+
+.taskTextWrapper {
+  overflow: hidden;
+  position: relative;
+  height: 1em; // Match line height
+}
+
+.taskText {
+  display: inline-block;
+  white-space: nowrap;
+  color: var(--ark-highlight-green);
+  font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 3px rgba(178, 242, 187, 0.5);
+  opacity: 0; // Initially hidden
+  // Reset transform from previous attempts if any
+  transform: translateX(0); 
+  // Use clip-path for reveal effect
+  clip-path: inset(0 100% 0 0);
+}
+
+.taskLine {
+  width: 2px; // Increased thickness
+  height: 34px; // Adjusted height (base + overlap)
+  background-color: var(--ark-highlight-green);
+  opacity: 0.65; 
+  margin-left: 3px; // Adjusted alignment for 2px width (center of 8px square is 4px, line center is 1px -> 4-1=3)
+  margin-top: -4px; // Pull line up to overlap square above
+  transform-origin: top;
+  transform: scaleY(0); // Initially hidden
+  opacity: 0; // Initially hidden for animation
+}
+
+// Hover effect on Column 0 to trigger animations
+.column0:hover:not(.nonInteractive) {
+  .taskContainer {
+    opacity: 1;
+  }
+
+  // Animation Timings 
+  $square-duration: 0.15s;        
+  $text-reveal-duration: 0.25s; 
+  $line-duration: 0.2s;         
+  $stagger-delay: 0.04s; // Delay between text end and line start, and line end and next square start      
+  $initial-delay: 0.1s;       
+  $total-tasks: 30;         // Updated to 30
+
+  // Calculate the total time for one full cycle (square + text + line + delays)
+  // Cycle: Square -> Text -> Delay -> Line -> Delay -> Next Square
+  $time_per_cycle: $square-duration + $text-reveal-duration + $stagger-delay + $line-duration + $stagger-delay;
+
+  // SCSS loop to generate animation rules
+  @for $i from 1 through $total-tasks {
+    // Calculate start time for the current task
+    $task-start: $initial-delay + ($i - 1) * $time_per_cycle;
+    
+    // Calculate relevant end/start times for this task and its line
+    $task-square-end: $task-start + $square-duration; // Text starts right after square
+    $task-text-end: $task-square-end + $text-reveal-duration;
+    $line-start: $task-text-end + $stagger-delay; // Line starts after text ends + delay
+
+    // Apply animation to task item (odd nth-child)
+    $item-selector-index: ($i * 2) - 1;
+    .taskItem:nth-child(#{$item-selector-index}) { 
+      .taskSquare { animation: revealTaskSquare $square-duration ease-out $task-start forwards; }
+      .taskText { animation: revealTaskTextClip $text-reveal-duration ease-out $task-square-end forwards; } // Text animation starts when square ends
+    }
+
+    // Apply animation to the line following the task item (even nth-child), if it exists
+    @if $i < $total-tasks {
+      $line-selector-index: $i * 2;
+      .taskLine:nth-child(#{$line-selector-index}) { 
+        animation: drawTaskLine $line-duration ease-out $line-start forwards; 
+      }
+    }
+  }
+}
+
+// Keyframes for Task List Animation
+@keyframes revealTaskSquare {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+// Changed text reveal to use clip-path
+@keyframes revealTaskTextClip {
+  from { 
+    opacity: 1; // Make visible from start
+    clip-path: inset(0 100% 0 0); 
+  }
+  to { 
+    opacity: 1;
+    clip-path: inset(0 0 0 0); 
+  }
+}
+
+@keyframes drawTaskLine {
+  from { opacity: 0; transform: scaleY(0); }
+  to { opacity: 0.65; transform: scaleY(1); } 
+}
+
+// Keyframe for ECG scroll
+@keyframes ecgScroll {
+  from { background-position-x: 0px; }
+  to { background-position-x: -100px; } // Scroll by the new background-size width
+}
+
+// Keyframe for ECG fade-in
+@keyframes fadeInEcg {
+  from { opacity: 0; }
+  to { opacity: 0.8; } // Fade to desired opacity
+}
+
+// --- Dedicated Scanlines for LIFE column ---
+.lifeScanlines {
+  position: absolute;
+  inset: 0; // Cover the entire overlay area
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(178, 242, 187, 0.2) 2px,
+    rgba(178, 242, 187, 0.2) 3px
+  );
+  background-size: 100% 6px;
+  filter: blur(0.3px);
+  background-position: 0 0;
+  opacity: 0; // Initially hidden
+  z-index: 1; // Ensure it's below ECG lines (which use ::before/::after at z-index 2 relative to hudOverlay)
+  transition: opacity 0.2s ease-out;
+
+  // Trigger animation on hover of column2
+  .column2:hover:not(.nonInteractive) & {
+    animation: scanHud 1.5s linear infinite, fadeInScanlines 0.2s ease-out forwards;
+    animation-delay: 0.2s, 0.2s; // Delay slightly after ECG fade-in
+  }
+}
+
+// --- Decorative text in Left Panel ---
+.fateTextContainer {
+  position: absolute;
+  bottom: 17%; // Positioned relative to the bottom edge of the border (100% - 85% = 15% + 2% buffer)
+  right: 17%; // Positioned relative to the right edge of the border (100% - 85% = 15% + 2% buffer)
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; // Align items to the right
+  opacity: 0; // Start hidden
+  transition: opacity 0.5s ease-out;
+  z-index: 5; // Ensure it's above the border/corner elements
+  pointer-events: none; // Prevent interaction
+
+  // Fade in after main animations complete
+  .leftPanel.animated & {
+    // Delay calculation: roughly after lines finish (approx 2200ms + 1600ms = 3800ms)
+    // Let's give it a bit more buffer, maybe start around 4500ms
+    transition-delay: 4.5s; 
+    opacity: 0.7; // Fade in to a slightly transparent state
+  }
+}
+
+.fateText {
+  font-family: 'Dosis', sans-serif;
+  font-size: 0.75rem;
+  color: var(--ark-text-secondary); // Use a secondary text color
+  letter-spacing: 0.5px;
+  margin-bottom: 4px; // Space between text and line
+  text-align: right;
+}
+
+.fateLine {
+  width: 270px; // Increased width from 150px
+  height: 1px;
+  border-bottom: 1px dashed var(--ark-border); // Dashed line using border
+  position: relative; // Needed for pseudo-element positioning
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 1px;      // Slash thickness
+    height: 16px;    // Doubled slash length from 8px
+    background-color: var(--ark-border);
+    left: calc(100% / 6); // Position 1/6th from the left
+    bottom: -7px;      // Adjusted vertical position for doubled height
+    transform: rotate(-30deg); // Tilt left (adjust angle as needed)
+    transform-origin: center bottom; // Rotate around bottom-center
+  }
+
+  // Add small rectangle at the end
+  &::after {
+    content: '';
+    position: absolute;
+    width: 10px;  // Doubled rectangle width
+    height: 6px;  // Doubled rectangle height
+    background-color: var(--ark-border);
+    right: 0;     // Position at the right end of the line
+    bottom: -2.5px; // Align vertically with the dashed line (center of 6px height is 3px, align with 1px line -> move up 2.5px from bottom)
+  }
+}
+
+// --- New Keyframe for Pulse Wave --- 
+@keyframes pulseWave {
+  0% {
+    top: 0%; 
+    opacity: 0.9; 
+    transform: translateX(-50%) scaleY(0.8); 
+  }
+  50% {
+    opacity: 0.7; 
+    transform: translateX(-50%) scaleY(1); 
+  }
+  100% {
+    top: 100%; 
+    opacity: 0.4;
+    transform: translateX(-50%) scaleY(0.8); 
+  }
+}
+
+// --- New Keyframe for REVERSE Pulse Wave (Bottom->Top) --- 
+@keyframes pulseWaveReverse {
+  0% {
+    bottom: 0%; // Start at the bottom
+    opacity: 0.9; 
+    transform: translateX(-50%) scaleY(0.8); 
+  }
+  50% {
+    opacity: 0.7; 
+    transform: translateX(-50%) scaleY(1); 
+  }
+  100% {
+    bottom: 100%; // End at the top
+    opacity: 0;
+    transform: translateX(-50%) scaleY(0.8); 
+  }
 }

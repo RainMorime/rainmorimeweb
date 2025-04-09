@@ -113,24 +113,25 @@
 .loading_content {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   z-index: 10;
   width: 100%;
-  max-width: 500px;
+  max-width: 1250px;
   padding: 1rem;
-  gap: 2rem;
+  gap: 5rem;
 }
 
 // LOGO区域
 .logo_area {
   position: relative;
-  width: 320px;
-  height: 160px;
+  width: 480px;
+  height: 240px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
 }
 
 // 框架容器
@@ -157,16 +158,16 @@
 // 主标题
 .main_title {
   font-family: 'Dosis', sans-serif;
-  font-size: 3.8rem;
+  font-size: 5.2rem;
   font-weight: 300;
   line-height: 1;
   margin: 0;
   padding: 0;
-  letter-spacing: 8px;
+  letter-spacing: 12px;
   color: var(--off-white);
   text-shadow: 
-    0 0 5px rgba(200, 200, 200, 0.3),
-    0 0 10px rgba(150, 150, 150, 0.2);
+    0 0 7px rgba(200, 200, 200, 0.3),
+    0 0 14px rgba(150, 150, 150, 0.2);
   text-transform: uppercase;
   transition: all 0.3s ease;
   @extend .variables;
@@ -181,11 +182,11 @@
 // 副标题
 .sub_title {
   font-family: 'Dosis', sans-serif;
-  font-size: 2.2rem;
+  font-size: 3.0rem;
   font-weight: 300;
-  margin: 0.3rem 0 0;
+  margin: 0.5rem 0 0;
   padding: 0;
-  letter-spacing: 5px;
+  letter-spacing: 8px;
   color: var(--light-gray);
   text-transform: uppercase;
   @extend .variables;
@@ -438,11 +439,19 @@
 
 // 进度显示区域
 .progress_area {
-  width: 100%;
+  // width: 100%; // 可以移除，依赖 max-width
   max-width: 480px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  position: absolute;
+  bottom: 30px;
+  // 使用 margin auto 进行居中
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  // transform: translateX(-50%); // 移除旧的 transform
 }
 
 // 进度条容器
@@ -544,19 +553,14 @@
   color: var(--off-white);
 }
 
-// 控制台输出 - 深灰CRT终端风格
+// 控制台输出 - 移除背景和边框
 .console_output {
-  margin-top: 10px;
-  width: 100%;
-  height: 200px;
-  border: none;
-  background-color: #1a1a1a;
-  border-radius: 3px;
+  width: 480px;
+  height: 400px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   
   &::before {
     content: none;
@@ -569,13 +573,12 @@
 
 .console_header {
   width: 100%;
-  padding: 5px 10px;
-  background-color: #252525;
-  border-bottom: 1px solid #333;
+  padding: 5px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
+  margin-bottom: 8px;
   
   &::after {
     content: none;
@@ -583,8 +586,8 @@
 }
 
 .header_title {
-  color: rgba(220, 220, 220, 0.9);
-  font-size: 0.85rem;
+  color: rgba(220, 220, 220, 0.7);
+  font-size: 0.8rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -605,7 +608,7 @@
 }
 
 .header_status {
-  color: rgba(220, 220, 220, 0.7);
+  color: rgba(220, 220, 220, 0.6);
   letter-spacing: 0.5px;
   position: relative;
   padding-left: 12px;
@@ -618,16 +621,14 @@
     transform: translateY(-50%);
     width: 4px;
     height: 4px;
-    background-color: #666;
+    background-color: #555;
     border-radius: 50%;
   }
 }
 
 .header_time {
-  color: rgba(180, 180, 180, 0.6);
+  color: rgba(180, 180, 180, 0.5);
   font-variant-numeric: tabular-nums;
-  border-left: 1px solid #333;
-  padding-left: 10px;
 }
 
 /* 扫描线效果 */
@@ -647,13 +648,12 @@
 
 .console_content {
   flex-grow: 1;
-  padding: 10px;
+  padding: 0 5px 0 0;
   overflow-y: auto;
   font-family: monospace;
-  font-size: 0.9rem;
+  font-size: 1.0rem;
   position: relative;
-  color: rgba(220, 220, 220, 0.9);
-  background-color: #1a1a1a;
+  color: rgba(200, 220, 200, 0.7);
   
   &::after {
     content: none;
@@ -661,95 +661,34 @@
 }
 
 .console_content::-webkit-scrollbar {
-  width: 12px;
-  background-color: #1a1a1a;
+  width: 4px;
 }
 
 .console_content::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: rgba(80, 80, 80, 0.1);
 }
 
 .console_content::-webkit-scrollbar-thumb {
-  background: transparent;
-  box-shadow: inset 0 0 0 2000px #1a1a1a;
-  border-radius: 0;
-}
-
-.console_content::-webkit-scrollbar-thumb::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  margin-left: -0.5px;
-  width: 1px;
-  height: 100%;
-  background-color: rgba(180, 180, 180, 0.5);
+  background: rgba(150, 150, 150, 0.3);
+  border-radius: 2px;
 }
 
 .console_content::-webkit-scrollbar-button {
-  height: 24px;
-  border: none;
-  background-color: transparent;
-  background-image: linear-gradient(to bottom, transparent, transparent);
-  position: relative;
-}
-
-.console_content::-webkit-scrollbar-button:vertical:decrement {
-  &::after {
-    content: '';
-    position: absolute;
-    top: auto;
-    bottom: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    border: 1px solid rgba(180, 180, 180, 0.6);
-    background-color: transparent;
-  }
-}
-
-.console_content::-webkit-scrollbar-button:vertical:increment {
-  &::after {
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    border: 1px solid rgba(180, 180, 180, 0.6);
-    background-color: transparent;
-  }
-}
-
-// 添加一个额外的中间线
-.console_content {
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 6px;
-    width: 1px;
-    height: 100%;
-    background-color: rgba(180, 180, 180, 0.5);
-    z-index: 10;
-    pointer-events: none;
-  }
+  display: none;
 }
 
 .log_line {
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 6px;
   animation: fade-in 0.2s ease-out forwards;
   opacity: 0;
   position: relative;
   z-index: 4;
   
   &:hover {
-    background-color: #252525;
+    background-color: rgba(255, 255, 255, 0.05);
   }
 }
 
@@ -763,27 +702,29 @@
 }
 
 .log_prefix {
-  color: rgba(220, 220, 220, 0.9);
-  font-weight: bold;
+  color: rgba(180, 200, 180, 0.6);
+  font-weight: normal;
   flex-shrink: 0;
 }
 
 .log_text {
-  color: rgba(220, 220, 220, 0.9);
-  line-height: 1.4;
-  
-  /* 添加打字机效果 */
+  color: rgba(200, 220, 200, 0.7);
+  line-height: 1.35;
   overflow: hidden;
   white-space: nowrap;
-  animation: typing 0.8s steps(40, end);
-  
-  // 添加间歇性闪烁的光标
+  animation: typing 0.6s steps(30, end);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
   &::after {
     content: '_';
     display: inline-block;
     opacity: 1;
     animation: blink 0.7s steps(2, start) infinite;
     margin-left: 1px;
+    color: rgba(200, 220, 200, 0.5);
   }
 }
 
@@ -819,43 +760,43 @@
   display: flex;
   align-items: center;
   font-family: 'Dosis', sans-serif;
-  font-size: 0.8rem;
+  font-size: 1.0rem;
   color: var(--light-gray);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   opacity: 0;
   animation: hudFadeIn 0.8s forwards;
   animation-delay: 0.5s;
   @extend .variables;
   
   &.top_left {
-    top: 20px;
-    left: 20px;
+    top: 40px;
+    left: 40px;
   }
   
   &.top_right {
-    top: 20px;
-    right: 20px;
+    top: 40px;
+    right: 40px;
     flex-direction: row-reverse;
   }
   
   &.bottom_left {
-    bottom: 20px;
-    left: 20px;
+    bottom: 40px;
+    left: 40px;
   }
   
   &.bottom_right {
-    bottom: 20px;
-    right: 20px;
+    bottom: 40px;
+    right: 40px;
     flex-direction: row-reverse;
   }
 }
 
 .hud_line {
-  width: 30px;
+  width: 50px;
   height: 1px;
   background-color: var(--border-color);
-  margin: 0 10px;
+  margin: 0 15px;
   @extend .variables;
 }
 
@@ -1132,44 +1073,172 @@
   pointer-events: none;
 }
 
-// 第八层横向滑动特效 - 颜色比第七层稍浅
-.horizontal_slide_eighth {
+// 新增：背景HUD层样式
+.background_hud_layer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
-    rgba(135, 215, 160, 0.04), // 比第七层稍浅
-    rgba(135, 215, 160, 0.02),
-    rgba(135, 215, 160, 0.001)
-  );
-  background-size: 200% 100%;
-  z-index: 17; // 低于第七层
-  transform-origin: left center;
+  z-index: 5; // 确保在主内容和网格之下
   pointer-events: none;
+  overflow: hidden;
 }
 
-// 退场时从右滑入的背景层
-.exit_slide_layer {
-  position: absolute; // 相对于 loading_screen 定位
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(34, 34, 34, 0.95); // 比 #1a1a1a 稍浅
-  z-index: 998; // 低于 wasteland_background (999) 和 loading_screen (1000)
-  pointer-events: none; // 通常背景层不需要交互
+// 背景大圆环
+.hud_background_circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 75vh; // 使用视口高度作为基准
+  height: 75vh;
+  max-width: 75vw; // 限制最大宽度
+  max-height: 75vw;
+  border: 1px solid rgba(180, 180, 180, 0.15);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(180, 180, 180, 0.08);
+  }
+  
+  &::before {
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+    top: -10px;
+    left: -10px;
+  }
+  
+  &::after {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    top: 10px;
+    left: 10px;
+  }
 }
 
-// 退场时第二层滑动的背景层 (更慢，更浅)
-.exit_slide_layer_2 {
+// 左右刻度容器的通用样式
+.hud_scale_left,
+.hud_scale_right {
+  position: absolute;
+  top: 15%;
+  height: 70%;
+  width: 50px;
+  overflow: hidden; // 隐藏容器外的内容
+}
+
+// 刻度动画容器 - 用于限制可见区域
+.scale_animation_container {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 0; // 或 right: 0 for right scale
   width: 100%;
   height: 100%;
-  background-color: rgba(40, 40, 40, 0.9); // 比 exit_slide_layer 稍浅
-  z-index: 997; // 低于 exit_slide_layer (998)
-  pointer-events: none;
+  overflow: hidden;
+}
+
+// 刻度动画内容 - 实际移动的部分
+.scale_animation_content {
+  position: absolute;
+  top: 0;
+  left: 0; // 或 right: 0
+  width: 100%;
+  height: 200%; // 高度为容器的两倍，用于无缝滚动
+  will-change: transform; // 优化动画性能
+}
+
+// 刻度标记样式
+.scale_marker {
+  position: absolute;
+  width: 10px;
+  height: 1px;
+  background-color: rgba(180, 180, 180, 0.3);
+}
+
+// 连接线样式
+.scale_connecting_line {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%; // 覆盖整个动画内容高度
+  background-color: rgba(180, 180, 180, 0.15); // 比标记线更淡
+}
+
+// 刻度标签样式
+.scale_label_v {
+  position: absolute;
+  font-family: 'Dosis', sans-serif;
+  font-size: 0.7rem;
+  color: rgba(180, 180, 180, 0.4);
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  bottom: 5%;
+  z-index: 2; // 确保标签在滚动内容之上
+}
+
+// 左侧刻度特定样式
+.hud_scale_left {
+  left: 5%;
+  .scale_animation_container {
+    left: 0;
+  }
+  .scale_animation_content {
+    left: 0;
+  }
+  .scale_marker {
+    left: 0;
+  }
+  .scale_connecting_line {
+    left: 5px; // 连接线位置，可以微调
+  }
+  .scale_label_v {
+    left: 15px;
+  }
+}
+
+// 右侧刻度特定样式
+.hud_scale_right {
+  right: 5%;
+  .scale_animation_container {
+    right: 0; 
+    left: auto; // 覆盖通用样式
+  }
+  .scale_animation_content {
+    right: 0;
+    left: auto; // 覆盖通用样式
+  }
+  .scale_marker {
+    right: 0;
+  }
+  .scale_connecting_line {
+    right: 5px; // 连接线位置
+    left: auto;
+  }
+  .scale_label_v {
+    right: 15px;
+  }
+}
+
+// 底部散落点容器
+.hud_scatter_dots {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+}
+
+// 单个散落点
+.scatter_dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: rgba(180, 180, 180, 0.5);
+  border-radius: 50%;
+  opacity: 0; // 初始透明，由动画控制
 }
