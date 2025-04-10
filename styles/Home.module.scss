@@ -1865,6 +1865,19 @@
   letter-spacing: 0.5px;
   margin-bottom: 4px; // Space between text and line
   text-align: right;
+  // --- 新增: 相对定位用于光标 ---
+  position: relative;
+}
+
+// --- 新增: 打字机光标样式 ---
+.fateTextContainer.typingActive .fateText::after {
+  content: '_'; // 使用下划线作为光标
+  position: absolute;
+  right: -0.1em; // 稍微偏移到文字右侧
+  bottom: -0.1em; // 调整垂直位置
+  color: var(--ark-text-secondary); // 光标颜色
+  animation: blinkCursor 0.8s infinite;
+  font-weight: bold;
 }
 
 .fateLine {
@@ -1895,6 +1908,12 @@
     right: 0;     // Position at the right end of the line
     bottom: -2.5px; // Align vertically with the dashed line (center of 6px height is 3px, align with 1px line -> move up 2.5px from bottom)
   }
+}
+
+// --- 新增: 光标闪烁动画 ---
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 // --- New Keyframe for Meteor Trail (Top->Bottom) --- 
@@ -2029,5 +2048,82 @@
   to {
     opacity: 1;
     transform: translateY(0); // 移动到最终位置
+  }
+}
+
+// --- 新增: 环境参数容器样式 (修改后) ---
+.envParamsContainer {
+  position: absolute;
+  // 定位在左侧面板边框 (15%) 的内侧左下角
+  bottom: 17%; // 与 fateTextContainer 的 right/bottom 对称
+  left: 17%;   // 与 fateTextContainer 的 right/bottom 对称
+  z-index: 10;
+  text-align: left;
+  max-width: 220px;
+  opacity: 0; // 初始隐藏
+  transition: opacity 0.5s ease-out;
+  // 与 fateTextContainer 使用相同的延迟
+  transition-delay: 2.0s; 
+  pointer-events: none; // 避免遮挡
+
+  // 移除 .animated 选择器，改为依赖 leftPanel.animated
+  .leftPanel.animated & {
+    opacity: 0.7; // 与 fateTextContainer 相同的透明度
+    transform: none; // 移除 transform
+  }
+  
+  &.typingActive .envParamsText::after {
+    content: '_';
+    position: absolute;
+    // --- 修改: 光标颜色与 fateText 一致 ---
+    color: var(--ark-text-secondary);
+    animation: blinkCursor 0.8s infinite;
+    font-weight: bold;
+    // 可能需要微调位置
+    right: -0.2em; 
+    bottom: -0.1em;
+  }
+}
+
+.envParamsText {
+  // --- 修改: 样式与 fateText 匹配 ---
+  font-family: 'Dosis', sans-serif;
+  font-size: 0.75rem;
+  color: var(--ark-text-secondary);
+  letter-spacing: 0.5px;
+  // --- 保留 --- 
+  white-space: pre; // 保持换行
+  line-height: 1.4; // 可以调整行间距
+  position: relative; // 为了光标定位
+  margin: 0; // 移除默认 margin
+
+  // --- 移除背景和边框 --- 
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0; // 移除内边距
+  
+  // --- 移除选择和伪元素样式 --- 
+  &::selection {
+    // 可以保留或移除，如果保留，颜色可能需要调整
+    background-color: rgba(var(--ark-secondary-rgb), 0.7);
+    color: var(--ark-dark-blue);
+  }
+  
+  // --- 移除 ::before (红色光晕) ---
+  /*
+  &::before {
+    ...
+  }
+  */
+}
+
+// --- 新增: 警告脉冲动画 ---
+@keyframes pulseWarning {
+  0% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.8;
   }
 }

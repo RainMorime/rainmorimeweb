@@ -6,15 +6,21 @@ const HomeLoadingScreen = ({ onComplete }) => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [logLines, setLogLines] = useState([]);
+  const [logQueue, setLogQueue] = useState([]); // 新增：待显示日志队列
   const [isExiting, setIsExiting] = useState(false);
   const [currentTime, setCurrentTime] = useState('--:--:--');
   const [welcomeMessage, setWelcomeMessage] = useState(false);
   const [showSplitLines, setShowSplitLines] = useState(false);
+  const [letterDelays, setLetterDelays] = useState([]); // 新增：存储字母随机延迟
   
   const containerRef = useRef(null);
   const consoleContentRef = useRef(null);
   const startTimeRef = useRef(Date.now());
+  const processedLogTextsRef = useRef(new Set()); // 新增：跟踪已处理的日志文本
+  const welcomeMessageCountsRef = useRef({}); // 新增：跟踪欢迎消息计数
   const minDisplayTime = 1800; // 最小显示时间 - 从2800减少到1800
+  
+  const [startTransitionOutTimer, setStartTransitionOutTimer] = useState(false); // 新增 state 控制转场计时器
   
   // 使用客户端时间，避免服务器/客户端不匹配错误
   useEffect(() => {
@@ -29,6 +35,34 @@ const HomeLoadingScreen = ({ onComplete }) => {
     // 清理定时器
     return () => clearInterval(timer);
   }, []);
+  
+  // 新增：为 MORIME 字母生成随机延迟
+  useEffect(() => {
+    if (loading) {
+      const word = "MORIME";
+      const baseDelay = 0.9; // 基础延迟 (与 RAIN 动画协调)
+      const staggerAmount = 0.12; // 每个字母出现的基础间隔
+      
+      // 创建索引数组 [0, 1, 2, 3, 4, 5]
+      const indices = Array.from(Array(word.length).keys());
+      
+      // 随机打乱索引数组 (Fisher-Yates shuffle)
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      
+      // 根据打乱后的顺序计算每个字母的延迟时间
+      // delays 数组的索引对应字母在 "MORIME" 中的原始位置
+      const delays = Array(word.length).fill(0);
+      indices.forEach((originalIndex, shuffledPosition) => {
+         // 延迟时间 = 基础延迟 + 打乱后的位置 * 间隔时间
+         delays[originalIndex] = baseDelay + shuffledPosition * staggerAmount;
+      });
+      
+      setLetterDelays(delays); // 保存计算好的延迟数组
+    }
+  }, [loading]); // 依赖 loading，确保只在加载开始时运行一次
   
   // 随机生成控制台日志 - 复古终端风格
   const generateLogLine = (progress) => {
@@ -52,36 +86,74 @@ const HomeLoadingScreen = ({ onComplete }) => {
       { threshold: 97, text: "欢迎回来，守林人。" }
     ];
     
-    // 统计"欢迎回来，守林人。"的输出次数
-    const welcomeCount = logLines.filter(line => line.text === "欢迎回来，守林人。").length;
-    
-    // 如果已经输出了两次"欢迎回来，守林人。"，则不再继续输出
-    if (welcomeCount >= 2) {
-      return;
-    }
-    
-    // 确定当前进度下应显示的最高阈值日志
-    let highestThresholdLog = null;
-    
+    let newLinesToAdd = []; // 存储本次要添加的新日志行
+
     for (let log of logs) {
-      if (progress >= log.threshold) {
-        highestThresholdLog = log;
+      const isWelcome = log.threshold === 93 || log.threshold === 97;
+
+      if (isWelcome) {
+        // 处理欢迎消息
+        const currentCount = welcomeMessageCountsRef.current[log.text] || 0;
+        if (progress >= log.threshold && currentCount < 2) {
+          newLinesToAdd.push({ id: Date.now() + Math.random(), text: log.text });
+          welcomeMessageCountsRef.current[log.text] = currentCount + 1;
+          if (log.threshold === 97) {
+            setWelcomeMessage(true);
+            
+            // 如果是第二次显示"欢迎回来，守林人。"，延迟800ms再触发转场
+            if (currentCount === 1 && progress >= 100) {
+              // 这里使用setTimeout来延迟显示分割线特效
+              const delayTransition = setTimeout(() => {
+                setShowSplitLines(true);
+              }, 800);
+              
+              // 清理函数，以防组件卸载时计时器仍在运行
+              return () => clearTimeout(delayTransition);
+            }
+          }
+        }
+      } else {
+        // 处理普通日志消息
+        // 检查阈值是否达到，并且该日志文本还未被处理
+        if (progress >= log.threshold && !processedLogTextsRef.current.has(log.text)) {
+          processedLogTextsRef.current.add(log.text); // 标记为已处理
+          
+          // 为普通日志生成随机数量（3-10）的百分比阶段
+          const numLines = Math.floor(Math.random() * 8) + 3; // 生成 3 到 10 之间的随机数
+          let lastPercentage = 0;
+
+          for (let i = 1; i <= numLines; i++) {
+            let currentPercentage;
+            if (i === numLines) {
+              // 最后一条必须是 100%
+              currentPercentage = 100;
+            } else {
+              // 生成一个比上一次大，且小于 (100 - (numLines - i) * 5) 的随机百分比，确保后续有空间递增
+              // 最小增加 5%，最大增加范围随剩余行数减少而减少
+              const minPercentage = lastPercentage + 5;
+              const maxPercentage = Math.max(minPercentage + 5, 100 - (numLines - i) * 5);
+              currentPercentage = Math.floor(Math.random() * (maxPercentage - minPercentage + 1)) + minPercentage;
+              currentPercentage = Math.min(99, currentPercentage); // 确保中间值不超过99
+            }
+
+            newLinesToAdd.push({ 
+              id: Date.now() + Math.random() * i, // 增加随机性避免key冲突
+              text: `${log.text} ${currentPercentage}%` 
+            });
+            lastPercentage = currentPercentage; // 更新上一次的百分比
+          }
+        }
       }
     }
-    
-    if (highestThresholdLog) {
-      // 检查是否需要显示欢迎消息
-      if (highestThresholdLog.threshold === 97) {
-        setWelcomeMessage(true);
-      }
-      
-      // 添加当前最高阈值的日志
-      setLogLines(prev => [
-        ...prev, 
-        { id: Date.now() + Math.random(), text: highestThresholdLog.text }
-      ]);
-        
-      // 自动滚动到底部 - 使用 requestAnimationFrame 确保在DOM更新后滚动
+
+    // 如果有新行需要添加，则将它们添加到队列中
+    if (newLinesToAdd.length > 0) {
+      setLogQueue(prev => [...prev, ...newLinesToAdd]);
+      // 不再直接更新 logLines 或在此处滚动
+      /*
+      setLogLines(prev => [...prev, ...newLinesToAdd]);
+
+      // 自动滚动到底部
       if (consoleContentRef.current) {
         requestAnimationFrame(() => {
           if (consoleContentRef.current) {
@@ -89,53 +161,96 @@ const HomeLoadingScreen = ({ onComplete }) => {
           }
         });
       }
+      */
     }
   };
   
-  // 模拟加载进度
+  // 修改：当 progress 达到 100% 时触发分割线，不再在此处直接处理退出
   useEffect(() => {
     startTimeRef.current = Date.now();
     
     const interval = setInterval(() => {
       setProgress(prev => {
-        // 稍微减小进度增长幅度，使其更平稳
         const newProgress = Math.min(prev + (Math.random() * 3.0 + 0.5), 100); 
-        
-        // 生成日志
         generateLogLine(newProgress);
         
         if (newProgress >= 100) {
           clearInterval(interval);
-          
-          // 计算已显示时间
           const elapsedTime = Date.now() - startTimeRef.current;
           const remainingTime = Math.max(0, minDisplayTime - elapsedTime);
           
-          // 确保最小显示时间
+          // 只设置 setShowSplitLines 的 timeout
+          // 不再检查 welcomeMessageCountsRef 来决定是否设置，统一处理
           setTimeout(() => {
-            setIsExiting(true);
-            
-            // 先显示分割线特效
             setShowSplitLines(true);
-            
-            // 先执行界面元素的退场动画，再完成整体退场
-            setTimeout(() => {
-              setLoading(false);
-              if (onComplete) {
-                onComplete();
-              }
-            }, 3000); // 增加退场动画时间 - 从2400增加到3000，以适应更多层
           }, remainingTime);
-          
+
           return 100;
         }
         
         return newProgress;
       });
-    }, 150); // 增加间隔时间 - 从100增加到150毫秒，减慢更新频率
+    }, 150); 
     
     return () => clearInterval(interval);
-  }, [onComplete]);
+  }, [onComplete]); // 依赖项保持不变
+  
+  // 新增：处理日志队列，实现逐条显示
+  useEffect(() => {
+    if (!loading || logQueue.length === 0) return; // 仅在加载中且队列不为空时运行
+
+    const displayInterval = setInterval(() => {
+      setLogQueue(currentQueue => {
+        if (currentQueue.length === 0) {
+          clearInterval(displayInterval); // 队列空了，停止定时器
+          return [];
+        }
+        
+        const lineToAdd = currentQueue[0]; // 取出队列的第一条
+        
+        // 添加到显示的日志行
+        setLogLines(prevLines => [...prevLines, lineToAdd]);
+
+        // 自动滚动到底部
+        if (consoleContentRef.current) {
+          requestAnimationFrame(() => {
+            // 短暂延迟后再次检查 current，确保 DOM 更新
+            setTimeout(() => {
+               if (consoleContentRef.current) {
+                 consoleContentRef.current.scrollTop = consoleContentRef.current.scrollHeight;
+               }
+            }, 0);
+          });
+        }
+
+        return currentQueue.slice(1); // 从队列中移除已显示的行
+      });
+    }, 60); // 控制日志显示的间隔时间（毫秒）
+
+    return () => clearInterval(displayInterval); // 组件卸载或 loading 结束时清理定时器
+
+  }, [loading, logQueue]); // 依赖 loading 和 logQueue
+  
+  // 修改：处理转场退出逻辑
+  const handleTransitionOut = () => {
+    setLoading(false);
+    if (onComplete) {
+      onComplete();
+    }
+  };
+
+  // 新增：useEffect 监听 showSplitLines 并触发最终退出
+  useEffect(() => {
+    if (showSplitLines) {
+      // 当分割线动画开始时，设置一个定时器来触发最终的退出
+      const transitionTimer = setTimeout(() => {
+        handleTransitionOut();
+      }, 800); // 延迟 800ms 后开始退出，让分割线动画播放一部分
+
+      // 清理函数
+      return () => clearTimeout(transitionTimer);
+    }
+  }, [showSplitLines]); // 依赖 showSplitLines
   
   // 优化的退场动画设置
   const exitTransition = {
@@ -199,7 +314,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
     opacity: [1, 1, 0],
     clipPath: [
       'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', 
-      'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)'
+      'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)' // 从右到左擦除
     ],
     transition: {
       clipPath: {
@@ -215,56 +330,63 @@ const HomeLoadingScreen = ({ onComplete }) => {
     }
   };
   
-  // 优化的标题动画变量
+  // 优化的标题动画变量 - 添加从左滑入效果
   const titleVariants = {
     hidden: { 
-      opacity: 0,
-      filter: "blur(5px)",
-      y: -10
+      opacity: 0, // 初始不可见
+      x: -50 // 从左侧开始
     },
     visible: { 
-      opacity: 1, 
+      opacity: 0.7,
+      x: 0, // 移动到最终位置
       filter: "blur(0px)",
-      y: 0,
       transition: {
-        duration: 0.7,
-        ease: "easeOut"
+        duration: 0.7, // 动画持续时间
+        delay: 0.8,    // 在 logo_area 展开后 (0.6s + 0.2s) 延迟触发
+        ease: [0.22, 1, 0.36, 1] // Ease-out 缓动
       }
     },
     exit: {
       opacity: 0,
-      filter: "blur(5px)",
-      y: -10,
       transition: {
         duration: 0.4
       }
     }
   };
   
-  const subtitleVariants = {
+  // 副标题容器动画 - 移除交错控制，由字母自身控制延迟
+  const subtitleContainerVariants = {
     hidden: { 
-      opacity: 0,
-      filter: "blur(3px)",
-      y: 10 
+      opacity: 0 // 容器初始不可见
     },
     visible: { 
-      opacity: 1, 
-      filter: "blur(0px)",
-      y: 0,
+      opacity: 1, // 容器变为可见
       transition: {
-        duration: 0.7,
-        delay: 0.15,
-        ease: "easeOut"
+        // 移除 staggerChildren 和 delayChildren
+        // 可以保留一个微小的容器延迟（如果需要）
+        // delay: 0.8
       }
     },
     exit: {
       opacity: 0,
-      filter: "blur(3px)",
-      y: 10,
       transition: {
-        duration: 0.3
+        duration: 0.4
       }
     }
+  };
+
+  // 副标题字母动画 - 修改为瞬间显现
+  const letterSpanVariants = {
+    hidden: { 
+      opacity: 0, 
+      // y: 10 // 移除 y 轴动画
+    },
+    visible: { 
+      opacity: 0.6, // 最终状态：可见
+      // y: 0,     // 移除 y 轴动画
+      // transition 定义移到 span 自身，以便应用随机延迟
+    } 
+    // exit 状态可以省略，因为父容器 subtitleContainerVariants 会处理整体退出
   };
 
   // 添加明日方舟多重切割动画
@@ -301,24 +423,6 @@ const HomeLoadingScreen = ({ onComplete }) => {
             {/* 明日方舟风格的分割线特效 */}
             {showSplitLines && (
               <>
-                <motion.div
-                  className={styles.split_line_horizontal}
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ 
-                    duration: 0.6,
-                    ease: [0.25, 1, 0.5, 1]
-                  }}
-                />
-                <motion.div
-                  className={styles.split_line_vertical}
-                  initial={{ scaleY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ 
-                    duration: 0.6,
-                    ease: [0.25, 1, 0.5, 1]
-                  }}
-                />
                 {/* 添加水平滑动特效 */}
                 <motion.div
                   className={styles.horizontal_slide}
@@ -396,69 +500,17 @@ const HomeLoadingScreen = ({ onComplete }) => {
                     exit: { duration: 1.6, delay: 0.5, ease: [0.25, 1, 0.5, 1] } // 退场更慢
                   }}
                 />
-                {/* 第七层水平滑动 - 最慢、颜色最深 */}
+                {/* 第七层水平滑动 - 最慢、颜色最深，完成时触发擦除 */}
                 <motion.div
                   className={styles.horizontal_slide_seventh}
                   initial={{ scaleX: 0, x: "-400%" }}
-                  animate={{ scaleX: 1, x: "0%" }}
-                  exit={{ x: "250%", opacity: 0.02 }}
+                  animate={{ scaleX: 1, x: "0%" }} 
+                  exit={{ x: "0%", opacity: 0.02 }} 
                   transition={{ 
-                    duration: 2.0, // 最慢层
-                    delay: 0.3, // 最明显延迟
+                    duration: 1.5, 
+                    delay: 0.2,
                     ease: [0.25, 1, 0.5, 1],
-                    exit: { duration: 1.8, delay: 0.6, ease: [0.25, 1, 0.5, 1] } // 退场最慢
-                  }}
-                />
-                <motion.div
-                  className={styles.split_diamond}
-                  initial={{ 
-                    opacity: 0,
-                    scale: 0
-                  }}
-                  animate={{ 
-                    opacity: 1,
-                    scale: 1,
-                    rotate: 45
-                  }}
-                  transition={{ 
-                    duration: 0.4,
-                    delay: 0.3,
-                    ease: [0, 0.55, 0.45, 1]
-                  }}
-                />
-                
-                {/* 添加多层次切割线 */}
-                <motion.div 
-                  className={styles.diagonal_line_1}
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{ 
-                    duration: 0.5,
-                    delay: 0.4,
-                    ease: [0.25, 1, 0.5, 1]
-                  }}
-                />
-                
-                <motion.div 
-                  className={styles.diagonal_line_2}
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{ 
-                    duration: 0.5,
-                    delay: 0.5,
-                    ease: [0.25, 1, 0.5, 1]
-                  }}
-                />
-                
-                {/* 添加明日方舟标志性的角落切割 */}
-                <motion.div 
-                  className={styles.corner_cut}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ 
-                    duration: 0.4,
-                    delay: 0.6,
-                    ease: [0, 0.55, 0.45, 1]
+                    exit: { duration: 0.8, ease: [0.25, 1, 0.5, 1] }
                   }}
                 />
               </>
@@ -554,14 +606,14 @@ const HomeLoadingScreen = ({ onComplete }) => {
               {/* LOGO区域 */}
               <motion.div 
                 className={styles.logo_area}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 1, scaleY: 0 }}
+                animate={{ scaleY: 1 }}
                 transition={{ 
-                  duration: 0.8, 
+                  duration: 0.6,
                   delay: 0.2,
                   ease: [0.1, 0.3, 0.2, 1]
                 }}
-                exit={horizontalSlideOut('left')}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
               >
                 <div className={styles.frame_container}>
                   {/* 标题 - 使用framer-motion优化动画 */}
@@ -580,9 +632,24 @@ const HomeLoadingScreen = ({ onComplete }) => {
                       initial="hidden"
                       animate="visible"
                       exit="exit"
-                      variants={subtitleVariants}
+                      variants={subtitleContainerVariants} // 使用修改后的容器变体
                     >
-                      MORIME
+                      {/* 将 MORIME 拆分为字母并应用随机延迟动画 */}
+                      { "MORIME".split("").map((char, index) => (
+                        <motion.span 
+                          key={`${char}-${index}`} 
+                          initial="hidden"
+                          animate={letterDelays.length > 0 ? "visible" : "hidden"}
+                          variants={letterSpanVariants} // 使用修改后的字母变体
+                          style={{ display: 'inline-block', position: 'relative' }} 
+                          transition={{ 
+                            duration: 0.05, // 接近瞬时显现
+                            delay: letterDelays[index] || (0.9 + index * 0.1) // 应用计算出的随机延迟，提供一个 fallback
+                          }}
+                        >
+                          {char}
+                        </motion.span>
+                      )) }
                     </motion.h2>
                   </div>
                   
@@ -599,23 +666,26 @@ const HomeLoadingScreen = ({ onComplete }) => {
                   <div className={styles.dimension_marker}></div>
                 </div>
                 
+                {/* 新增：旋转的小方框 */}
+                <div className={styles.rotating_square}></div> 
+                
                 {/* 状态图标 */}
                 <div className={styles.status_icon}>
                   <div className={styles.icon_pulse}></div>
                 </div>
               </motion.div>
               
-              {/* 控制台日志 - 移到LOGO右侧 */}
+              {/* 控制台日志 - 作为背景 */}
               <motion.div 
                 className={styles.console_output}    
-                initial={{ opacity: 0, x: 30 }} // 从右侧滑入    
-                animate={{ opacity: 1, x: 0 }}    
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ 
                   duration: 0.7, 
-                  delay: 0.5, // 稍微延迟出现    
-                  ease: [0.1, 0.3, 0.2, 1] 
+                  delay: 1.0,
+                  ease: "linear"
                 }}    
-                exit={horizontalSlideOut('right')} // 从右侧滑出
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
               >    
                 <div className={styles.console_header}>    
                   <span className={styles.header_title}>SYSTEM LOG</span>    
@@ -631,16 +701,18 @@ const HomeLoadingScreen = ({ onComplete }) => {
                   {logLines.map(line => (    
                     <div key={line.id} className={styles.log_line}>    
                       <span className={styles.log_prefix}>&gt;</span>    
-                      <span className={styles.log_text}>{line.text}</span>    
+                      <span className={styles.log_text}>
+                        {line.text} 
+                      </span>    
                     </div>    
                   ))}    
                   {/* 添加固定底部提示符 */}    
-                  {logLines.length > 0 &&     
+                  {logLines.length > 0 && (    
                     <div className={styles.log_line} style={{ opacity: 1 }}>    
                       <span className={styles.log_prefix}>&gt;</span>    
                       <span className={styles.log_text}>_</span>    
                     </div>    
-                  }    
+                  )}    
                 </div>    
               </motion.div>
             </div>
@@ -652,10 +724,10 @@ const HomeLoadingScreen = ({ onComplete }) => {
               animate={{ opacity: 1, y: 0 }}    
               transition={{     
                 duration: 0.7,     
-                delay: 0.8, // 延迟出现    
+                delay: 0.8,
                 ease: [0.1, 0.3, 0.2, 1]    
               }}    
-              exit={horizontalSlideOut('left')}    
+              exit={{ opacity: 0, transition: { duration: 0.5 } }}    
             >    
               {/* 进度条 */}    
               <div className={styles.progress_container}>    
@@ -692,7 +764,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
               <motion.div 
                 className={`${styles.hud_element} ${styles.top_left}`}
                 custom={{ index: 0 }}
-                exit={horizontalSlideOut('left')}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
               >
                 <div className={styles.hud_line}></div>
                 <div className={styles.hud_text}>STATUS MONITOR</div>
@@ -700,7 +772,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
               <motion.div 
                 className={`${styles.hud_element} ${styles.top_right}`}
                 custom={{ index: 1 }}
-                exit={horizontalSlideOut('right')}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
               >
                 <div className={styles.hud_line}></div>
                 <div className={styles.hud_text}>SYSTEM ONLINE</div>
@@ -708,7 +780,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
               <motion.div 
                 className={`${styles.hud_element} ${styles.bottom_left}`}
                 custom={{ index: 2 }}
-                exit={horizontalSlideOut('left')}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
               >
                 <div className={styles.hud_line}></div>
                 <div className={styles.hud_text}>ID-1A1A1A</div>
@@ -716,7 +788,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
               <motion.div 
                 className={`${styles.hud_element} ${styles.bottom_right}`}
                 custom={{ index: 3 }}
-                exit={horizontalSlideOut('right')}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
               >
                 <div className={styles.hud_line}></div>
                 <div className={styles.hud_text}>{currentTime}</div>

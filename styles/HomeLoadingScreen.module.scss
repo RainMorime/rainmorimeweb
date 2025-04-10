@@ -112,26 +112,25 @@
 // 主加载内容
 .loading_content {
   position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
   z-index: 10;
   width: 100%;
-  max-width: 1250px;
-  padding: 1rem;
-  gap: 5rem;
+  height: 100%;
+  padding: 0;
 }
 
 // LOGO区域
 .logo_area {
-  position: relative;
+  position: absolute;
+  top: 41%;
+  left: 40%;
+  transform: translate(-50%, -50%);
   width: 480px;
   height: 240px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  z-index: 10;
 }
 
 // 框架容器
@@ -164,7 +163,7 @@
   margin: 0;
   padding: 0;
   letter-spacing: 12px;
-  color: var(--off-white);
+  color: var(--light-gray);
   text-shadow: 
     0 0 7px rgba(200, 200, 200, 0.3),
     0 0 14px rgba(150, 150, 150, 0.2);
@@ -187,7 +186,7 @@
   margin: 0.5rem 0 0;
   padding: 0;
   letter-spacing: 8px;
-  color: var(--light-gray);
+  color: var(--medium-gray);
   text-transform: uppercase;
   @extend .variables;
   transform-style: preserve-3d;
@@ -437,6 +436,29 @@
   }
 }
 
+// 新增：旋转小方框的 Keyframes
+@keyframes rotateSquare {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 新增：旋转小方框的样式
+.rotating_square {
+  position: absolute;
+  bottom: 17px; // 调整垂直位置
+  right: 17px;  // 调整水平位置
+  width: 12px;   // 方框宽度
+  height: 12px;  // 方框高度
+  border: 1px solid var(--border-color); // 方框边框，使用现有边框颜色变量
+  opacity: 0.6; // 设置透明度
+  animation: rotateSquare 4s linear infinite; // 应用旋转动画，4秒一圈，线性速度，无限循环
+  z-index: 3; // 确保在其他元素之上（如果需要）
+}
+
 // 进度显示区域
 .progress_area {
   // width: 100%; // 可以移除，依赖 max-width
@@ -555,12 +577,15 @@
 
 // 控制台输出 - 移除背景和边框
 .console_output {
-  width: 480px;
-  height: 400px;
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 45%;
+  height: 80%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  position: relative;
+  z-index: 5;
   
   &::before {
     content: none;
@@ -649,7 +674,7 @@
 .console_content {
   flex-grow: 1;
   padding: 0 5px 0 0;
-  overflow-y: auto;
+  overflow-y: hidden;
   font-family: monospace;
   font-size: 1.0rem;
   position: relative;
@@ -705,6 +730,7 @@
   color: rgba(180, 200, 180, 0.6);
   font-weight: normal;
   flex-shrink: 0;
+  font-size: 1.4rem;
 }
 
 .log_text {
@@ -717,6 +743,7 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  font-size: 1.4rem;
 
   &::after {
     content: '_';
@@ -815,25 +842,10 @@
   }
 }
 
-// 闪光文字效果
+// 移除闪光文字效果
 .shiny_text {
-  color: var(--off-white);
-  background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0.7) 50%,
-    rgba(255, 255, 255, 0) 60%
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  display: inline-block;
-  animation: shine 1.5s ease-in-out infinite;
-  will-change: background-position;
-  
-  &.disabled {
-    animation: none;
-  }
+  color: var(--light-gray);
+  animation: none;
 }
 
 @keyframes shine {

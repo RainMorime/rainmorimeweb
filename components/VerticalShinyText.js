@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './VerticalShinyText.module.scss';
 
-const VerticalShinyText = ({ text, disabled = false, speed = 5, className = '', textVisible, animationDelay }) => {
+const VerticalShinyText = ({ text, disabled = false, speed = 3, className = '', textVisible, animationDelay }) => {
   const animationDuration = `${speed}s`;
 
   return (

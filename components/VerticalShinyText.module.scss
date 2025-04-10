@@ -6,7 +6,7 @@
   font-weight: inherit;
   letter-spacing: inherit;
   position: relative;
-  transition: transform 0.2s ease-out, color 0.2s ease-out, text-shadow 0.2s ease-out; /* For hover */
+  transition: transform 0.1s ease-out, color 0.1s ease-out, text-shadow 0.1s ease-out; /* 从 0.2s 减少到 0.1s */
   
   /* Initial state for fade-in */
   opacity: 0;
@@ -14,9 +14,9 @@
 
   &.startAnimation {
     animation-name: fadeInChar;
-    animation-duration: 0.3s;
+    animation-duration: 0.2s; /* 从 0.3s 减少为 0.2s */
     animation-fill-mode: forwards;
-    animation-timing-function: ease-out;
+    animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0); /* 使用更快的加速缓动 */
     /* animation-delay is set inline via style prop */
   }
   
