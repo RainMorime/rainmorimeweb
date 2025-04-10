@@ -431,27 +431,38 @@
     content: '';
     position: absolute;
     left: 50%; 
-    top: 0; 
-    width: 2px; 
-    height: 100px; 
-    background-color: var(--ark-highlight-green); 
+    top: 0; // Start position for background
+    width: 3px; // Slightly wider head
+    height: 100%; // Cover full line height for background positioning
+    // Use gradient for meteor trail effect
+    background-image: linear-gradient(
+      to bottom, 
+      var(--ark-highlight-green) 0%, 
+      rgba(178, 242, 187, 0.5) 15%, // Shorten bright head
+      transparent 40% // Shorten tail fade out point (Original: 60%)
+    );
+    background-size: 100% 200%; // Slightly reduce background height (Original: 250%)
+    background-repeat: no-repeat;
+    background-position: 0% -100%; // Adjust starting position (Original: -150%)
     opacity: 0; 
     transform: translateX(-50%); 
-    // Add glow effect using box-shadow
-    box-shadow: 0 0 8px var(--ark-highlight-green), 0 0 12px rgba(178, 242, 187, 0.6); 
+    transform-origin: center center; // Set transform origin for scaling
+    // Keep a subtle glow
+    filter: drop-shadow(0 0 5px var(--ark-highlight-green));
   }
 
   // Apply NORMAL (Top->Bottom) animation
   &.pulsing::after {
-    animation: pulseWave 2s ease-out forwards; 
+    // Reset transform just in case (if element could alternate between pulse types)
+    transform: translateX(-50%) scaleY(1);
+    animation: pulseMeteor 2s ease-out forwards; // New animation name
   }
   
   // Apply REVERSE (Bottom->Top) animation
   &.pulsingReverse::after {
-    // Start at the bottom for reverse animation
-    top: auto;
-    bottom: 0;
-    animation: pulseWaveReverse 2s ease-out forwards; 
+    // Flip the element vertically to reverse the gradient direction visually
+    transform: translateX(-50%) scaleY(-1);
+    animation: pulseMeteorReverse 2s ease-out forwards; // New animation name
   }
 }
 
@@ -1343,27 +1354,60 @@
 // Column 1 (EXPERIENCE - Timeline)
 .column1:hover:not(.nonInteractive) {
   .hudOverlay::before {
-    // 删除以下样式以移除光柱动画
-    /*
     position: absolute;
-    bottom: 15%; 
+    bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
     width: 4px; 
-    height: 0; 
+    height: 100%;
     background-color: var(--ark-highlight-green);
-    border: none;
-    border-radius: 0;
-    opacity: 0; 
-    transform-origin: bottom center; 
-
-    animation: buildTower 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
-    animation-delay: 0.1s; 
-    */
+    opacity: 0;
+    transform-origin: bottom center;
+    transform: translateX(-50%) scaleY(0);
+    animation: buildTowerScale 1.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    filter: drop-shadow(0 0 4px var(--ark-highlight-green));
   }
-  .imageHud { // 位置保持不变
-    top: 15px;
-    right: 15px;
+  .imageHud { top: 15px; right: 15px; }
+
+  // --- Update branch animation delays based on 1.8s duration ---
+  
+  // 分支 1 (Right) - 50% 处
+  .branch1 {
+    animation: slideOutRight 0.5s ease-out forwards;
+    animation-delay: 0.90s; // Updated: 1.8s * 0.5
+  }
+  .branch1 .branchText {
+    animation: fadeInTextDown 0.4s ease-out forwards;
+    animation-delay: 1.20s; // Updated: 0.90s + 0.3s
+  }
+
+  // 分支 2 (Left) - 40% 处
+  .branch2 {
+    animation: slideOutLeft 0.5s ease-out forwards;
+    animation-delay: 0.72s; // Updated: 1.8s * 0.4
+  }
+   .branch2 .branchText {
+    animation: fadeInTextDown 0.4s ease-out forwards;
+    animation-delay: 1.02s; // Updated: 0.72s + 0.3s
+  }
+
+  // 分支 3 (Right) - 30% 处
+  .branch3 {
+    animation: slideOutRight 0.5s ease-out forwards;
+    animation-delay: 0.54s; // Updated: 1.8s * 0.3
+  }
+  .branch3 .branchText {
+    animation: fadeInTextDown 0.4s ease-out forwards;
+    animation-delay: 0.84s; // Updated: 0.54s + 0.3s
+  }
+
+  // 分支 4 (Left) - 20% 处
+  .branch4 {
+    animation: slideOutLeft 0.5s ease-out forwards;
+    animation-delay: 0.36s; // Updated: 1.8s * 0.2
+  }
+  .branch4 .branchText {
+    animation: fadeInTextDown 0.4s ease-out forwards;
+    animation-delay: 0.66s; // Updated: 0.36s + 0.3s
   }
 }
 
@@ -1805,9 +1849,11 @@
 
   // Fade in after main animations complete
   .leftPanel.animated & {
-    // Delay calculation: roughly after lines finish (approx 2200ms + 1600ms = 3800ms)
-    // Let's give it a bit more buffer, maybe start around 4500ms
-    transition-delay: 4.5s; 
+    // Delay calculation: Sync with HUD start (~2300ms total)
+    // HUD starts at 2200ms + 100ms = 2300ms
+    // Left panel gets .animated at 200ms + 100ms = 300ms
+    // Required delay = 2300ms - 300ms = 2000ms
+    transition-delay: 2.0s; // Original: 4.5s
     opacity: 0.7; // Fade in to a slightly transparent state
   }
 }
@@ -1851,38 +1897,137 @@
   }
 }
 
-// --- New Keyframe for Pulse Wave --- 
-@keyframes pulseWave {
+// --- New Keyframe for Meteor Trail (Top->Bottom) --- 
+ @keyframes pulseMeteor {
   0% {
-    top: 0%; 
-    opacity: 0.9; 
-    transform: translateX(-50%) scaleY(0.8); 
+    background-position: 50% -100%; // Adjust start position
+    opacity: 0;
   }
-  50% {
-    opacity: 0.7; 
-    transform: translateX(-50%) scaleY(1); 
+  20% { 
+    opacity: 1; // Fade in quickly
+  }
+  80% {
+    opacity: 0.9; // Hold opacity
   }
   100% {
-    top: 100%; 
-    opacity: 0.4;
-    transform: translateX(-50%) scaleY(0.8); 
+    background-position: 50% 100%; // End below
+    opacity: 0; // Fade out
+  } 
+} 
+
+// --- New Keyframe for REVERSE Meteor Trail (Bottom->Top) --- 
+// MODIFIED: Now animates Top->Bottom like pulseMeteor
+@keyframes pulseMeteorReverse {
+  0% {
+    // Start at top
+    background-position: center -200%; // Was: center 100%
+    opacity: 0;
+  }
+  20% { 
+    opacity: 1; // Fade in quickly
+  }
+  80% {
+    opacity: 0.9; // Hold opacity
+  }
+  100% {
+    // End at bottom
+    background-position: center 100%; // Was: center -200%
+    opacity: 0; // Fade out
   }
 }
 
-// --- New Keyframe for REVERSE Pulse Wave (Bottom->Top) --- 
-@keyframes pulseWaveReverse {
+// 添加新的 buildTowerScale 关键帧 (动画 scaleY)
+@keyframes buildTowerScale {
   0% {
-    bottom: 0%; // Start at the bottom
-    opacity: 0.9; 
-    transform: translateX(-50%) scaleY(0.8); 
-  }
-  50% {
-    opacity: 0.7; 
-    transform: translateX(-50%) scaleY(1); 
+    opacity: 0;
+    transform: translateX(-50%) scaleY(0);
   }
   100% {
-    bottom: 100%; // End at the top
+    opacity: 1;
+    transform: translateX(-50%) scaleY(2); // 保持缩放比例为 2
+  }
+}
+
+// --- 添加分支动画样式 ---
+
+.branchContainer {
+  position: absolute;
+  left: 50%; // 水平居中对齐主线条
+  transform: translateX(-50%) skewX(-15deg); // 初始居中并应用倾斜
+  transform-origin: center center; // 倾斜基点
+  opacity: 0; // 修改：容器初始透明，通过动画淡入和滑出
+  display: flex;
+  flex-direction: column; // 修改：垂直排列
+  align-items: center; // 修改：水平居中对齐内部元素
+  pointer-events: none;
+  z-index: 1; // 低于主线条 (::before 是 z-index 2 隐含?)
+}
+
+// --- 修改：定义四个分支的垂直位置 ---
+.branch1 { top: 20%; }
+.branch2 { top: 40%; }
+.branch3 { top: 60%; }
+.branch4 { top: 80%; }
+
+// .leftBranch 和 .rightBranch 仅用于区分动画方向，不再设置 top
+.leftBranch { justify-content: flex-end; /* 保持 */ }
+.rightBranch { justify-content: flex-start; /* 保持 */ }
+
+.branchSquare {
+  width: 8px;
+  height: 8px;
+  background-color: var(--ark-highlight-green);
+  filter: drop-shadow(0 0 3px var(--ark-highlight-green));
+  // opacity: 0; // 移除：由父容器动画控制
+  flex-shrink: 0;
+  // 方块不再单独设置 transform，而是通过容器移动
+}
+
+.branchText {
+  color: var(--ark-highlight-green);
+  font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 3px rgba(178, 242, 187, 0.5);
+  opacity: 0; // 修改：明确初始为透明
+  white-space: pre-wrap; // 修改：处理换行符
+  margin-top: 5px; 
+  line-height: 1.1; // 添加：调整行高以获得更紧凑的竖排效果
+  // 文字不再单独设置 transform，而是通过容器移动
+}
+
+// --- 添加分支动画关键帧 ---
+
+@keyframes slideOutLeft {
+  from {
     opacity: 0;
-    transform: translateX(-50%) scaleY(0.8); 
+    transform: translateX(0) ; // 保持倾斜
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-28px) ; // 修改：向左移动距离减小
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 0;
+    transform: translateX(0) ; // 保持倾斜
+  }
+  to {
+    opacity: 1;
+    transform: translateX(30px) ; // 修改：向右移动距离减小，并略大于左侧绝对值
+  }
+}
+
+// 新增：文字向下淡入动画
+@keyframes fadeInTextDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px); // 从上方一点开始
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); // 移动到最终位置
   }
 }

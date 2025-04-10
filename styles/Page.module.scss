@@ -1,0 +1,33 @@
+.pageContainer {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-color: var(--ark-dark-blue); */ /* Removed this line */
+  color: var(--ark-text); /* Use existing variable */
+  position: relative; /* Ensure content stays above background elements */
+  z-index: 5; /* Ensure content stays above background elements */
+}
+
+.mainContent {
+  width: 100%;
+  max-width: 800px; /* Limit content width */
+  text-align: center;
+}
+
+.pageTitle {
+  font-family: 'Dosis', sans-serif; /* Use existing font */
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+  color: var(--ark-primary); /* Use existing variable */
+}
+
+.placeholderText {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--ark-text-secondary); /* Use existing variable */
+  opacity: 0.8;
+} 

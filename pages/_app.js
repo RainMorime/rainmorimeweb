@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/router';
-import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/globals.scss';
 
 function MyApp({ Component, pageProps }) {
@@ -68,12 +67,12 @@ function MyApp({ Component, pageProps }) {
   
   return (
     <>
-      <LoadingSpinner 
+      {/* <LoadingSpinner 
         key={`loading-${loadingKey}`} 
         fullScreen={true} 
         size="large"
         isVisible={isRouteChanging}
-      />
+      /> */}
       
       <AnimatePresence mode="wait" initial={false}>
         <Component 

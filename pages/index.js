@@ -27,8 +27,18 @@ export default function Home() {
   ]; 
   const [randomHudTexts, setRandomHudTexts] = useState(initialRandomTexts);
   
+  // --- 修改: State for 4 Branch Texts ---
+  const [branchText1, setBranchText1] = useState('');
+  const [branchText2, setBranchText2] = useState('');
+  const [branchText3, setBranchText3] = useState('');
+  const [branchText4, setBranchText4] = useState('');
+  
   // Ref to store the interval ID for ABOUT column's HUD update
   const intervalRef = useRef(null);
+  // --- 新增: Ref for Branch Text Interval --- 
+  const branchIntervalRef = useRef(null);
+  // --- 新增: Ref for Branch Update Counter ---
+  const branchUpdateCounterRef = useRef(0);
   
   // States now hold arrays of indices or null
   const [pulsingNormalIndices, setPulsingNormalIndices] = useState(null);
@@ -41,35 +51,30 @@ export default function Home() {
     setTimeout(() => { // 0.1s after load
       setMainVisible(true);
 
-      // 1. 开始左侧面板动画 (延迟 500ms)
+      // 1. 开始左侧面板动画 (建议延迟 200ms)
       setTimeout(() => {
         setLeftPanelAnimated(true);
-      }, 500);
+      }, 200); // Original: 500
 
-      // 2. 开始右侧线条动画 (在左侧动画结束后 + 300ms 延迟)
-      // 总延迟 = 500ms (初始) + 1400ms (左侧时长) + 300ms (停顿) = 2200ms
+      // 2. 开始右侧线条动画 (建议延迟 1400ms)
       setTimeout(() => {
         setLinesAnimated(true);
-      }, 2200);
+      }, 1000); // Original: 2200
 
-      // 3. 开始 HUD 动画 (在线条动画结束后 + 200ms 延迟)
-      // 总延迟 = 2200ms (线条开始) + 1600ms (线条大致结束) + 200ms (停顿) = 4000ms
+      // 3. 开始 HUD 动画 (建议延迟 2700ms)
       setTimeout(() => {
         setHudVisible(true);
-      }, 4000);
+      }, 2200); // Original: 4000
 
-      // 4. 开始文字淡入动画 (在 HUD 动画开始后 + 300ms 延迟)
-      // 总延迟 = 4000ms (HUD 开始) + 300ms (停顿) = 4300ms
+      // 4. 开始文字淡入动画 (建议延迟 3100ms)
       setTimeout(() => {
         setTextVisible(true);
-      }, 4300);
+      }, 3100); // Original: 4300
 
-      // 5. 设置动画完成标志 (在文字动画结束后 + buffer)
-      // 文字动画 0.3s + 最大交错延迟约 0.5s = 0.8s
-      // 总延迟 = 4300ms (文字开始) + 800ms + 200ms (buffer) = 5300ms
+      // 5. 设置动画完成标志 (建议延迟 4200ms)
       setTimeout(() => {
         setAnimationsComplete(true);
-      }, 5300);
+      }, 4200); // Original: 5300
 
     }, 100); // 0.1 seconds delay after loading complete
   };
@@ -90,13 +95,20 @@ export default function Home() {
   // useEffect for the pulsing line interval
   useEffect(() => {
     let pulseIntervalId = null;
-    let pulseTimeoutId = null;
+    let pulseTimeoutIds = []; // Store multiple timeout IDs
 
     if (animationsComplete) {
+      // Define constants outside the interval callback
+      const staggerDelay = 200; // Delay between each line's animation start (in ms)
+      const animationDuration = 2000; // Duration of the CSS animation
+
       pulseIntervalId = setInterval(() => {
-        if (pulseTimeoutId) {
-          clearTimeout(pulseTimeoutId);
-        }
+        // Clear any previous animation timeouts
+        pulseTimeoutIds.forEach(clearTimeout);
+        pulseTimeoutIds = [];
+        // Reset states immediately before starting new sequence
+        setPulsingNormalIndices(null);
+        setPulsingReverseIndices(null);
 
         // Generate three distinct random indices
         const indices = [];
@@ -107,24 +119,46 @@ export default function Home() {
           }
         }
         
-        // Assign first two to normal, third to reverse
-        setPulsingNormalIndices([indices[0], indices[1]]);
-        setPulsingReverseIndices([indices[2]]);
+        // Stagger the application of pulsing classes
+        // Constants staggerDelay and animationDuration are now defined above
 
-        pulseTimeoutId = setTimeout(() => {
-          // Reset both states back to null
+        // Trigger first line (normal pulse)
+        const timeoutId1 = setTimeout(() => {
+          setPulsingNormalIndices([indices[0]]);
+          setPulsingReverseIndices(null); // Ensure only one state is active at a time
+        }, 0); // Start immediately
+        pulseTimeoutIds.push(timeoutId1);
+
+        // Trigger second line (normal pulse) after delay
+        const timeoutId2 = setTimeout(() => {
+          setPulsingNormalIndices(prev => (prev ? [...prev, indices[1]] : [indices[1]]));
+          // No need to reset reverse here as it wasn't set
+        }, staggerDelay);
+        pulseTimeoutIds.push(timeoutId2);
+        
+        // Trigger third line (reverse pulse) after another delay
+        const timeoutId3 = setTimeout(() => {
+          setPulsingReverseIndices([indices[2]]);
+          // Reset normal pulse for the third line if needed, or let them overlap briefly
+          // setPulsingNormalIndices(prev => prev?.filter(idx => idx !== indices[0] && idx !== indices[1]) || null);
+        }, staggerDelay * 2);
+        pulseTimeoutIds.push(timeoutId3);
+
+        // Schedule the final reset after the last animation finishes
+        const resetTimeoutId = setTimeout(() => {
           setPulsingNormalIndices(null);
           setPulsingReverseIndices(null);
-          pulseTimeoutId = null; 
-        }, pulseAnimationDuration);
+          pulseTimeoutIds = []; // Clear timeout array after reset
+        }, staggerDelay * 2 + animationDuration); // Wait for last animation to end
+        pulseTimeoutIds.push(resetTimeoutId);
 
-      }, 3000); 
+      }, 2000 + staggerDelay * 2); // Adjust interval to account for stagger - Decreased base from 3000
     }
 
     // Cleanup function
     return () => {
       if (pulseIntervalId) clearInterval(pulseIntervalId);
-      if (pulseTimeoutId) clearTimeout(pulseTimeoutId);
+      pulseTimeoutIds.forEach(clearTimeout); // Clear all pending timeouts on unmount
     };
   }, [animationsComplete]); 
 
@@ -152,23 +186,108 @@ export default function Home() {
     setRandomHudTexts(newTexts);
   };
 
-  // Handler for mouse entering the ABOUT column
-  const handleAboutMouseEnter = () => {
-    updateRandomHudTexts(); // Update immediately on enter
-    // Clear any existing interval before starting a new one
-    if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+  // --- 修改: Helper function accepts optional length --- 
+  const generateRandomChars = (length) => { 
+    let targetLength = length;
+    // 如果没有提供长度，则默认为3到6的随机长度
+    if (typeof length === 'undefined' || length === null) {
+      targetLength = Math.floor(Math.random() * 4) + 3; // 3 to 6
     }
-    // Start interval to update faster (every 50ms)
-    intervalRef.current = setInterval(updateRandomHudTexts, 50); 
+    
+    // 使用双引号定义字符串，并转义内部的双引号和反斜杠
+    const chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:'\",.<>/?~`§±¥₩£¢€©®™×÷≠≤≥∞∑∫√≈≠≡";
+    let result = '';
+    // 确保targetLength有效
+    targetLength = Math.max(0, targetLength); 
+    
+    for (let i = 0; i < targetLength; i++) { 
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+      if (i < targetLength - 1) { 
+        result += '\n';
+      }
+    }
+    return result;
   };
 
-  // Handler for mouse leaving the ABOUT column
-  const handleAboutMouseLeave = () => {
-    // Clear the interval when mouse leaves
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null; // Reset ref
+  // --- 修改: Combined Mouse Enter handler --- 
+  const handleColumnMouseEnter = (index) => {
+    if (index === 4) { // ABOUT column logic
+      updateRandomHudTexts();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(updateRandomHudTexts, 50);
+    } else if (index === 1) { // EXPERIENCE column logic
+      // 重置计数器
+      branchUpdateCounterRef.current = 0; 
+      if (branchIntervalRef.current) clearInterval(branchIntervalRef.current);
+      
+      // 定义一个辅助函数来根据有效计数确定长度
+      const getTargetLength = (effectiveCount) => {
+        if (effectiveCount <= 15) {      
+          return 1;
+        } else if (effectiveCount <= 24) { 
+          return 2;
+        } else if (effectiveCount <= 36) { 
+          return 3;
+        } else if (effectiveCount <= 48) { 
+          return 4;
+        } else {                 
+          // 恢复 4 到 6 的随机长度
+          return Math.floor(Math.random() * 3) + 4; // 4, 5, or 6
+        }
+      };
+
+      // 立即执行一次，根据偏移量计算初始长度
+      const initialMainCount = 1;
+      const initialLength1 = getTargetLength(initialMainCount + 45);
+      const initialLength2 = getTargetLength(initialMainCount + 30);
+      const initialLength3 = getTargetLength(initialMainCount + 15);
+      const initialLength4 = getTargetLength(initialMainCount + 0);
+
+      setBranchText1(generateRandomChars(initialLength1));
+      setBranchText2(generateRandomChars(initialLength2));
+      setBranchText3(generateRandomChars(initialLength3));
+      setBranchText4(generateRandomChars(initialLength4));
+      branchUpdateCounterRef.current = initialMainCount; // 计数器设置为1
+
+      // 启动 interval
+      branchIntervalRef.current = setInterval(() => {
+        branchUpdateCounterRef.current += 1;
+        const mainCount = branchUpdateCounterRef.current;
+        
+        // 为每个分支计算有效计数并获取目标长度
+        const length1 = getTargetLength(mainCount + 45);
+        const length2 = getTargetLength(mainCount + 30);
+        const length3 = getTargetLength(mainCount + 15);
+        const length4 = getTargetLength(mainCount + 0);
+        
+        // 生成并更新所有四个分支的文本
+        setBranchText1(generateRandomChars(length1));
+        setBranchText2(generateRandomChars(length2));
+        setBranchText3(generateRandomChars(length3));
+        setBranchText4(generateRandomChars(length4));
+
+      }, 100); 
+    }
+  };
+
+  // --- 修改: Combined Mouse Leave handler --- 
+  const handleColumnMouseLeave = (index) => {
+    if (index === 4) { // ABOUT column logic
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    } else if (index === 1) { // EXPERIENCE column logic
+      if (branchIntervalRef.current) {
+        clearInterval(branchIntervalRef.current);
+        branchIntervalRef.current = null;
+      }
+      // 清空文本并重置计数器
+      setBranchText1('');
+      setBranchText2('');
+      setBranchText3('');
+      setBranchText4('');
+      branchUpdateCounterRef.current = 0; 
     }
   };
 
@@ -241,10 +360,6 @@ export default function Home() {
               const columnPercentage = index * 16;
               const hudText = `DATA-Ø0${index + 1}`;
 
-              // Add event handlers specifically for the ABOUT column (index 4)
-              const mouseEnterHandler = index === 4 ? handleAboutMouseEnter : null;
-              const mouseLeaveHandler = index === 4 ? handleAboutMouseLeave : null;
-
               // Task data for the first column - Generate 30 tasks
               const tasks = Array.from({ length: 30 }, (_, i) => {
                 const taskNumber = String(i + 1).padStart(3, '0'); // Format number like 001, 002...
@@ -257,9 +372,9 @@ export default function Home() {
                   className={`${styles.column} ${styles['column' + index]} ${!animationsComplete ? styles.nonInteractive : ''}`} 
                   style={{ left: `${columnPercentage}%`, width: '16%' }} 
                   onClick={animationsComplete ? () => handleColumnClick(index) : null}
-                  // Attach the mouse enter and leave handlers for ABOUT column
-                  onMouseEnter={mouseEnterHandler}
-                  onMouseLeave={mouseLeaveHandler}
+                  // --- 修改: Use combined handlers ---
+                  onMouseEnter={() => handleColumnMouseEnter(index)}
+                  onMouseLeave={() => handleColumnMouseLeave(index)}
                 >
                   <div className={styles.verticalText}>
                     {name.split('').map((char, charIdx) => {
@@ -293,6 +408,31 @@ export default function Home() {
                         ))}
                       </div>
                     )}
+                    {/* 修改: 添加四个分支的结构 - 仅在 column1 (index=1) */}
+                    {index === 1 && (
+                      <>
+                        {/* 分支 1 (Top 20%, Right) */}
+                        <div className={`${styles.branchContainer} ${styles.branch1} ${styles.rightBranch}`}>
+                          <div className={styles.branchSquare}></div>
+                          <div className={styles.branchText}>{branchText1}</div>
+                        </div>
+                        {/* 分支 2 (Top 40%, Left) */}
+                        <div className={`${styles.branchContainer} ${styles.branch2} ${styles.leftBranch}`}>
+                          <div className={styles.branchSquare}></div>
+                          <div className={styles.branchText}>{branchText2}</div>
+                        </div>
+                        {/* 分支 3 (Top 60%, Right) */}
+                        <div className={`${styles.branchContainer} ${styles.branch3} ${styles.rightBranch}`}>
+                          <div className={styles.branchSquare}></div>
+                          <div className={styles.branchText}>{branchText3}</div>
+                        </div>
+                        {/* 分支 4 (Top 80%, Left) */}
+                        <div className={`${styles.branchContainer} ${styles.branch4} ${styles.leftBranch}`}>
+                          <div className={styles.branchSquare}></div>
+                          <div className={styles.branchText}>{branchText4}</div>
+                        </div>
+                      </>
+                    )}
                     {index === 3 && (
                       <>
                         <span className={`${styles.radarRipple} ${styles.ripple1}`}></span>
@@ -320,7 +460,7 @@ export default function Home() {
                     <>
                       {/* Map over the state array elements 1 through 5 */}
                       {randomHudTexts.slice(1).map((text, i) => (
-                        <div key={`random-${i}`} className={`${styles.imageHud} ${styles.randomHud} ${styles[`randomHud${i + 1}`]}`}>
+                        <div key={`random-${i}`} className={`${styles.imageHud} ${styles.randomHud} ${styles[`randomHud${i + 1}`]}`}> 
                           <span className={styles.imageHudSquare}></span>
                           <span className={styles.imageHudText}>{text}</span>
                         </div>
