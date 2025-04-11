@@ -12,6 +12,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
   const [welcomeMessage, setWelcomeMessage] = useState(false);
   const [showSplitLines, setShowSplitLines] = useState(false);
   const [letterDelays, setLetterDelays] = useState([]); // 新增：存储字母随机延迟
+  const [rainLetterDelays, setRainLetterDelays] = useState([]); // 新增：存储 RAIN 字母随机延迟
   
   const containerRef = useRef(null);
   const consoleContentRef = useRef(null);
@@ -36,31 +37,39 @@ const HomeLoadingScreen = ({ onComplete }) => {
     return () => clearInterval(timer);
   }, []);
   
-  // 新增：为 MORIME 字母生成随机延迟
+  // 新增：为 RAIN 和 MORIME 字母生成随机延迟
   useEffect(() => {
     if (loading) {
-      const word = "MORIME";
-      const baseDelay = 0.9; // 基础延迟 (与 RAIN 动画协调)
-      const staggerAmount = 0.12; // 每个字母出现的基础间隔
-      
-      // 创建索引数组 [0, 1, 2, 3, 4, 5]
-      const indices = Array.from(Array(word.length).keys());
-      
-      // 随机打乱索引数组 (Fisher-Yates shuffle)
-      for (let i = indices.length - 1; i > 0; i--) {
+      const rainWord = "RAIN";
+      const morimeWord = "MORIME";
+      const rainBaseDelay = 0.8; // RAIN 动画基础延迟 (logo_area 展开后)
+      const rainStaggerAmount = 0.1; // RAIN 字母间隔
+      const morimeBaseDelay = rainBaseDelay + rainWord.length * rainStaggerAmount + 0.1; // MORIME 基础延迟 (RAIN 结束后 + 0.1s 间隔)
+      const morimeStaggerAmount = 0.12; // MORIME 字母间隔
+
+      // --- 计算 RAIN 的延迟 ---
+      const rainIndices = Array.from(Array(rainWord.length).keys());
+      for (let i = rainIndices.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [indices[i], indices[j]] = [indices[j], indices[i]];
+        [rainIndices[i], rainIndices[j]] = [rainIndices[j], rainIndices[i]];
       }
-      
-      // 根据打乱后的顺序计算每个字母的延迟时间
-      // delays 数组的索引对应字母在 "MORIME" 中的原始位置
-      const delays = Array(word.length).fill(0);
-      indices.forEach((originalIndex, shuffledPosition) => {
-         // 延迟时间 = 基础延迟 + 打乱后的位置 * 间隔时间
-         delays[originalIndex] = baseDelay + shuffledPosition * staggerAmount;
+      const rainDelays = Array(rainWord.length).fill(0);
+      rainIndices.forEach((originalIndex, shuffledPosition) => {
+         rainDelays[originalIndex] = rainBaseDelay + shuffledPosition * rainStaggerAmount;
       });
-      
-      setLetterDelays(delays); // 保存计算好的延迟数组
+      setRainLetterDelays(rainDelays); // 保存 RAIN 的延迟
+
+      // --- 计算 MORIME 的延迟 ---
+      const morimeIndices = Array.from(Array(morimeWord.length).keys());
+      for (let i = morimeIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [morimeIndices[i], morimeIndices[j]] = [morimeIndices[j], morimeIndices[i]];
+      }
+      const morimeDelays = Array(morimeWord.length).fill(0);
+      morimeIndices.forEach((originalIndex, shuffledPosition) => {
+         morimeDelays[originalIndex] = morimeBaseDelay + shuffledPosition * morimeStaggerAmount;
+      });
+      setLetterDelays(morimeDelays); // 保存 MORIME 的延迟
     }
   }, [loading]); // 依赖 loading，确保只在加载开始时运行一次
   
@@ -314,16 +323,16 @@ const HomeLoadingScreen = ({ onComplete }) => {
     opacity: [1, 1, 0],
     clipPath: [
       'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', 
-      'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)' // 从右到左擦除
+      'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' // 修改：从右到左擦除
     ],
     transition: {
       clipPath: {
-        duration: 1.2,
+        duration: 1.2, // 修改：增加时长，减慢效果
         ease: [0.65, 0, 0.35, 1],
         times: [0, 1]
       },
       opacity: {
-        duration: 1.5,
+        duration: 2.0, // 修改：增加时长，减慢效果
         times: [0, 0.8, 1],
         ease: [0.65, 0, 0.35, 1]
       }
@@ -389,6 +398,16 @@ const HomeLoadingScreen = ({ onComplete }) => {
     // exit 状态可以省略，因为父容器 subtitleContainerVariants 会处理整体退出
   };
 
+  // 主标题字母动画 - 类似 subtitle 但 opacity 不同
+  const mainLetterSpanVariants = {
+    hidden: { 
+      opacity: 0, 
+    },
+    visible: { 
+      opacity: 0.7, // 最终状态：可见 (RAIN 的透明度)
+    }
+  };
+
   // 添加明日方舟多重切割动画
   const arknightTransition = (direction) => ({
     opacity: 0,
@@ -399,6 +418,13 @@ const HomeLoadingScreen = ({ onComplete }) => {
       ease: [0.22, 1, 0.36, 1]
     }
   });
+
+  // 标题容器动画 - 移除动画效果，仅控制显隐
+  const titleContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { delay: 0.7 } }, // 容器稍晚出现
+    exit: { opacity: 0, transition: { duration: 0.4 } }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -420,10 +446,10 @@ const HomeLoadingScreen = ({ onComplete }) => {
             exit={bgSplitAnimationWithLayers}
             ref={containerRef}
           >
-            {/* 明日方舟风格的分割线特效 */}
+            {/* 修改：新的转场动画 - 菱形和线条 */}
             {showSplitLines && (
               <>
-                {/* 添加水平滑动特效 */}
+                {/* 重新添加水平滑动特效 */}
                 <motion.div
                   className={styles.horizontal_slide}
                   initial={{ scaleX: 0, x: "-100%" }}
@@ -435,7 +461,6 @@ const HomeLoadingScreen = ({ onComplete }) => {
                     exit: { duration: 0.7, delay: 0, ease: [0.25, 1, 0.5, 1] }
                   }}
                 />
-                {/* 第二层水平滑动 - 速度稍慢、颜色稍浅 */}
                 <motion.div
                   className={styles.horizontal_slide_second}
                   initial={{ scaleX: 0, x: "-150%" }}
@@ -448,7 +473,6 @@ const HomeLoadingScreen = ({ onComplete }) => {
                     exit: { duration: 0.85, delay: 0.1, ease: [0.25, 1, 0.5, 1] } // 退场也稍慢
                   }}
                 />
-                {/* 第三层水平滑动 - 速度最慢、颜色最浅 */}
                 <motion.div
                   className={styles.horizontal_slide_third}
                   initial={{ scaleX: 0, x: "-200%" }}
@@ -461,7 +485,6 @@ const HomeLoadingScreen = ({ onComplete }) => {
                     exit: { duration: 1.0, delay: 0.2, ease: [0.25, 1, 0.5, 1] } // 退场最慢
                   }}
                 />
-                {/* 第四层水平滑动 - 更慢、颜色更深 */}
                 <motion.div
                   className={styles.horizontal_slide_fourth}
                   initial={{ scaleX: 0, x: "-250%" }}
@@ -474,7 +497,6 @@ const HomeLoadingScreen = ({ onComplete }) => {
                     exit: { duration: 1.2, delay: 0.3, ease: [0.25, 1, 0.5, 1] } // 退场更慢
                   }}
                 />
-                {/* 第五层水平滑动 - 最慢、颜色最深 */}
                 <motion.div
                   className={styles.horizontal_slide_fifth}
                   initial={{ scaleX: 0, x: "-300%" }}
@@ -487,31 +509,61 @@ const HomeLoadingScreen = ({ onComplete }) => {
                     exit: { duration: 1.4, delay: 0.4, ease: [0.25, 1, 0.5, 1] } // 退场最慢
                   }}
                 />
-                {/* 第六层水平滑动 - 更慢、颜色更深 */}
-                <motion.div
-                  className={styles.horizontal_slide_sixth}
-                  initial={{ scaleX: 0, x: "-350%" }}
-                  animate={{ scaleX: 1, x: "0%" }}
-                  exit={{ x: "230%", opacity: 0.04 }}
-                  transition={{ 
-                    duration: 1.8, // 比第五层更慢
-                    delay: 0.25, // 更长的延迟
-                    ease: [0.25, 1, 0.5, 1],
-                    exit: { duration: 1.6, delay: 0.5, ease: [0.25, 1, 0.5, 1] } // 退场更慢
-                  }}
+                
+                {/* 中心菱形 */}
+                <motion.div 
+                  className={styles.split_diamond}
+                  initial={{ scale: 0, rotate: 45 }}
+                  animate={{ scale: 1, rotate: 45 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 />
-                {/* 第七层水平滑动 - 最慢、颜色最深，完成时触发擦除 */}
-                <motion.div
-                  className={styles.horizontal_slide_seventh}
-                  initial={{ scaleX: 0, x: "-400%" }}
-                  animate={{ scaleX: 1, x: "0%" }} 
-                  exit={{ x: "0%", opacity: 0.02 }} 
-                  transition={{ 
-                    duration: 1.5, 
-                    delay: 0.2,
-                    ease: [0.25, 1, 0.5, 1],
-                    exit: { duration: 0.8, ease: [0.25, 1, 0.5, 1] }
-                  }}
+                {/* 水平线 */}
+                <motion.div 
+                  className={styles.transition_line_horizontal}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                />
+                {/* 垂直线 */}
+                <motion.div 
+                  className={styles.transition_line_vertical}
+                  initial={{ scaleY: 0 }}
+                  animate={{ scaleY: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                />
+                {/* 对角线 1 */}
+                <motion.div 
+                  className={styles.transition_line_diagonal_1}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                />
+                {/* 对角线 2 */}
+                <motion.div 
+                  className={styles.transition_line_diagonal_2}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                />
+                {/* 重新添加顶部和底部线条 */}
+                <motion.div 
+                  className={`${styles.transition_glow_line} ${styles.top}`}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }} // 与水平/垂直线同步或稍早
+                />
+                 <motion.div 
+                  className={`${styles.transition_glow_line} ${styles.bottom}`}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }} // 与水平/垂直线同步或稍早
                 />
               </>
             )}
@@ -623,9 +675,24 @@ const HomeLoadingScreen = ({ onComplete }) => {
                       initial="hidden"
                       animate="visible"
                       exit="exit"
-                      variants={titleVariants}
+                      variants={titleContainerVariants}
                     >
-                      RAIN
+                      {/* 将 RAIN 拆分为字母并应用随机延迟动画 */}
+                      { "RAIN".split("").map((char, index) => (
+                        <motion.span 
+                          key={`rain-${char}-${index}`} 
+                          initial="hidden"
+                          animate={rainLetterDelays.length > 0 ? "visible" : "hidden"}
+                          variants={mainLetterSpanVariants} // 使用主标题字母变体
+                          style={{ display: 'inline-block', position: 'relative' }} 
+                          transition={{ 
+                            duration: 0.05, // 接近瞬时显现
+                            delay: rainLetterDelays[index] || (0.8 + index * 0.1) // 应用计算出的随机延迟，提供 fallback
+                          }}
+                        >
+                          {char}
+                        </motion.span>
+                      )) }
                     </motion.h1>
                     <motion.h2 
                       className={`${styles.sub_title} ${styles.shiny_text}`}
@@ -689,10 +756,6 @@ const HomeLoadingScreen = ({ onComplete }) => {
               >    
                 <div className={styles.console_header}>    
                   <span className={styles.header_title}>SYSTEM LOG</span>    
-                  <div className={styles.header_controls}>    
-                    <span className={styles.header_status}>STATUS: ONLINE</span>    
-                    <span className={styles.header_time}>{currentTime}</span>    
-                  </div>    
                 </div>    
                 <div     
                   className={styles.console_content}    

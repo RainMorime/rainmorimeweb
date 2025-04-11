@@ -6,6 +6,15 @@
   font-display: swap;
 }
 
+// 新增：定义 Zelda 字体
+@font-face {
+  font-family: 'ZeldaFont'; // 定义字体族名称
+  src: url('/fonts/ZELDA Free.otf') format('opentype'); // 修改：指定正确的字体文件路径和格式
+  font-weight: normal; // 根据字体实际情况调整
+  font-style: normal;
+  font-display: swap;
+}
+
 // 基础变量
 .variables {
   --main-dark: #1a1a1a;
@@ -156,17 +165,14 @@
 
 // 主标题
 .main_title {
-  font-family: 'Dosis', sans-serif;
-  font-size: 5.2rem;
-  font-weight: 300;
+  font-family: 'ZeldaFont', sans-serif;
+  font-size: 4.5rem;
+  font-weight: normal;
   line-height: 1;
   margin: 0;
   padding: 0;
-  letter-spacing: 12px;
-  color: var(--light-gray);
-  text-shadow: 
-    0 0 7px rgba(200, 200, 200, 0.3),
-    0 0 14px rgba(150, 150, 150, 0.2);
+  letter-spacing: 8px;
+  color: var(--medium-gray);
   text-transform: uppercase;
   transition: all 0.3s ease;
   @extend .variables;
@@ -180,9 +186,9 @@
 
 // 副标题
 .sub_title {
-  font-family: 'Dosis', sans-serif;
-  font-size: 3.0rem;
-  font-weight: 300;
+  font-family: 'ZeldaFont', sans-serif;
+  font-size: 4.5rem;
+  font-weight: normal;
   margin: 0.5rem 0 0;
   padding: 0;
   letter-spacing: 8px;
@@ -844,7 +850,7 @@
 
 // 移除闪光文字效果
 .shiny_text {
-  color: var(--light-gray);
+  text-shadow: none;
   animation: none;
 }
 
@@ -1253,4 +1259,111 @@
   background-color: rgba(180, 180, 180, 0.5);
   border-radius: 50%;
   opacity: 0; // 初始透明，由动画控制
+}
+
+// 新增：转场发光线条样式
+.transition_glow_line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px; // 线条高度
+  background-color: rgba(255, 255, 255, 0.9); // 线条颜色
+  box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.5); // 发光效果
+  transform-origin: left center; // 从左侧扩展
+  z-index: 25; // 与中心线条同层
+  pointer-events: none;
+
+  &.top {
+    top: 0%; // 紧贴顶部
+  }
+
+  &.bottom {
+    bottom: 0%; // 紧贴底部
+  }
+}
+
+// 修改：水平分割线 - 从中心扩展
+.transition_line_horizontal {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px; // 线条可以细一点
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.5);
+  transform: translateY(-50%); // 垂直居中
+  transform-origin: center center; // 从中心扩展
+  z-index: 25;
+  pointer-events: none;
+}
+
+// 修改：垂直分割线 - 从中心扩展
+.transition_line_vertical {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px; // 线条可以细一点
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.5);
+  transform: translateX(-50%); // 水平居中
+  transform-origin: center center; // 从中心扩展
+  z-index: 25;
+  pointer-events: none;
+}
+
+// 新增：对角线样式
+.transition_line_diagonal_1,
+.transition_line_diagonal_2 {
+  position: absolute;
+  top: 50%;
+  left: -21%; // (100% * sqrt(2) - 100%) / 2 
+  width: 142%; // 100% * sqrt(2)
+  height: 1px; // 线条粗细
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.5);
+  transform-origin: center center; // 从中心扩展和旋转
+  z-index: 25;
+  pointer-events: none;
+}
+
+.transition_line_diagonal_1 {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.transition_line_diagonal_2 {
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+// 恢复全屏线条样式
+.transition_glow_line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px; // 线条高度
+  background-color: rgba(255, 255, 255, 0.9); // 线条颜色
+  box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.5); // 发光效果
+  transform-origin: left center; // 从左侧扩展
+  z-index: 25; // 与中心线条同层
+  pointer-events: none;
+
+  &.top {
+    top: 0%; // 紧贴顶部
+  }
+
+  &.bottom {
+    bottom: 0%; // 紧贴底部
+  }
+}
+
+// 新增：背景HUD层样式
+.background_hud_layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5; // 确保在主内容和网格之下
+  pointer-events: none;
+  overflow: hidden;
 }

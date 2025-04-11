@@ -502,8 +502,12 @@
     margin: 10px 0;
     transform: skewX(15deg); // 抵消父元素的倾斜
     color: rgba(255, 255, 255, 0.6);
-    transition: all 0.3s ease;
+    transition: all 0.1s ease; // Faster transition consistent with VerticalShinyText
     text-shadow: 0 0 3px rgba(0, 150, 255, 0.2);
+    // --- 修改: 应用新字体 ---
+    font-family: 'ZELDA Free', sans-serif; // 使用新字体，并提供回退
+    font-size: 1.1rem; // 可以根据新字体调整大小，这里稍微增大一点
+    line-height: 1; // 可能需要调整行高适应新字体
   }
 }
 
