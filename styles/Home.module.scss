@@ -363,7 +363,7 @@
         .verticalText .charItem > div {
           transform: scale(1.15);
           color: var(--ark-highlight-green);
-          text-shadow: 0 0 24px var(--ark-highlight-green);
+          text-shadow: 0 0 8px var(--ark-highlight-green);
         }
       }
     }
@@ -501,9 +501,10 @@
   .charItem {
     margin: 10px 0;
     transform: skewX(15deg); // 抵消父元素的倾斜
-    color: rgba(255, 255, 255, 0.6);
+    // --- 修改: 加大字体灰度 ---
+    color: rgba(200, 200, 200, 0.5); // 从 rgba(255, 255, 255, 0.6) 调暗
     transition: all 0.1s ease; // Faster transition consistent with VerticalShinyText
-    text-shadow: 0 0 3px rgba(0, 150, 255, 0.2);
+    text-shadow: 0 0 3px rgba(0, 150, 255, 0.2); // 保持原有的细微阴影
     // --- 修改: 应用新字体 ---
     font-family: 'ZELDA Free', sans-serif; // 使用新字体，并提供回退
     font-size: 1.1rem; // 可以根据新字体调整大小，这里稍微增大一点

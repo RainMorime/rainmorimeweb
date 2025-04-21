@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from '../styles/HomeLoadingScreen.module.scss';
+import gsap from 'gsap'; // 导入 GSAP
 
 const HomeLoadingScreen = ({ onComplete }) => {
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,15 @@ const HomeLoadingScreen = ({ onComplete }) => {
   const processedLogTextsRef = useRef(new Set()); // 新增：跟踪已处理的日志文本
   const welcomeMessageCountsRef = useRef({}); // 新增：跟踪欢迎消息计数
   const minDisplayTime = 1800; // 最小显示时间 - 从2800减少到1800
+  const hudCircleRef = useRef(null); // 新增：为背景圆环添加 ref
+  const rotatingInnerGroupRef = useRef(null);
+  const sectorPathRef = useRef(null); // 修改：确保 Ref 引用 Path
+  const signalLineRef = useRef(null); // 新增：折线 Ref
+  const outerCircleGroupRef = useRef(null); // 新增：外圈圆和刻度线的旋转组 Ref
+  
+  // 定义扇形参数 (移到 useEffect 之前)
+  const sectorRadius = 50; // 半径，比旋转圆稍小
+  const sectorAngleWidth = 25; // 扇形的固定角度宽度
   
   const [startTransitionOutTimer, setStartTransitionOutTimer] = useState(false); // 新增 state 控制转场计时器
   
@@ -100,77 +110,47 @@ const HomeLoadingScreen = ({ onComplete }) => {
     for (let log of logs) {
       const isWelcome = log.threshold === 93 || log.threshold === 97;
 
-      if (isWelcome) {
-        // 处理欢迎消息
-        const currentCount = welcomeMessageCountsRef.current[log.text] || 0;
-        if (progress >= log.threshold && currentCount < 2) {
+      // 检查日志文本是否已处理，或者是否是允许重复的欢迎消息
+      const currentCount = welcomeMessageCountsRef.current[log.text] || 0;
+      const canProcess = (isWelcome && currentCount < 2) || (!isWelcome && !processedLogTextsRef.current.has(log.text));
+      
+      if (progress >= log.threshold && canProcess) {
+        if (isWelcome) {
           newLinesToAdd.push({ id: Date.now() + Math.random(), text: log.text });
           welcomeMessageCountsRef.current[log.text] = currentCount + 1;
           if (log.threshold === 97) {
             setWelcomeMessage(true);
-            
-            // 如果是第二次显示"欢迎回来，守林人。"，延迟800ms再触发转场
-            if (currentCount === 1 && progress >= 100) {
-              // 这里使用setTimeout来延迟显示分割线特效
-              const delayTransition = setTimeout(() => {
-                setShowSplitLines(true);
-              }, 800);
-              
-              // 清理函数，以防组件卸载时计时器仍在运行
-              return () => clearTimeout(delayTransition);
-            }
+            // 欢迎消息不再直接触发分割线
           }
-        }
-      } else {
-        // 处理普通日志消息
-        // 检查阈值是否达到，并且该日志文本还未被处理
-        if (progress >= log.threshold && !processedLogTextsRef.current.has(log.text)) {
-          processedLogTextsRef.current.add(log.text); // 标记为已处理
-          
-          // 为普通日志生成随机数量（3-10）的百分比阶段
-          const numLines = Math.floor(Math.random() * 8) + 3; // 生成 3 到 10 之间的随机数
+        } else {
+          processedLogTextsRef.current.add(log.text); // 标记普通日志为已处理
+
+          const numLines = Math.floor(Math.random() * 8) + 3; 
           let lastPercentage = 0;
 
           for (let i = 1; i <= numLines; i++) {
             let currentPercentage;
             if (i === numLines) {
-              // 最后一条必须是 100%
               currentPercentage = 100;
             } else {
-              // 生成一个比上一次大，且小于 (100 - (numLines - i) * 5) 的随机百分比，确保后续有空间递增
-              // 最小增加 5%，最大增加范围随剩余行数减少而减少
               const minPercentage = lastPercentage + 5;
               const maxPercentage = Math.max(minPercentage + 5, 100 - (numLines - i) * 5);
               currentPercentage = Math.floor(Math.random() * (maxPercentage - minPercentage + 1)) + minPercentage;
-              currentPercentage = Math.min(99, currentPercentage); // 确保中间值不超过99
+              currentPercentage = Math.min(99, currentPercentage);
             }
 
             newLinesToAdd.push({ 
-              id: Date.now() + Math.random() * i, // 增加随机性避免key冲突
+              id: Date.now() + Math.random() * i,
               text: `${log.text} ${currentPercentage}%` 
             });
-            lastPercentage = currentPercentage; // 更新上一次的百分比
+            lastPercentage = currentPercentage;
           }
         }
       }
     }
 
-    // 如果有新行需要添加，则将它们添加到队列中
     if (newLinesToAdd.length > 0) {
       setLogQueue(prev => [...prev, ...newLinesToAdd]);
-      // 不再直接更新 logLines 或在此处滚动
-      /*
-      setLogLines(prev => [...prev, ...newLinesToAdd]);
-
-      // 自动滚动到底部
-      if (consoleContentRef.current) {
-        requestAnimationFrame(() => {
-          if (consoleContentRef.current) {
-             consoleContentRef.current.scrollTop = consoleContentRef.current.scrollHeight;
-          }
-        });
-      }
-      */
     }
   };
   
@@ -188,11 +168,13 @@ const HomeLoadingScreen = ({ onComplete }) => {
           const elapsedTime = Date.now() - startTimeRef.current;
           const remainingTime = Math.max(0, minDisplayTime - elapsedTime);
           
-          // 只设置 setShowSplitLines 的 timeout
-          // 不再检查 welcomeMessageCountsRef 来决定是否设置，统一处理
-          setTimeout(() => {
+          // 确保在最小显示时间后触发分割线
+          const showSplitTimer = setTimeout(() => {
             setShowSplitLines(true);
           }, remainingTime);
+
+          // 清理定时器
+          // return () => clearTimeout(showSplitTimer); // 不能在 setInterval 的回调中返回清理函数
 
           return 100;
         }
@@ -201,6 +183,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
       });
     }, 150); 
     
+    // 返回清理函数，确保 interval 在组件卸载时被清除
     return () => clearInterval(interval);
   }, [onComplete]); // 依赖项保持不变
   
@@ -240,26 +223,171 @@ const HomeLoadingScreen = ({ onComplete }) => {
 
   }, [loading, logQueue]); // 依赖 loading 和 logQueue
   
+  // 新增：GSAP 动画效果
+  useEffect(() => {
+    if (loading && hudCircleRef.current) {
+      // 缓慢旋转动画
+      const rotationTween = gsap.to(hudCircleRef.current, {
+        rotation: 360,
+        duration: 90, // 90秒转一圈
+        repeat: -1,
+        ease: 'none'
+      });
+
+      // 透明度脉冲动画 (从 0.5 到 0.7 来回)
+      const pulseTween = gsap.to(hudCircleRef.current, {
+        opacity: 0.7, // 目标透明度（提高一点可见性）
+        duration: 4, // 4秒完成一次脉冲
+        repeat: -1,
+        yoyo: true, // 来回播放
+        ease: 'power1.inOut'
+      });
+
+      // 返回清理函数
+      return () => {
+        rotationTween.kill(); // 停止旋转动画
+        pulseTween.kill();    // 停止脉冲动画
+      };
+    }
+  }, [loading]); // 依赖 loading 状态
+  
   // 修改：处理转场退出逻辑
   const handleTransitionOut = () => {
-    setLoading(false);
-    if (onComplete) {
-      onComplete();
-    }
-  };
-
+      setLoading(false);
+      if (onComplete) {
+        onComplete();
+      }
+    };
+  
+  
   // 新增：useEffect 监听 showSplitLines 并触发最终退出
   useEffect(() => {
     if (showSplitLines) {
       // 当分割线动画开始时，设置一个定时器来触发最终的退出
       const transitionTimer = setTimeout(() => {
-        handleTransitionOut();
-      }, 800); // 延迟 800ms 后开始退出，让分割线动画播放一部分
+        //handleTransitionOut(); // DEBUG: Temporarily disabled for debugging - Re-enable to restore transition
+      }, 600); // 延迟 600ms 后开始退出，让分割线动画播放一部分
 
       // 清理函数
       return () => clearTimeout(transitionTimer);
     }
-  }, [showSplitLines]); // 依赖 showSplitLines
+  }, [showSplitLines, onComplete]); // 依赖 showSplitLines 和 onComplete
+  
+  // 新增：为旋转内圈添加 GSAP 动画
+  useEffect(() => {
+    if (loading && rotatingInnerGroupRef.current) {
+      // 随机旋转动画
+      let currentTween;
+
+      const randomRotate = () => {
+        // 先停止当前的动画
+        if (currentTween) {
+          currentTween.kill();
+        }
+        
+        const targetRotation = "+=" + (Math.random() * 180 - 180); // 随机旋转 -90 到 +90 度
+        const duration = gsap.utils.random(0.4, 1.5); // 修改：加快速度，随机持续时间 0.8 到 2.5 秒
+        const delay = gsap.utils.random(0.03, 0.1); // 修改：减少延迟，0.05 到 0.2 秒
+        const ease = gsap.utils.random(["power1.inOut", "power2.inOut", "sine.inOut", "none"]); // 随机缓动
+
+        currentTween = gsap.to(rotatingInnerGroupRef.current, {
+          rotation: targetRotation,
+          duration: duration,
+          ease: ease,
+          delay: delay, // 在上一个完成后延迟启动
+          onComplete: randomRotate // 动画完成后再次调用自身，形成循环
+        });
+      };
+
+      // 启动第一个随机旋转
+      randomRotate();
+
+      // 返回清理函数
+      return () => {
+        gsap.killTweensOf(rotatingInnerGroupRef.current); // 停止所有针对该元素的 tween
+      };
+    }
+  }, [loading]); // 依赖 loading 状态
+  
+  // 新增：为扇形添加旋转动画
+  useEffect(() => {
+    if (loading && sectorPathRef.current) {
+      const angleProxy = { angle: 0 }; // 代理对象存储角度
+
+      const sectorTween = gsap.to(angleProxy, {
+        angle: 360, // 动画目标角度
+        duration: 2.5, // 修改：加快旋转速度，4 秒旋转一周
+        ease: "none",
+        repeat: -1, // 无限重复
+        onUpdate: () => {
+          if (sectorPathRef.current) {
+            const currentStartAngle = angleProxy.angle;
+            const newPathD = describeSector(
+              50, 50, // Center cx, cy
+              sectorRadius,
+              currentStartAngle,
+              currentStartAngle + sectorAngleWidth // End angle is start + fixed width
+            );
+            sectorPathRef.current.setAttribute('d', newPathD);
+          }
+        }
+      });
+
+      // 返回清理函数
+      return () => {
+        sectorTween.kill();
+      };
+    }
+  }, [loading, sectorRadius, sectorAngleWidth]);
+  
+  // 新增：为信号线添加绘制动画
+  useEffect(() => {
+    if (loading && signalLineRef.current) {
+      // 获取 polyline 元素并计算总长度
+      const line = signalLineRef.current;
+      // const lineLength = 98.3; // Original
+      // const lineLength = 108.3; // Previous: sqrt(800) + 80 ≈ 108.3
+      // New calculation: sqrt((70-50)^2 + (70-50)^2) + (180-70) = sqrt(800) + 110 ≈ 138.3
+      const lineLength = 138.3; // 新的估算长度 - 进一步加长
+
+      // 设置初始状态 (隐藏线条)
+      gsap.set(line, {
+        strokeDasharray: lineLength,
+        strokeDashoffset: lineLength,
+        opacity: 1 // Make sure it's visible for animation
+      });
+
+      // 创建绘制动画
+      const lineTween = gsap.to(line, {
+        strokeDashoffset: 0,
+        duration: 0.6, // 绘制动画时长
+        delay: 1.8, // 在其他元素之后开始 (例如，在内圈淡入后)
+        ease: "power1.inOut"
+      });
+
+      // 返回清理函数
+      return () => {
+        lineTween.kill();
+      };
+    }
+  }, [loading]); // 依赖 loading 状态
+  
+  // 新增：为外圈和其刻度线添加旋转动画
+  useEffect(() => {
+    if (loading && outerCircleGroupRef.current) {
+      const rotationTween = gsap.to(outerCircleGroupRef.current, {
+        rotation: 360, // 顺时针旋转
+        duration: 60, // 旋转速度 (60秒一圈，比背景慢)
+        repeat: -1,
+        ease: 'none',
+        transformOrigin: "50% 50%" // 确保绕 SVG 中心旋转
+      });
+      // 返回清理函数
+      return () => {
+        rotationTween.kill();
+      };
+    }
+  }, [loading]); // 依赖 loading 状态
   
   // 优化的退场动画设置
   const exitTransition = {
@@ -426,6 +554,33 @@ const HomeLoadingScreen = ({ onComplete }) => {
     exit: { opacity: 0, transition: { duration: 0.4 } }
   };
 
+  // Helper function to calculate sector path
+  const describeSector = (cx, cy, radius, startAngle, endAngle) => {
+    // Ensure angles wrap around 360 degrees for calculation
+    const startRad = ((startAngle % 360) - 90) * Math.PI / 180.0;
+    const endRad = ((endAngle % 360) - 90) * Math.PI / 180.0;
+    // Ensure endAngle is always greater than startAngle for arc flag calculation, even across 360 boundary
+    let angleDiff = (endAngle % 360) - (startAngle % 360);
+    if (angleDiff <= 0) {
+        angleDiff += 360;
+    }
+    const largeArcFlag = angleDiff <= 180 ? "0" : "1";
+
+    const startX = cx + (radius * Math.cos(startRad));
+    const startY = cy + (radius * Math.sin(startRad));
+    const endX = cx + (radius * Math.cos(endRad));
+    const endY = cy + (radius * Math.sin(endRad));
+
+    const d = [
+        "M", cx, cy,
+        "L", startX, startY,
+        "A", radius, radius, 0, largeArcFlag, 1, endX, endY,
+        "Z"
+    ].join(" ");
+
+    return d;
+  }
+
   return (
     <AnimatePresence mode="wait">
       {loading && (
@@ -578,11 +733,124 @@ const HomeLoadingScreen = ({ onComplete }) => {
               animate={{ opacity: 1, transition: { delay: 0.3, duration: 1.0 } }}
               exit={{ opacity: 0, transition: { duration: 0.5 } }}
             >
-              {/* 背景大圆环 */}
-              <div className={styles.hud_background_circle}></div>
-              
-              {/* 左侧刻度 */}
-              <div className={styles.hud_scale_left}>
+              {/* 背景大圆环 - 添加 ref */}
+              <div 
+                 className={styles.hud_background_circle} 
+                 ref={hudCircleRef} 
+                 style={{ opacity: 0.6 }} // 设置初始透明度，GSAP会覆盖
+              ></div>
+               
+               {/* 修改：使用 SVG 实现右上角中等圆形 */}
+               <svg 
+                 className={styles.hud_secondary_circle_svg} 
+                 viewBox="0 0 100 100" // 定义 SVG 视口
+               >
+                 {/* 新增：包含外圈和其刻度线的旋转组 */}
+                 <g ref={outerCircleGroupRef} className={styles.outer_circle_group}>
+                   {/* 最外圈绘制圆 (现在在旋转组内) */}
+                   <circle 
+                     className={styles.drawable_circle} 
+                     cx="50" // 圆心 X 坐标
+                     cy="50" // 圆心 Y 坐标
+                     r="48"  // 半径 (稍小于50以容纳描边)
+                   />
+                   {/* 新增：外圈的旋转刻度线 */}
+                   { [...Array(60)].map((_, i) => { // 添加 60 条刻度线 (每 6 度一条)
+                      const angle = i * 6;
+                      const rad = angle * Math.PI / 180;
+                      const rInner = 46.5; // 修改：内半径，使其小于外圈半径，指向内侧
+                      const rOuter = 48;   // 修改：外半径，与外圈半径一致
+                      const x1 = 50 + rInner * Math.cos(rad);
+                      const y1 = 50 + rInner * Math.sin(rad);
+                      const x2 = 50 + rOuter * Math.cos(rad);
+                      const y2 = 50 + rOuter * Math.sin(rad);
+                      return (
+                        <line
+                          key={`outer-tick-${i}`}
+                          className={styles.outer_circle_tick}
+                          x1={x1} y1={y1} x2={x2} y2={y2}
+                        />
+                      );
+                    })}
+                 </g>
+                 {/* 中心实心圆点 */}
+                 <circle 
+                   className={styles.center_solid_dot}
+                   cx="50"
+                   cy="50"
+                   r="3" // 较小半径
+                 />
+                 {/* 内圈空心圆 (不旋转) */}
+                 <circle 
+                   className={styles.inner_hollow_circle}
+                   cx="50"
+                   cy="50"
+                   r="8" // 减小半径
+                 />
+
+                 {/* 修改：旋转扇形 - 应用 Ref，设置初始 d */}
+                 <path
+                   ref={sectorPathRef} // 应用 Ref
+                   className={styles.rotating_sector}
+                   d={describeSector(50, 50, sectorRadius, 0, sectorAngleWidth)} // 设置初始路径
+                 />
+
+                 {/* 不规则旋转的内圈和刻度组 */}
+                 <g ref={rotatingInnerGroupRef} className={styles.rotating_inner_group}>
+                   {/* 旋转的空心圆 */}
+                   <circle
+                      className={styles.rotating_inner_circle}
+                      cx="50" cy="50" r="30" // 半径比 drawable_circle 小，比 inner_hollow_circle 大
+                   />
+                   {/* 旋转圆的刻度线 (修改：更密集、更短) */}
+                   { [...Array(36)].map((_, i) => { // 增加到 36 条刻度线
+                      const angle = i * 10; // 每 10 度一条
+                      const rad = angle * Math.PI / 180; // 弧度
+                      const rInner = 28.5; // 刻度线内半径 (更靠近外圈)
+                      const rOuter = 30;   // 刻度线外半径 (保持不变)
+                      const x1 = 50 + rInner * Math.cos(rad);
+                      const y1 = 50 + rInner * Math.sin(rad);
+                      const x2 = 50 + rOuter * Math.cos(rad);
+                      const y2 = 50 + rOuter * Math.sin(rad);
+                      return (
+                        <line
+                          key={`tick-${i}`}
+                          className={styles.rotating_circle_tick}
+                          x1={x1} y1={y1} x2={x2} y2={y2}
+                        />
+                      );
+                    })}
+                 </g>
+
+                 {/* 新增：信号线 */}
+                 <polyline
+                   ref={signalLineRef}
+                   className={styles.signal_line}
+                   points="50,50 70,70 70,180" // 新的坐标点：右上到水平，并加长
+                 />
+               </svg>
+
+               {/* 新增：生物信号文本 */}
+               <motion.div
+                 className={styles.bio_signal_text}
+                 initial={{ opacity: 0 }}
+                 animate={{ opacity: [0, 0.7, 0.7, 0] }} // 淡入 -> 保持 -> 淡出
+                 transition={{
+                   duration: 2, // 动画总时长
+                   delay: 2.4, // 修改：在线条绘制完成后开始 (1.8s + 0.6s)
+                   repeat: Infinity, // 无限重复
+                   repeatDelay: 0.1, // 每次重复间隔 0.1 秒
+                   times: [0, 0.15, 0.85, 1] // 控制各阶段时间点
+                 }}
+               >
+                 Bio-Signal: Not Detected
+               </motion.div>
+               
+               {/* 新增：右侧条纹渐变 */}
+               <div className={styles.right_stripe_gradient}></div>
+
+               {/* 左侧刻度 */}
+               <div className={styles.hud_scale_left}>
                 <div className={styles.scale_animation_container}> 
                   <motion.div 
                     className={styles.scale_animation_content}
@@ -648,6 +916,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
                       }} 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 0.3 + Math.random() * 0.3, transition: { delay: 0.8 + Math.random() * 0.5, duration: 0.5 } }}
+                      exit={{ opacity: 0 }} // 添加退出动画
                     />
                  ))}
               </div>
@@ -827,7 +1096,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
               <motion.div 
                 className={`${styles.hud_element} ${styles.top_left}`}
                 custom={{ index: 0 }}
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }} // 添加退出动画
               >
                 <div className={styles.hud_line}></div>
                 <div className={styles.hud_text}>STATUS MONITOR</div>
@@ -835,7 +1104,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
               <motion.div 
                 className={`${styles.hud_element} ${styles.top_right}`}
                 custom={{ index: 1 }}
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }} // 添加退出动画
               >
                 <div className={styles.hud_line}></div>
                 <div className={styles.hud_text}>SYSTEM ONLINE</div>
@@ -843,7 +1112,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
               <motion.div 
                 className={`${styles.hud_element} ${styles.bottom_left}`}
                 custom={{ index: 2 }}
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }} // 添加退出动画
               >
                 <div className={styles.hud_line}></div>
                 <div className={styles.hud_text}>ID-1A1A1A</div>
@@ -851,7 +1120,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
               <motion.div 
                 className={`${styles.hud_element} ${styles.bottom_right}`}
                 custom={{ index: 3 }}
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }} // 添加退出动画
               >
                 <div className={styles.hud_line}></div>
                 <div className={styles.hud_text}>{currentTime}</div>

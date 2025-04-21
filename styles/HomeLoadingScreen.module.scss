@@ -29,7 +29,7 @@
   --primary-dark: #0a0a0a;
   --primary-light: #f0f0f0;
   --primary-accent: #f0f0f0;
-  --terminal-base: #1a1a1a; 
+  --terminal-base: #1a1a1a;
   --terminal-lighter: #2a2a2a;
   --terminal-darker: #101010;
   --terminal-glow: rgba(220, 220, 220, 0.15);
@@ -48,6 +48,7 @@
   --scan-line-height: 2px;
   --scan-line-opacity: 0.15;
   --accent-yellow: rgba(255, 220, 60, 0.8);
+  --hud-element-color: rgba(180, 180, 180, 0.5); // 新增 HUD 元素基础颜色
 }
 
 // 加载屏幕主容器
@@ -58,10 +59,10 @@
   width: 100%;
   height: 100vh;
   background: var(--main-dark);
-  background-image: 
-    linear-gradient(to bottom, 
-      rgba(20, 20, 20, 0.98) 0%, 
-      rgba(26, 26, 26, 0.95) 70%, 
+  background-image:
+    linear-gradient(to bottom,
+      rgba(20, 20, 20, 0.98) 0%,
+      rgba(26, 26, 26, 0.95) 70%,
       rgba(30, 30, 30, 0.92) 100%);
   display: flex;
   justify-content: center;
@@ -82,7 +83,7 @@
   height: 100vh;
   z-index: 999;
   background-color: var(--main-dark);
-  background-image: 
+  background-image:
     linear-gradient(rgba(20, 20, 20, 0.9), rgba(15, 15, 15, 0.95)),
     url('/images/texture-noise.png');
   background-blend-mode: overlay;
@@ -98,13 +99,13 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  background-image: 
+  background-image:
     linear-gradient(rgba(0, 0, 0, 0) 95%, rgba(60, 60, 60, 0.1) 100%),
     linear-gradient(90deg, rgba(0, 0, 0, 0) 95%, rgba(60, 60, 60, 0.1) 100%);
   background-size: 20px 20px;
   opacity: 0.12;
   pointer-events: none;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -112,11 +113,28 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, 
-      rgba(50, 50, 50, 0.1) 0%, 
+    background: radial-gradient(circle at center,
+      rgba(50, 50, 50, 0.1) 0%,
       rgba(0, 0, 0, 0) 70%);
   }
 }
+
+// 新增：次级网格
+.secondary_grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2; // 在主网格之上，但在 HUD 层之下
+  background-image:
+    linear-gradient(rgba(100, 100, 100, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 100, 100, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px; // 更大的网格尺寸
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 
 // 主加载内容
 .loading_content {
@@ -178,7 +196,7 @@
   @extend .variables;
   transform-style: preserve-3d;
   backface-visibility: hidden;
-  
+
   @media (max-width: 768px) {
     font-size: 3rem;
   }
@@ -198,7 +216,7 @@
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transition: all 0.3s ease;
-  
+
   @media (max-width: 768px) {
     font-size: 1.8rem;
   }
@@ -214,7 +232,7 @@
   border: none;
   z-index: 1;
   @extend .variables;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -231,7 +249,7 @@
     );
     opacity: 0.5;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -259,7 +277,7 @@
   height: 100%;
   z-index: 2;
   @extend .variables;
-  
+
   // 顶部斜线
   &::before {
     content: '';
@@ -277,7 +295,7 @@
     );
     opacity: 0.3;
   }
-  
+
   // 底部角落方块
   &::after {
     content: '';
@@ -299,7 +317,7 @@
   width: 4px;
   height: 70%;
   transform: translateY(-50%);
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -310,7 +328,7 @@
     background-color: var(--border-color);
     opacity: 0.4;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -336,13 +354,13 @@
   right: 20px;
   display: flex;
   gap: 5px;
-  
+
   .dot {
     width: 4px;
     height: 4px;
     background-color: var(--border-color);
     opacity: 0.6;
-    
+
     &:nth-child(2) {
       background-color: var(--accent-green);
       animation: dotPulse 3s infinite;
@@ -367,7 +385,7 @@
   width: 40px;
   height: 10px;
   opacity: 0.4;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -377,7 +395,7 @@
     height: 1px;
     background-color: var(--border-color);
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -403,7 +421,7 @@
   height: 15px;
   z-index: 3;
   @extend .variables;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -499,7 +517,7 @@
   position: relative;
   overflow: hidden;
   @extend .variables;
-  
+
   &::before, &::after {
     content: '';
     position: absolute;
@@ -510,14 +528,14 @@
     border-width: 0;
     z-index: 2;
   }
-  
+
   &::before {
     top: -8px;
     left: -1px;
     border-top-width: 1px;
     border-left-width: 1px;
   }
-  
+
   &::after {
     bottom: -8px;
     right: -1px;
@@ -539,7 +557,7 @@
   transition: width 0.3s ease-out;
   position: relative;
   @extend .variables;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -592,11 +610,11 @@
   display: flex;
   flex-direction: column;
   z-index: 5;
-  
+
   &::before {
     content: none;
   }
-  
+
   &::after {
     content: none;
   }
@@ -610,7 +628,7 @@
   justify-content: space-between;
   position: relative;
   margin-bottom: 8px;
-  
+
   &::after {
     content: none;
   }
@@ -624,7 +642,7 @@
   letter-spacing: 1px;
   display: flex;
   align-items: center;
-  
+
   &::before {
     content: none;
   }
@@ -643,7 +661,7 @@
   letter-spacing: 0.5px;
   position: relative;
   padding-left: 12px;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -685,7 +703,7 @@
   font-size: 1.0rem;
   position: relative;
   color: rgba(200, 220, 200, 0.7);
-  
+
   &::after {
     content: none;
   }
@@ -717,7 +735,7 @@
   opacity: 0;
   position: relative;
   z-index: 4;
-  
+
   &:hover {
     background-color: rgba(255, 255, 255, 0.05);
   }
@@ -785,7 +803,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 20;
+  z-index: 20; // 提高层级，确保在背景HUD层之上
 }
 
 .hud_element {
@@ -794,34 +812,69 @@
   align-items: center;
   font-family: 'Dosis', sans-serif;
   font-size: 1.0rem;
-  color: var(--light-gray);
+  color: var(--hud-element-color); // 使用变量
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  opacity: 0;
-  animation: hudFadeIn 0.8s forwards;
-  animation-delay: 0.5s;
+  // 移除 animation，由 Framer Motion 控制
   @extend .variables;
-  
+
   &.top_left {
     top: 40px;
     left: 40px;
+    .corner_bracket_graphics { // 定位角框
+       top: -8px;
+       left: -8px;
+    }
+    .status_indicator_lights { // 定位状态灯
+      bottom: -10px;
+      left: 0;
+    }
   }
-  
+
   &.top_right {
     top: 40px;
     right: 40px;
     flex-direction: row-reverse;
+    .corner_bracket_graphics {
+       top: -8px;
+       right: -8px;
+       transform: scaleX(-1); // 水平翻转角框
+    }
+    .status_indicator_lights {
+      bottom: -10px;
+      right: 0;
+      flex-direction: row-reverse; // 灯也翻转
+    }
   }
-  
+
   &.bottom_left {
     bottom: 40px;
     left: 40px;
+     .corner_bracket_graphics {
+       bottom: -8px;
+       left: -8px;
+       transform: scaleY(-1); // 垂直翻转角框
+    }
+     .status_indicator_lights {
+      top: -10px;
+      left: 0;
+    }
   }
-  
+
   &.bottom_right {
     bottom: 40px;
     right: 40px;
     flex-direction: row-reverse;
+     .corner_bracket_graphics {
+       bottom: -8px;
+       right: -8px;
+       transform: scale(-1, -1); // 水平垂直翻转
+    }
+     .status_indicator_lights {
+      top: -10px;
+      right: 0;
+      flex-direction: row-reverse;
+    }
   }
 }
 
@@ -830,23 +883,17 @@
   height: 1px;
   background-color: var(--border-color);
   margin: 0 15px;
+  opacity: 0.7; // 降低一点不透明度
   @extend .variables;
 }
 
 .hud_text {
   text-shadow: 0 0 5px rgba(100, 100, 100, 0.4);
+  opacity: 0.9; // 提高一点文本清晰度
 }
 
-@keyframes hudFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-}
+// 移除旧的 HUD FadeIn 动画
+// @keyframes hudFadeIn { ... }
 
 // 移除闪光文字效果
 .shiny_text {
@@ -854,17 +901,8 @@
   animation: none;
 }
 
-@keyframes shine {
-  0% {
-    background-position: 200% center;
-  }
-  50% {
-    background-position: 0% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
-}
+// 移除旧的闪光动画
+// @keyframes shine { ... }
 
 // 明日方舟风格的分割线特效
 .split_line_horizontal {
@@ -913,7 +951,7 @@
   background: none;
   overflow: visible;
   z-index: 10;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -943,20 +981,20 @@
   border-right: 1px solid rgba(255, 255, 255, 0.6);
   border-top: 1px solid rgba(255, 255, 255, 0.6);
   z-index: 10;
-  
+
   &::before, &::after {
     content: '';
     position: absolute;
     background: rgba(255, 255, 255, 0.6);
   }
-  
+
   &::before {
     width: 10px;
     height: 1px;
     top: 10px;
     right: 0;
   }
-  
+
   &::after {
     width: 1px;
     height: 10px;
@@ -972,7 +1010,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
+  background: linear-gradient(90deg,
     rgba(255, 255, 255, 0.35),
     rgba(255, 255, 255, 0.2),
     rgba(255, 255, 255, 0.05)
@@ -990,7 +1028,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
+  background: linear-gradient(90deg,
     rgba(200, 220, 255, 0.25),
     rgba(200, 220, 255, 0.15),
     rgba(200, 220, 255, 0.03)
@@ -1008,7 +1046,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
+  background: linear-gradient(90deg,
     rgba(180, 255, 220, 0.2),
     rgba(180, 255, 220, 0.1),
     rgba(180, 255, 220, 0.02)
@@ -1026,7 +1064,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
+  background: linear-gradient(90deg,
     rgba(160, 240, 190, 0.08),
     rgba(160, 240, 190, 0.04),
     rgba(160, 240, 190, 0.005)
@@ -1044,7 +1082,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
+  background: linear-gradient(90deg,
     rgba(140, 230, 170, 0.07),
     rgba(140, 230, 170, 0.035),
     rgba(140, 230, 170, 0.004)
@@ -1062,7 +1100,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
+  background: linear-gradient(90deg,
     rgba(130, 220, 160, 0.06),
     rgba(130, 220, 160, 0.03),
     rgba(130, 220, 160, 0.003)
@@ -1080,7 +1118,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, 
+  background: linear-gradient(90deg,
     rgba(120, 210, 150, 0.05),
     rgba(120, 210, 150, 0.025),
     rgba(120, 210, 150, 0.002)
@@ -1091,7 +1129,9 @@
   pointer-events: none;
 }
 
-// 新增：背景HUD层样式
+// --- 新增 HUD 背景层及内部元素样式 ---
+
+// 背景HUD层样式
 .background_hud_layer {
   position: absolute;
   top: 0;
@@ -1100,7 +1140,7 @@
   height: 100%;
   z-index: 5; // 确保在主内容和网格之下
   pointer-events: none;
-  overflow: hidden;
+  overflow: hidden; // 隐藏溢出的动画元素
 }
 
 // 背景大圆环
@@ -1115,7 +1155,7 @@
   border: 1px solid rgba(180, 180, 180, 0.15);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0.6;
+  will-change: transform, opacity; // 优化动画
 
   &::before, &::after {
     content: '';
@@ -1123,14 +1163,14 @@
     border-radius: 50%;
     border: 1px solid rgba(180, 180, 180, 0.08);
   }
-  
+
   &::before {
     width: calc(100% + 20px);
     height: calc(100% + 20px);
     top: -10px;
     left: -10px;
   }
-  
+
   &::after {
     width: calc(100% - 20px);
     height: calc(100% - 20px);
@@ -1139,6 +1179,190 @@
   }
 }
 
+// 新增：右上角中等圆形 SVG 容器样式
+.hud_secondary_circle_svg {
+  position: absolute;
+  top: 30%;
+  left: 70%;
+  width: 18vh;
+  height: 18vh;
+  max-width: 18vw;
+  max-height: 18vw;
+  transform: translate(-50%, -50%) rotate(-90deg); // 旋转 -90 度使动画从顶部开始
+  opacity: 0.5;
+  pointer-events: none;
+  overflow: visible; // 确保描边可见
+}
+
+// 新增：圆形绘制动画
+@keyframes drawCircle {
+  from {
+    stroke-dashoffset: 301.6; // 周长 (2 * PI * 48)
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+// 新增：SVG 内圆形样式
+.drawable_circle {
+  fill: none; // 不填充
+  stroke: rgba(180, 180, 180, 0.15); // 描边颜色，与大圆环一致
+  stroke-width: 0.75; // 描边宽度
+  stroke-linecap: round; // 线条末端样式
+  stroke-dasharray: 301.6; // 设置为周长 (2 * PI * 48)
+  stroke-dashoffset: 301.6; // 初始偏移，隐藏描边
+  animation: drawCircle 0.75s linear 0.5s forwards; // 应用动画：2.5s 持续时间, 1s 延迟, 线性, 结束后保持状态
+}
+
+// 新增：外圈旋转组的样式
+.outer_circle_group {
+  transform-origin: center center; // 设置旋转中心
+  // 不需要单独的淡入动画，依赖于内部元素的动画
+}
+
+// 新增：外圈刻度线样式
+.outer_circle_tick {
+  stroke: rgba(180, 180, 180, 0.1); // 比外圈描边更淡
+  stroke-width: 0.5; // 刻度线宽度
+  stroke-linecap: round;
+  opacity: 0; // 初始隐藏
+  animation: fadeInDot 0.5s linear 1.25s forwards; // 与中心点一起淡入
+}
+
+// 新增：中心实心圆点样式
+.center_solid_dot {
+  fill: rgba(180, 180, 180, 0.25); // 填充颜色与描边一致
+  opacity: 0; // 初始隐藏
+  animation: fadeInDot 0.5s linear 1.25s forwards; // 与中心点一起淡入
+}
+
+// 新增：内层空心圆样式
+.inner_hollow_circle {
+  fill: none; // 不填充
+  stroke: rgba(180, 180, 180, 0.10); // 稍浅的描边颜色
+  stroke-width: 0.5; // 较细的描边
+  opacity: 0; // 初始隐藏
+  animation: fadeInDot 0.5s linear 1.35s forwards; // 比中心点稍晚淡入
+}
+
+// 新增：淡入动画
+@keyframes fadeInDot {
+  to {
+    opacity: 1;
+  }
+}
+
+// 新增：扇形淡入动画 (可能需要不同的目标透明度)
+@keyframes fadeInSector {
+ to {
+    opacity: 0.8; // Or adjust as needed for the sector
+ }
+}
+
+// 新增：旋转扇形样式
+.rotating_sector {
+  fill: rgba(180, 180, 180, 0.08); // 填充颜色
+  stroke: none; // 无描边
+  opacity: 0; // 初始隐藏
+  animation: fadeInSector 0.5s linear 1.0s forwards; // 在外圈绘制后稍早淡入
+}
+
+// 新增：旋转内圈组的样式
+.rotating_inner_group {
+  transform-origin: center center; // 设置旋转中心为 SVG 中心
+  // GSAP 会控制 transform: rotate()
+  opacity: 0; // 初始隐藏
+  animation: fadeInDot 0.5s linear 1.45s forwards; // 保持其淡入动画
+}
+
+// 新增：旋转内圈样式
+.rotating_inner_circle {
+  fill: none;
+  stroke: rgba(180, 180, 180, 0.12); // 比最外圈稍暗或不同色调
+  stroke-width: 0.5; // 比最外圈细
+}
+
+// 新增：旋转内圈刻度线样式
+.rotating_circle_tick {
+  stroke: rgba(180, 180, 180, 0.12); // 与旋转圈颜色一致
+  stroke-width: 0.4; // 使刻度线更细
+  stroke-linecap: round;
+}
+
+// 新增：信号线样式
+.signal_line {
+  fill: none;
+  stroke: var(--hud-element-color); // 使用 HUD 颜色
+  stroke-width: 0.6; // 线条粗细
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0; // 初始不可见，由 GSAP 控制
+  // stroke-dasharray 和 stroke-dashoffset 由 GSAP 设置
+}
+
+// 新增：生物信号文本样式 - 调整位置
+.bio_signal_text {
+  position: absolute;
+  // Original Endpoint X=30, Y=140
+  // Previous Endpoint X=70, Y=180; Adjusted Top-Right: top: calc(30% + 2.6vh); left: calc(70% + 24.9vh);
+  // New Adjustment: Top-Left (-1vh top, -1vh left)
+  top: calc(22% + 3.5vh); // 更新视觉垂直位置 (2.6vh - 1vh)
+  left: calc(67% + 12svh); // 更新视觉水平位置 (24.9vh - 1vh)
+  transform: translateY(-50%); // 垂直居中
+  font-family: 'Dosis', sans-serif;
+  font-size: 1.1rem;
+  color: var(--hud-element-color);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0; // 初始不可见，由动画控制
+  z-index: 7;
+}
+
+// 新增：中心准星
+.targeting_reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px; // 准星大小
+  height: 100px;
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+  will-change: transform, opacity, scale;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    border: 1px solid var(--hud-element-color);
+    opacity: 0.6;
+  }
+
+  // 内层八边形
+  &::before {
+     width: 70%;
+     height: 70%;
+     top: 15%;
+     left: 15%;
+     clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  }
+
+  // 外层十字线
+  &::after {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    // 用 clip-path 绘制十字
+    clip-path: polygon(
+      48% 0, 52% 0, 52% 48%, 100% 48%, 100% 52%, 52% 52%,
+      52% 100%, 48% 100%, 48% 52%, 0 52%, 0 48%, 48% 48%
+    );
+  }
+}
+
+
 // 左右刻度容器的通用样式
 .hud_scale_left,
 .hud_scale_right {
@@ -1146,7 +1370,7 @@
   top: 15%;
   height: 70%;
   width: 50px;
-  overflow: hidden; // 隐藏容器外的内容
+  overflow: hidden; // 隐藏滚动内容
 }
 
 // 刻度动画容器 - 用于限制可见区域
@@ -1174,7 +1398,8 @@
   position: absolute;
   width: 10px;
   height: 1px;
-  background-color: rgba(180, 180, 180, 0.3);
+  background-color: var(--hud-element-color); // 使用变量
+  opacity: 0.6;
 }
 
 // 连接线样式
@@ -1191,7 +1416,8 @@
   position: absolute;
   font-family: 'Dosis', sans-serif;
   font-size: 0.7rem;
-  color: rgba(180, 180, 180, 0.4);
+  color: var(--hud-element-color); // 使用变量
+  opacity: 0.7;
   text-transform: uppercase;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -1223,7 +1449,7 @@
 .hud_scale_right {
   right: 5%;
   .scale_animation_container {
-    right: 0; 
+    right: 0;
     left: auto; // 覆盖通用样式
   }
   .scale_animation_content {
@@ -1242,6 +1468,54 @@
   }
 }
 
+// 新增：垂直数据流容器样式
+.vertical_data_stream_container_left,
+.vertical_data_stream_container_right {
+   position: absolute;
+   top: 10%;
+   height: 80%;
+   width: 20px; // 数据流宽度
+   overflow: hidden; // 隐藏滚动内容
+   opacity: 0.5; // 整体透明度
+}
+.vertical_data_stream_container_left {
+   left: 10%; // 左侧位置
+}
+.vertical_data_stream_container_right {
+   right: 10%; // 右侧位置
+}
+
+// 新增：垂直数据流滚动内容
+.vertical_data_stream {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 200%; // 两倍高度用于滚动
+   will-change: transform;
+
+   // 使用重复渐变创建虚线效果
+   background-image: repeating-linear-gradient(
+      transparent,
+      transparent 10px, // 空白部分高度
+      var(--hud-element-color) 10px, // 线段颜色
+      var(--hud-element-color) 15px // 线段高度
+   );
+   background-size: 2px 25px; // 线条宽度和重复单元总高度
+   background-repeat: repeat-y;
+   background-position: center;
+   opacity: 0.7;
+}
+
+// (可选) 如果需要更复杂的片段，可以取消注释 JS 中的 segment 并添加样式
+// .data_stream_segment {
+//    height: 15px;
+//    margin-bottom: 10px;
+//    background-color: var(--hud-element-color);
+//    opacity: 0.7;
+// }
+
+
 // 底部散落点容器
 .hud_scatter_dots {
   position: absolute;
@@ -1249,17 +1523,75 @@
   left: 0;
   width: 100%;
   height: 20%;
+  pointer-events: none; // 允许点击穿透
 }
 
 // 单个散落点
 .scatter_dot {
   position: absolute;
-  width: 4px;
-  height: 4px;
-  background-color: rgba(180, 180, 180, 0.5);
+  // width/height/left/bottom 由 JS 控制
+  background-color: var(--hud-element-color); // 使用变量
   border-radius: 50%;
-  opacity: 0; // 初始透明，由动画控制
+  will-change: opacity; // 优化动画
+  // opacity 由 Framer Motion 控制
 }
+
+// 新增：角落图形化角框
+.corner_bracket_graphics {
+  position: absolute;
+  width: 25px; // 角框大小
+  height: 25px;
+  // 定位在 .hud_element 样式中根据角落调整
+  opacity: 0.6;
+  pointer-events: none;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    background-color: var(--hud-element-color); // 使用变量
+  }
+  // L 形的两条线
+  &::before {
+    width: 100%;
+    height: 1px;
+    top: 0;
+    left: 0;
+  }
+  &::after {
+    width: 1px;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+}
+
+// 新增：状态指示灯
+@keyframes statusBlink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.status_indicator_lights {
+  position: absolute;
+  // 定位在 .hud_element 样式中根据角落调整
+  display: flex;
+  gap: 5px;
+  pointer-events: none;
+
+  &::before, &::after {
+    content: '';
+    width: 8px; // 灯的大小
+    height: 2px; // 灯的形状（短线）
+    background-color: var(--accent-green); // 默认绿色
+    animation: statusBlink 2.5s infinite ease-in-out;
+  }
+  &::after {
+    background-color: var(--accent-yellow); // 第二个灯用黄色
+    animation-delay: 0.5s; // 错开闪烁
+  }
+}
+
+// --- 转场动画相关样式保持不变 ---
 
 // 新增：转场发光线条样式
 .transition_glow_line {
@@ -1317,7 +1649,7 @@
 .transition_line_diagonal_2 {
   position: absolute;
   top: 50%;
-  left: -21%; // (100% * sqrt(2) - 100%) / 2 
+  left: -21%; // (100% * sqrt(2) - 100%) / 2
   width: 142%; // 100% * sqrt(2)
   height: 1px; // 线条粗细
   background-color: rgba(255, 255, 255, 0.9);
@@ -1356,14 +1688,25 @@
   }
 }
 
-// 新增：背景HUD层样式
-.background_hud_layer {
+// 新增：右侧条纹渐变效果
+.right_stripe_gradient {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  right: 0;
+  width: 25%; // 条纹区域宽度，可调整
   height: 100%;
-  z-index: 5; // 确保在主内容和网格之下
-  pointer-events: none;
-  overflow: hidden;
+  pointer-events: none; // 不响应鼠标事件
+  // 修改：创建水平条纹 (1px 灰白线, 3px 透明间隔)
+  background: repeating-linear-gradient(
+    to bottom, // 改为水平条纹
+    rgba(200, 200, 200, 0.15), // 条纹颜色和基础透明度
+    rgba(200, 200, 200, 0.15) 1px,
+    transparent 1px,
+    transparent 4px // 调整间隔
+  );
+  // 保持从右向左的遮罩，使条纹渐变消失
+  mask-image: linear-gradient(to left, black 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%); // Safari 兼容
+  opacity: 0.6; // 整体效果透明度，可调整
+  z-index: 6; // 确保在圆圈等元素之上，如果需要的话
 }

@@ -238,4 +238,31 @@ body > div,
 #__next,
 #__next > div {
   background-color: var(--ark-dark-blue);
-} 
+}
+
+.three-canvas-container {
+  position: fixed; /* 固定在视口 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* 将其置于页面内容之后 */
+  overflow: hidden; /* 防止画布内容溢出 */
+
+  canvas {
+    display: block; /* 移除 canvas 下方的额外空间 */
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* 确保 body 和其他主要容器不会覆盖 Canvas */
+body, html, #__next {
+  /* 可能需要调整背景色或透明度，取决于你的设计 */
+  background-color: transparent; /* 让 Three.js 背景可见 */
+}
+
+/* 你可能还需要调整现有布局的 z-index 或背景色，
+   以确保它们位于 Three.js Canvas 之上 */
+/* 例如，如果你的主内容区有一个白色背景，
+   你需要确保它的 z-index 高于 -1，或者背景是透明的 */ 

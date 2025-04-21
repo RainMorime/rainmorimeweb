@@ -1,13 +1,16 @@
 import Head from 'next/head';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import CustomCursor from '../components/CustomCursor';
 import HomeLoadingScreen from '../components/HomeLoadingScreen';
 import ShinyText from '../components/ShinyText';
 import VerticalShinyText from '../components/VerticalShinyText';
+import RainMorimeEffect from '../components/RainMorimeEffect';
 import styles from '../styles/Home.module.scss';
 import React from 'react';
 
 export default function Home() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [mainVisible, setMainVisible] = useState(false);
   const [linesAnimated, setLinesAnimated] = useState(false);
@@ -531,7 +534,8 @@ export default function Home() {
     ];
     
     if (columnIndex < routes.length) {
-      window.location.href = routes[columnIndex];
+      // --- 修改: 使用 router.push 进行导航 ---
+      router.push(routes[columnIndex]);
     }
   };
 
@@ -544,10 +548,10 @@ export default function Home() {
       </Head>
 
       <CustomCursor />
+      <RainMorimeEffect />
       
       <div className={styles.gridBackground}></div>
       <div className={styles.glowEffect}></div>
-      <div className={styles.scanLines}></div>
 
       <HomeLoadingScreen onComplete={handleLoadingComplete} />
 
