@@ -8,6 +8,55 @@ import VerticalShinyText from '../components/VerticalShinyText';
 import RainMorimeEffect from '../components/RainMorimeEffect';
 import styles from '../styles/Home.module.scss';
 import React from 'react';
+import ProjectCard from '../components/ProjectCard';
+import Noise from '../components/Noise';
+// --- 新增: 引入 Tesseract 体验 --- 
+import TesseractExperience from '../components/TesseractExperience';
+// --- 新增: 引入激活拉杆 --- 
+import ActivationLever from '../components/ActivationLever';
+
+// --- 新增: 引入 GSAP 和 ScrollTrigger ---
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+// --- 注册插件 ---
+gsap.registerPlugin(ScrollTrigger);
+
+// --- 新增: 示例项目数据 ---
+const sampleProjects = [
+  {
+    id: 1,
+    title: 'Project Cyberscape',
+    description: 'A procedural city generator visualizing network data streams.',
+    tech: ['React', 'Three.js', 'Node.js', 'WebSockets'],
+    link: '#', // 替换为实际链接
+    imageUrl: '/placeholders/cyberscape.png' // 替换为实际图片路径或占位图
+  },
+  {
+    id: 2,
+    title: 'Aether Analytics',
+    description: 'Real-time data analysis platform with a retro terminal interface.',
+    tech: ['Next.js', 'Chart.js', 'Python (Flask)', 'PostgreSQL'],
+    link: '#',
+    imageUrl: '/placeholders/aether.png' 
+  },
+  {
+    id: 3,
+    title: 'Chrono Courier',
+    description: 'Secure messaging system simulation with quantum encryption concepts.',
+    tech: ['Vue.js', 'Web Crypto API', 'Firebase'],
+    link: '#',
+    imageUrl: '/placeholders/chrono.png'
+  },
+    {
+    id: 4,
+    title: 'Bio-Synth Composer',
+    description: 'Generative music tool based on simulated biological growth patterns.',
+    tech: ['Tone.js', 'P5.js', 'JavaScript'],
+    link: '#',
+    imageUrl: '/placeholders/biosynth.png'
+  },
+];
 
 export default function Home() {
   const router = useRouter();
@@ -59,7 +108,22 @@ export default function Home() {
   const [pulsingNormalIndices, setPulsingNormalIndices] = useState(null);
   const [pulsingReverseIndices, setPulsingReverseIndices] = useState(null);
   const pulseAnimationDuration = 2000; 
-  
+
+  // --- 恢复: State for Active Section --- 
+  const [activeSection, setActiveSection] = useState('home'); // 'home' or 'content'
+
+  // --- 新增: Ref for Content Wrapper --- 
+  const contentWrapperRef = useRef(null);
+  // --- 新增: Ref for About Section 和其内部内容容器 ---
+  const aboutSectionRef = useRef(null);
+  const aboutContentRef = useRef(null);
+  // --- 新增: State for Power Level ---
+  const [powerLevel, setPowerLevel] = useState(67);
+  // --- 新增: 负色状态 --- 
+  const [isInverted, setIsInverted] = useState(false);
+  // --- 新增: Tesseract 激活状态 --- 
+  const [isTesseractActivated, setIsTesseractActivated] = useState(false);
+
   // 处理加载完成
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -84,7 +148,7 @@ export default function Home() {
       // 4. 开始文字淡入动画 (建议延迟 3100ms)
       setTimeout(() => {
         setTextVisible(true);
-      }, 3100); // Original: 4300
+      }, 2500); // 修改: 从 3100ms 减少到 2500ms
 
       // 5. 设置动画完成标志 (建议延迟 4200ms)
       setTimeout(() => {
@@ -303,36 +367,32 @@ export default function Home() {
       // --- 修改: 更新参数生成逻辑 --- 
       const generateNewParams = () => {
         // 温度: 44-66°C, 每次变化 <= 1.5°C
-        const tempChange = (Math.random() * 3) - 1.5; // -1.5 to +1.5
+        const tempChange = (Math.random() * 3) - 1.5; 
         let newTemp = currentTempRef.current + tempChange;
-        newTemp = Math.max(44, Math.min(66, newTemp)); // Clamp between 44 and 66
-        currentTempRef.current = newTemp; // Update ref for next calculation
+        newTemp = Math.max(44, Math.min(66, newTemp)); 
+        currentTempRef.current = newTemp; 
         const tempStr = newTemp.toFixed(1);
         
-        // 辐射值: 200-499 mSv/h
         const rad = Math.floor(200 + Math.random() * 300);
+        const o2 = (8 + Math.random() * 2).toFixed(1); 
         
-        // 氧气含量: 8-10%
-        const o2 = (8 + Math.random() * 2).toFixed(1); // 8.0 to 9.9
-        
-        // 污染等级 (保持不变)
         const pollutionLevels = ["SEVERE", "CRITICAL", "UNSTABLE", "HAZARDOUS"];
         const pollution = pollutionLevels[Math.floor(Math.random() * pollutionLevels.length)];
         
-        // 酸雨状态 (保持不变)
         const rainStatus = ["IMMINENT", "LIKELY", "UNLIKELY", "CERTAIN"];
         const rain = rainStatus[Math.floor(Math.random() * rainStatus.length)];
                 
-        // 电力状态: 百分制, 初始 53%, 每次下降 1-10%, 最低 0%
+        // --- 移除 Power 计算 --- 
+        /*
         let newPower = currentPowerRef.current;
         if (newPower > 0) {
-          const powerDecrease = Math.floor(Math.random() * 10) + 1; // 1 to 10
-          newPower = Math.max(0, newPower - powerDecrease); // Decrease but not below 0
+          const powerDecrease = Math.floor(Math.random() * 10) + 1; 
+          newPower = Math.max(0, newPower - powerDecrease); 
         }
-        currentPowerRef.current = newPower; // Update ref for next calculation
+        currentPowerRef.current = newPower; 
         const powerStr = `${newPower}%`;
+        */
         
-        // 随机警告 (保持不变)
         const warnings = [
           "ALERT: TOXIC EXPOSURE RISK",
           "CAUTION: RADIATION STORM",
@@ -342,8 +402,8 @@ export default function Home() {
         const randomWarning = warnings[Math.floor(Math.random() * warnings.length)];
         const warningLine = Math.random() > 0.5 ? `\n${randomWarning}` : '';
         
-        // --- 修改: 返回更新后的字符串 (移除 CO2, WIND, 修改 RAD 单位, 修改 POWER 格式) ---
-        return `TEMP: ${tempStr}°C\nRAD: ${rad}mSv/h\nO2: ${o2}%\nPOLLUTION: ${pollution}\nACID RAIN: ${rain}\nPOWER: ${powerStr}${warningLine}`;
+        // --- 修改: 返回更新后的字符串 (移除 POWER) ---
+        return `TEMP: ${tempStr}°C\nRAD: ${rad}mSv/h\nO2: ${o2}%\nPOLLUTION: ${pollution}\nACID RAIN: ${rain}${warningLine}`;
       };
 
       // --- 修改: 包含删除逻辑的启动函数 --- 
@@ -390,6 +450,43 @@ export default function Home() {
       };
     }
   }, [textVisible]);
+
+  // --- 新增: Power Level 更新逻辑 ---
+  useEffect(() => {
+    if (!mainVisible) return; // 只在主界面可见时更新
+
+    const intervalId = setInterval(() => {
+      const decrease = Math.floor(Math.random() * 3) + 1; // 随机减 1-3
+      setPowerLevel(prevLevel => Math.max(0, prevLevel - decrease)); // 更新并确保不低于0
+    }, 5000); // 每 5 秒
+
+    return () => clearInterval(intervalId); // 清理 interval
+  }, [mainVisible]); // 依赖 mainVisible
+
+  // --- 新增: 电池充电函数 --- 
+  const chargeBattery = () => {
+    setPowerLevel(prevLevel => {
+      // Don't charge if already inverted (or at 100)
+      if (prevLevel >= 100) return 100;
+      const newLevel = Math.min(100, prevLevel + 5); // Increase by 5, cap at 100
+      console.log("Charging... New Power Level:", newLevel); // Log charging
+      return newLevel;
+    });
+  };
+
+  // --- 新增: 监听电量以触发负色效果 --- 
+  useEffect(() => {
+    if (powerLevel === 100 && !isInverted) {
+      console.log("Power at 100%! Activating inverted mode.");
+      setIsInverted(true);
+      // Optional: You could add sound effects or other visual cues here
+    }
+    // Optional: Add logic here if you want to revert the effect 
+    // if the power level drops below 100 for some reason.
+    // else if (powerLevel < 100 && isInverted) {
+    //   setIsInverted(false);
+    // }
+  }, [powerLevel, isInverted]);
 
   // 定义列的数量
   const numberOfColumns = 6; // 共6条边界，产生5个可点击区域
@@ -520,27 +617,104 @@ export default function Home() {
     }
   };
 
-  // 处理列点击事件
+  // 处理列点击事件 - 修改为切换到内容视图并滚动
   const handleColumnClick = (columnIndex) => {
     console.log(`Column ${columnIndex + 1} clicked`);
-    
-    // 根据点击的列导航到不同页面
-    const routes = [
-      '/work',      // 第1列
-      '/experience', // 第2列
-      '/life',      // 第3列
-      '/contact',   // 第4列
-      '/about'      // 第5列
+    const sectionIds = [
+      'works-section',
+      'experience-section',
+      'life-section',
+      'contact-section',
+      'about-section'
     ];
     
-    if (columnIndex < routes.length) {
-      // --- 修改: 使用 router.push 进行导航 ---
-      router.push(routes[columnIndex]);
+    if (columnIndex < sectionIds.length) {
+      const sectionId = sectionIds[columnIndex];
+      // 1. 切换到内容视图
+      setActiveSection('content');
+
+      // 2. 延迟滚动，确保 contentWrapper 可见且元素已渲染
+      // 使用 requestAnimationFrame 确保在下一次绘制前执行
+      requestAnimationFrame(() => {
+        const targetElement = document.getElementById(sectionId);
+        const containerElement = contentWrapperRef.current;
+        if (targetElement && containerElement) {
+          // 计算目标元素相对于容器顶部的距离
+          const offsetTop = targetElement.offsetTop;
+          // 滚动容器
+          containerElement.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      });
+    }
+  };
+
+  // --- 修改: 处理返回主页视图 --- 
+  const handleGoHome = () => {
+    setActiveSection('home');
+    // 移除滚动逻辑
+    // mainLayoutRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+  };
+
+  // --- 恢复并修改 About Section 弹出动画 useEffect ---
+  useEffect(() => {
+    // 仅在 contentWrapper 可见时设置动画
+    if (activeSection === 'content' && aboutSectionRef.current && aboutContentRef.current) {
+      // console.log("Setting up GSAP animation for About section..."); 
+      
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: aboutSectionRef.current, // 触发器保持不变
+          scroller: contentWrapperRef.current, 
+          start: 'top bottom', 
+          end: 'bottom top', 
+          toggleActions: 'play none none reverse', 
+          markers: false, 
+        }
+      });
+
+      // 修改动画目标为整个 aboutSection
+      tl.from(aboutSectionRef.current, { // 修改: 目标改为 aboutSectionRef
+        x: '100%', 
+        opacity: 0,
+        immediateRender: false, 
+        duration: 0.8, 
+        ease: 'power3.out' 
+      });
+
+      // 清理函数保持不变
+      return () => {
+        // console.log("Cleaning up GSAP animation for About section."); 
+        if (tl.scrollTrigger) {
+          tl.scrollTrigger.kill();
+        }
+        tl.kill();
+      };
+    } 
+    // 清理逻辑保持不变
+    else {
+        ScrollTrigger.getAll().forEach(st => {
+            if (st.trigger === aboutSectionRef.current) {
+                // console.log("Cleaning up GSAP trigger on section change."); 
+                st.kill();
+            }
+        });
+    }
+  }, [activeSection]); 
+
+  // --- 新增: 激活 Tesseract 的回调函数 --- 
+  const handleActivateTesseract = () => {
+    if (!isTesseractActivated) {
+      console.log('Activation Lever Pulled! Activating Tesseract...');
+      setIsTesseractActivated(true);
+      // You could potentially add a sound effect trigger here
     }
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${isInverted ? styles.inverted : ''}`}>
       <Head>
         <title>森雨 - RainMorime</title>
         <meta name="description" content="森雨(RainMorime)的个人网站" />
@@ -550,168 +724,22 @@ export default function Home() {
       <CustomCursor />
       <RainMorimeEffect />
       
-      <div className={styles.gridBackground}></div>
-      <div className={styles.glowEffect}></div>
-
       <HomeLoadingScreen onComplete={handleLoadingComplete} />
 
+      {/* --- 修改: 条件渲染 Tesseract 并传递激活状态 --- */}
       {mainVisible && (
-        <main className={styles.mainLayout}>
-          <div className={`${styles.leftPanel} ${leftPanelAnimated ? styles.animated : ''}`}>
-            <div className={styles.logoContainer}>
-            </div>
-            {/* --- 修改: 应用打字机状态 --- */}
-            <div className={`${styles.fateTextContainer} ${isFateTypingActive ? styles.typingActive : ''}`}>
-              {/* --- 修改: 显示打字机文本 --- */}
-              <span className={styles.fateText}>{displayedFateText}</span>
-              <div className={styles.fateLine}></div>
-            </div>
-            
-            {/* --- 修改: 环境参数容器移回 LeftPanel --- */}
-            <div className={`${styles.envParamsContainer} ${isEnvParamsTyping ? styles.typingActive : ''} ${leftPanelAnimated ? styles.animated : ''}`}>
-                <pre className={styles.envParamsText}>
-                  {displayedEnvParams}
-                </pre>
-            </div>
-          </div>
-          
-          <div className={styles.rightPanel}>
-            {[...Array(6)].map((_, index) => { 
-              const lineLeftPercentage = index * 16;
-              // Determine classes based on includes check
-              const isPulsingNormal = pulsingNormalIndices?.includes(index);
-              const isPulsingReverse = pulsingReverseIndices?.includes(index);
-              return (
-                <div 
-                  key={`line-${index}`}
-                  className={`
-                    ${styles.verticalLine} 
-                    ${linesAnimated ? styles.animated : ''} 
-                    ${isPulsingNormal ? styles.pulsing : ''} 
-                    ${isPulsingReverse ? styles.pulsingReverse : ''}
-                  `}
-                  style={{ left: `${lineLeftPercentage}%` }}
-                ></div>
-              );
-            })}
-            
-            {sectionNames.map((name, index) => {
-              const columnPercentage = index * 16;
-              const hudText = `DATA-Ø0${index + 1}`;
-
-              // Task data for the first column - Generate 30 tasks
-              const tasks = Array.from({ length: 30 }, (_, i) => {
-                const taskNumber = String(i + 1).padStart(3, '0'); // Format number like 001, 002...
-                return `TASK-${taskNumber}: Done`;
-              });
-
-              return (
-                <div 
-                  key={name}
-                  className={`${styles.column} ${styles['column' + index]} ${!animationsComplete ? styles.nonInteractive : ''}`} 
-                  style={{ left: `${columnPercentage}%`, width: '16%' }} 
-                  onClick={animationsComplete ? () => handleColumnClick(index) : null}
-                  // --- 修改: Use combined handlers ---
-                  onMouseEnter={() => handleColumnMouseEnter(index)}
-                  onMouseLeave={() => handleColumnMouseLeave(index)}
-                >
-                  <div className={styles.verticalText}>
-                    {name.split('').map((char, charIdx) => {
-                      const delay = `${charIdx * 0.01}s`;
-                      return (
-                        <div key={charIdx} className={styles.charItem}>
-                          <VerticalShinyText
-                            text={char}
-                            textVisible={textVisible}
-                            animationDelay={delay}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className={styles.hudOverlay}>
-                    {/* Render task list only for the first column */}
-                    {index === 0 && (
-                      <div className={styles.taskContainer}>
-                        {tasks.map((task, taskIndex) => (
-                          <React.Fragment key={taskIndex}>
-                            <div className={styles.taskItem}>
-                              <div className={styles.taskSquare}></div>
-                              <div className={styles.taskText}>{task}</div>
-                            </div>
-                            {/* Render line conditionally *after* the item */}
-                            {taskIndex < tasks.length - 1 && (
-                              <div className={styles.taskLine}></div>
-                            )}
-                          </React.Fragment>
-                        ))}
-                      </div>
-                    )}
-                    {/* 修改: 添加四个分支的结构 - 仅在 column1 (index=1) */}
-                    {index === 1 && (
-                      <>
-                        {/* 分支 1 (Top 20%, Right) */}
-                        <div className={`${styles.branchContainer} ${styles.branch1} ${styles.rightBranch}`}>
-                          <div className={styles.branchSquare}></div>
-                          <div className={styles.branchText}>{branchText1}</div>
-                        </div>
-                        {/* 分支 2 (Top 40%, Left) */}
-                        <div className={`${styles.branchContainer} ${styles.branch2} ${styles.leftBranch}`}>
-                          <div className={styles.branchSquare}></div>
-                          <div className={styles.branchText}>{branchText2}</div>
-                        </div>
-                        {/* 分支 3 (Top 60%, Right) */}
-                        <div className={`${styles.branchContainer} ${styles.branch3} ${styles.rightBranch}`}>
-                          <div className={styles.branchSquare}></div>
-                          <div className={styles.branchText}>{branchText3}</div>
-                        </div>
-                        {/* 分支 4 (Top 80%, Left) */}
-                        <div className={`${styles.branchContainer} ${styles.branch4} ${styles.leftBranch}`}>
-                          <div className={styles.branchSquare}></div>
-                          <div className={styles.branchText}>{branchText4}</div>
-                        </div>
-                      </>
-                    )}
-                    {index === 3 && (
-                      <>
-                        <span className={`${styles.radarRipple} ${styles.ripple1}`}></span>
-                        <span className={`${styles.radarRipple} ${styles.ripple2}`}></span>
-                        <span className={`${styles.radarRipple} ${styles.ripple3}`}></span>
-                        <span className={styles.rotatingScanLine}></span>
-                      </>
-                    )}
-                    {index === 2 && <span className={styles.lifeScanlines}></span>}
-                  </div>
-                  <div className={styles.cornerHudTopLeft}></div>
-                  <div className={styles.cornerHudBottomRight}></div>
-                  
-                  {/* Main Image HUD - Use state for ABOUT, default for others */}
-                  <div className={styles.imageHud}>
-                    <span className={styles.imageHudSquare}></span>
-                    <span className={styles.imageHudText}>
-                      {/* Use first element of state array for ABOUT's main HUD */}
-                      {index === 4 ? randomHudTexts[0] : hudText}
-                    </span>
-                  </div>
-
-                  {/* Add 5 extra random HUDs for ABOUT */}
-                  {index === 4 && (
-                    <>
-                      {/* Map over the state array elements 1 through 5 */}
-                      {randomHudTexts.slice(1).map((text, i) => (
-                        <div key={`random-${i}`} className={`${styles.imageHud} ${styles.randomHud} ${styles[`randomHud${i + 1}`]}`}> 
-                          <span className={styles.imageHudSquare}></span>
-                          <span className={styles.imageHudText}>{text}</span>
-                        </div>
-                      ))}
-                    </>
-                  )}
-
-                </div>
-              );
-            })}
-          </div>
-          
+        <TesseractExperience 
+          chargeBattery={chargeBattery} 
+          isActivated={isTesseractActivated} // Pass activation state
+        />
+      )}
+      
+      {/* --- 静态元素移到顶层 --- */}
+      <div className={styles.gridBackground}></div>
+      <div className={styles.glowEffect}></div>
+      {/* 四角 HUD */} 
+      {mainVisible && (
+        <>
           <div className={`${styles.hudElement} ${styles.topLeft} ${hudVisible ? styles.visible : ''}`}>
             <div>TIME: {currentTime}</div>
             <div>SYSTEM_ONLINE</div>
@@ -728,7 +756,253 @@ export default function Home() {
             <div>TACTICAL_MODE</div>
             <div>SECURE_CONNECTION</div>
           </div>
-        </main>
+          {/* 左侧面板 */} 
+          <div className={`${styles.leftPanel} ${leftPanelAnimated ? styles.animated : ''}`}> 
+            {/* --- 新增: 将激活拉杆移到这里 --- */}
+            {mainVisible && (
+              <ActivationLever 
+                onActivate={handleActivateTesseract} 
+                isActive={isTesseractActivated} 
+              />
+            )}
+            {/* --- 修改: Power Display --- */}
+            <div className={styles.powerDisplay}>
+              <div className={styles.batteryIcon}>
+                {/* --- 新增: 动态生成电池格子 --- */}
+                {[...Array(5)].map((_, i) => {
+                  // 计算当前格子是否应该被填充
+                  const shouldBeFilled = powerLevel >= (i + 1) * 20; // 每 20% 填充一格
+                  // 特殊处理 100% 的情况，确保最后一格填充
+                  const isFilled = (i === 4 && powerLevel === 100) || shouldBeFilled;
+                  return (
+                    <span 
+                      key={i} 
+                      className={`${styles.batteryLevelSegment} ${isFilled ? styles.filled : ''}`}>
+                    </span>
+                  );
+                })}
+              </div>
+              <span className={styles.powerText}>{powerLevel}%</span>
+            </div>
+            <div className={styles.logoContainer}>
+            </div>
+            <div className={`${styles.fateTextContainer} ${isFateTypingActive ? styles.typingActive : ''}`}>
+              <span className={styles.fateText}>{displayedFateText}</span>
+              <div className={styles.fateLine}></div>
+            </div>
+            <div className={`${styles.envParamsContainer} ${isEnvParamsTyping ? styles.typingActive : ''} ${leftPanelAnimated ? styles.animated : ''}`}>
+                <pre className={styles.envParamsText}>
+                  {displayedEnvParams}
+                </pre>
+            </div>
+          </div>
+
+          {/* --- 主页视图容器 (仅包含右侧面板) --- */}
+          <main className={`${styles.mainLayout} ${activeSection === 'home' ? styles.visible : styles.hidden}`}>
+            {/* --- 左侧面板 (已移出) --- */}
+            {/* <div className={`${styles.leftPanel} ${leftPanelAnimated ? styles.animated : ''}`}>
+              ...
+            </div> */}
+            
+            {/* --- 右侧面板 (保留在 main 内) --- */}
+            <div
+              className={styles.rightPanel}
+            >
+              {[...Array(6)].map((_, index) => { 
+                const lineLeftPercentage = index * 16;
+                const isPulsingNormal = pulsingNormalIndices?.includes(index);
+                const isPulsingReverse = pulsingReverseIndices?.includes(index);
+                return (
+                  <div 
+                    key={`line-${index}`}
+                    className={`
+                      ${styles.verticalLine} 
+                      ${linesAnimated ? styles.animated : ''} 
+                      ${isPulsingNormal ? styles.pulsing : ''} 
+                      ${isPulsingReverse ? styles.pulsingReverse : ''}
+                    `}
+                    style={{ left: `${lineLeftPercentage}%` }}
+                  ></div>
+                );
+              })}
+              
+              {sectionNames.map((name, index) => {
+                const columnPercentage = index * 16;
+                // --- 修改: 从 randomHudTexts 获取正确的 HUD 文本 ---
+                const hudText = randomHudTexts[index + 1] || `DATA-Ø0${index + 1}`; // 使用 randomHudTexts 并提供回退
+                
+                // --- 任务列表内容保持不变 ---
+                const tasks = Array.from({ length: 30 }, (_, i) => {
+                  const taskNumber = String(i + 1).padStart(3, '0');
+                  return `TASK-${taskNumber}: Done`;
+                });
+
+                return (
+                  <div 
+                    key={name}
+                    className={`${styles.column} ${styles['column' + index]} ${!animationsComplete ? styles.nonInteractive : ''}`} 
+                    style={{ left: `${columnPercentage}%`, width: '16%' }} 
+                    onClick={animationsComplete ? () => handleColumnClick(index) : null}
+                    onMouseEnter={() => handleColumnMouseEnter(index)}
+                    onMouseLeave={() => handleColumnMouseLeave(index)}
+                  >
+                    <div className={styles.verticalText}>
+                      {name.split('').map((char, charIdx) => {
+                        const delay = `${charIdx * 0.005}s`;
+                        return (
+                          <div key={charIdx} className={styles.charItem}>
+                            <VerticalShinyText
+                              text={char}
+                              textVisible={textVisible}
+                              animationDelay={delay}
+                              speed={0.8}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* --- 修改: 添加 hudOverlay 内容 --- */}
+                    <div className={styles.hudOverlay}>
+                      {/* Column 0 (WORKS) - Task List */}
+                      {index === 0 && (
+                        <div className={styles.taskContainer}>
+                          {tasks.flatMap((task, taskIdx) => [
+                            <div key={`task-${taskIdx}`} className={styles.taskItem}>
+                              <span className={styles.taskSquare}></span>
+                              <div className={styles.taskTextWrapper}>
+                                <span className={styles.taskText}>{task}</span>
+                              </div>
+                            </div>,
+                            taskIdx < tasks.length - 1 && <div key={`line-${taskIdx}`} className={styles.taskLine}></div>
+                          ])}
+                        </div>
+                      )}
+                      {/* Column 1 (EXPERIENCE) - Branch Lines */}
+                      {index === 1 && (
+                        <>
+                          <div className={`${styles.branchContainer} ${styles.branch1} ${styles.rightBranch}`}>
+                            <span className={styles.branchSquare}></span>
+                            <pre className={styles.branchText}>{branchText1}</pre>
+                          </div>
+                          <div className={`${styles.branchContainer} ${styles.branch2} ${styles.leftBranch}`}>
+                            <span className={styles.branchSquare}></span>
+                            <pre className={styles.branchText}>{branchText2}</pre>
+                          </div>
+                          <div className={`${styles.branchContainer} ${styles.branch3} ${styles.rightBranch}`}>
+                            <span className={styles.branchSquare}></span>
+                            <pre className={styles.branchText}>{branchText3}</pre>
+                          </div>
+                          <div className={`${styles.branchContainer} ${styles.branch4} ${styles.leftBranch}`}>
+                            <span className={styles.branchSquare}></span>
+                            <pre className={styles.branchText}>{branchText4}</pre>
+                          </div>
+                        </>
+                      )}
+                      {/* Column 2 (LIFE) - ECG Scanlines */}
+                      {index === 2 && <span className={styles.lifeScanlines}></span>}
+
+                      {/* Column 3 (CONTACT) - Ripples (Elements added dynamically if needed, or keep static SVG/CSS) */}
+                      {index === 3 && (
+                          <>
+                            <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
+                            <div className={`${styles.radarRipple} ${styles.ripple2}`}></div>
+                            <div className={`${styles.radarRipple} ${styles.ripple3}`}></div>
+                          </>
+                      )}
+                      {/* Column 4 (ABOUT) - Additional Random HUDs */}
+                      {/* The random HUD elements are handled separately below */}
+                    </div>
+                    <div className={styles.cornerHudTopLeft}></div>
+                    <div className={styles.cornerHudBottomRight}></div>
+                    {/* --- 修改: 区分主 Image HUD 和随机 HUD --- */}
+                    <div className={styles.imageHud}>
+                      <span className={styles.imageHudSquare}></span>
+                      <span className={styles.imageHudText}>
+                        {index === 4 ? randomHudTexts[0] : hudText} 
+                      </span>
+                    </div>
+                    {/* --- 新增: 为 ABOUT 列添加 5 个随机 HUD 元素 --- */}
+                    {index === 4 && (
+                      <>
+                        {randomHudTexts.slice(1).map((text, randomIdx) => (
+                          <div 
+                            key={`random-hud-${randomIdx}`} 
+                            className={`${styles.imageHud} ${styles.randomHud} ${styles[`randomHud${randomIdx + 1}`]}`} // Correct template literal syntax
+                          >
+                            <span className={styles.imageHudSquare}></span>
+                            <span className={styles.imageHudText}>{text}</span>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* --- 四角 HUD (已移出) --- */}
+            {/* <div className={`${styles.hudElement} ...`}> ... </div> */}
+            
+          </main>
+
+          {/* --- 内容包裹器 --- */}
+          <div 
+            ref={contentWrapperRef} 
+            className={`${styles.contentWrapper} ${activeSection === 'content' ? styles.visible : styles.hidden}`}
+          >
+            {/* --- 内容区域放在包裹器内部 --- */}
+            <div id="works-section" className={`${styles.contentSection} ${styles.worksSection}`}> 
+              <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
+              <h2>WORKS</h2>
+              <div className={styles.projectGrid}>
+                {sampleProjects.map(project => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            </div>
+
+            <div id="experience-section" className={`${styles.contentSection} ${styles.experienceSection}`}> 
+              <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
+              <h2>EXPERIENCE</h2>
+              <p>这里是 Experience 部分的内容...</p>
+              {/* 在这里填充 Experience 相关的内容 */}
+            </div>
+
+            <div id="life-section" className={`${styles.contentSection} ${styles.lifeSection}`}> 
+              <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
+              <h2>LIFE</h2>
+              <p>这里是 Life 部分的内容...</p>
+              {/* 在这里填充 Life 相关的内容 */}
+            </div>
+
+            <div id="contact-section" className={`${styles.contentSection} ${styles.contactSection}`}> 
+              <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
+              <h2>CONTACT</h2>
+              <p>这里是 Contact 部分的内容...</p>
+              {/* 在这里填充 Contact 相关的内容 */}
+            </div>
+
+            <div id="about-section" ref={aboutSectionRef} className={`${styles.contentSection} ${styles.aboutSection}`}> 
+              <Noise />
+              {/* --- 新增: 内容包裹器，应用动画 --- */}
+              <div ref={aboutContentRef}>
+                <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
+                <h2>ABOUT</h2>
+                {/* 修改: 将 "ICP备案: " 包含在链接内 */}
+                <div className={styles.footerInfo}>
+                  <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
+                    ICP备案: 陕ICP备2023011267号-1
+                  </a>
+                </div>
+
+                {/* 修改: 版权信息文本 */} 
+                <div className={styles.footerInfo}> 
+                  © 2025 朴相霖 / RainMorime 版权所有
+                </div>
+              </div>
+            </div>
+          </div> { /* contentWrapper 结束 */ } 
+        </>
       )}
     </div>
   );

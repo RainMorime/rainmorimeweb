@@ -95,10 +95,10 @@ const HomeLoadingScreen = ({ onComplete }) => {
       { threshold: 41, text: "正在连接数据终端[DAT-189]" },
       { threshold: 47, text: "数据库启动..." },
       { threshold: 53, text: "加载区域地图文件[MAP-379]" },
-      { threshold: 59, text: "解密地图数据..." },
+      { threshold: 59, text: "正在索引伊甸计划基因序列..." },
       { threshold: 65, text: "计算生存指数[SRV-682]" },
-      { threshold: 71, text: "检查安全协议..." },
-      { threshold: 77, text: "校准工业系统" },
+      { threshold: 71, text: "加载莱茵计划大气模型..." },
+      { threshold: 77, text: "校准工业系统..." },
       { threshold: 83, text: "正在检验系统完整性..." },
       { threshold: 89, text: "准备接入主系统[SYS-000]" },
       { threshold: 93, text: "WELCOME, MORIME GUARD." },
@@ -125,7 +125,14 @@ const HomeLoadingScreen = ({ onComplete }) => {
         } else {
           processedLogTextsRef.current.add(log.text); // 标记普通日志为已处理
 
-          const numLines = Math.floor(Math.random() * 8) + 3; 
+          // 修改：根据概率决定生成行数范围
+          let numLines;
+          if (Math.random() < 0.2) { // 20% 几率
+            numLines = Math.floor(Math.random() * 6) + 3; // 生成 3 到 8 行
+          } else { // 80% 几率
+            numLines = Math.floor(Math.random() * 3) + 2; // 生成 2 到 4 行
+          }
+          
           let lastPercentage = 0;
 
           for (let i = 1; i <= numLines; i++) {
@@ -157,12 +164,12 @@ const HomeLoadingScreen = ({ onComplete }) => {
   // 修改：当 progress 达到 100% 时触发分割线，不再在此处直接处理退出
   useEffect(() => {
     startTimeRef.current = Date.now();
-    
+
     const interval = setInterval(() => {
       setProgress(prev => {
         const newProgress = Math.min(prev + (Math.random() * 3.0 + 0.5), 100); 
         generateLogLine(newProgress);
-        
+
         if (newProgress >= 100) {
           clearInterval(interval);
           const elapsedTime = Date.now() - startTimeRef.current;
@@ -181,8 +188,8 @@ const HomeLoadingScreen = ({ onComplete }) => {
         
         return newProgress;
       });
-    }, 150); 
-    
+    }, 80); // 修改：加快进度条更新速度，从 150ms 减少到 8 0ms
+
     // 返回清理函数，确保 interval 在组件卸载时被清除
     return () => clearInterval(interval);
   }, [onComplete]); // 依赖项保持不变
@@ -217,7 +224,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
 
         return currentQueue.slice(1); // 从队列中移除已显示的行
       });
-    }, 60); // 控制日志显示的间隔时间（毫秒）
+    }, 70); // 控制日志显示的间隔时间（毫秒）
 
     return () => clearInterval(displayInterval); // 组件卸载或 loading 结束时清理定时器
 
@@ -265,7 +272,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
     if (showSplitLines) {
       // 当分割线动画开始时，设置一个定时器来触发最终的退出
       const transitionTimer = setTimeout(() => {
-        //handleTransitionOut(); // DEBUG: Temporarily disabled for debugging - Re-enable to restore transition
+        handleTransitionOut(); // DEBUG: Temporarily disabled for debugging - Re-enable to restore transition
       }, 600); // 延迟 600ms 后开始退出，让分割线动画播放一部分
 
       // 清理函数
@@ -345,10 +352,10 @@ const HomeLoadingScreen = ({ onComplete }) => {
     if (loading && signalLineRef.current) {
       // 获取 polyline 元素并计算总长度
       const line = signalLineRef.current;
-      // const lineLength = 98.3; // Original
-      // const lineLength = 108.3; // Previous: sqrt(800) + 80 ≈ 108.3
-      // New calculation: sqrt((70-50)^2 + (70-50)^2) + (180-70) = sqrt(800) + 110 ≈ 138.3
-      const lineLength = 138.3; // 新的估算长度 - 进一步加长
+      // Original: 98.3
+      // Previous: 156.21 (sqrt(450) + 135)
+      // New calculation: sqrt((75-50)^2 + (25-50)^2) + (200-75) = sqrt(1250) + 125 ≈ 160.36
+      const lineLength = 160.36; // 更新的估算长度 - 适配抬高的文字
 
       // 设置初始状态 (隐藏线条)
       gsap.set(line, {
@@ -586,7 +593,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
       {loading && (
         <>
           {/* 背景层 */}
-          <motion.div 
+          <motion.div
             className={`${styles.wasteland_background} ${styles.variables}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -594,7 +601,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
           />
           
           {/* 主内容层 */}
-          <motion.div 
+          <motion.div
             className={styles.loading_screen}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -826,7 +833,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
                  <polyline
                    ref={signalLineRef}
                    className={styles.signal_line}
-                   points="50,50 70,70 70,180" // 新的坐标点：右上到水平，并加长
+                   points="50,50 75,25 200,25" // 新坐标点：适配抬高的文字，斜线更长
                  />
                </svg>
 

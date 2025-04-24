@@ -1,0 +1,95 @@
+/* ActivationLever.module.scss */
+
+.leverContainer {
+  position: absolute;
+  top: 17.5%;
+  right: 20%;
+  width: 50px;
+  height: 100px;
+  z-index: 11;
+  cursor: pointer;
+  // transform: skewX(-15deg); // Remove skew as it's relative to the non-skewed left panel
+  // transform-origin: top right; // Remove skew origin
+  // background-color: red !important; // --- REMOVE THIS DEBUG LINE --- 
+  // background-color: rgba(0, 255, 0, 0.1); // Optional faint background
+
+  display: flex;
+  transition: filter 0.3s ease;
+}
+
+.leverContainer.disabled {
+  cursor: default;
+  filter: brightness(0.7); /* Slightly dim when disabled */
+}
+
+.leverSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.base {
+  fill: none;
+  stroke: var(--ark-border, #888888); /* Use CSS var, fallback to gray */
+  stroke-width: 1.5;
+}
+
+.slotLine {
+  stroke: rgba(var(--ark-border-rgb, 136, 136, 136), 0.5); /* Dimmer slot line */
+  stroke-width: 1;
+  stroke-dasharray: 2 2; /* Dashed line for the slot */
+}
+
+/* Group for handle elements */
+.leverSvg g {
+   transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Easing for pull effect */
+}
+
+.handleTop {
+  stroke: var(--ark-border, #888888);
+  stroke-width: 2.5; /* Thicker handle top */
+}
+
+.handleShaft {
+  stroke: var(--ark-border, #888888);
+  stroke-width: 2;
+}
+
+.indicatorLight {
+  stroke-width: 1;
+  transition: fill 0.3s ease, stroke 0.3s ease, filter 0.3s ease;
+}
+
+.indicatorLight.off {
+  fill: none;
+  stroke: var(--ark-border, #888888);
+}
+
+.indicatorLight.on {
+  fill: var(--ark-highlight-green, #B2F2BB); /* Bright green/cyan on */
+  stroke: none;
+  /* Optional: Add a subtle glow */
+  filter: drop-shadow(0 0 3px var(--ark-highlight-green, #B2F2BB)); 
+}
+
+.labelText {
+  fill: var(--ark-text-secondary, #aaaaaa);
+  font-family: 'Dosis', monospace;
+  font-size: 10px;
+  text-anchor: middle;
+  user-select: none;
+}
+
+.leverLine {
+  stroke: var(--ark-primary);
+  stroke-width: 2;
+  transition: transform 0.3s ease-in-out;
+
+  &.vertical {
+    // Optional: specific styles for vertical line
+  }
+
+  &.horizontal {
+    // Optional: specific styles for horizontal line
+  }
+} 

@@ -49,6 +49,9 @@
   --scan-line-opacity: 0.15;
   --accent-yellow: rgba(255, 220, 60, 0.8);
   --hud-element-color: rgba(180, 180, 180, 0.5); // 新增 HUD 元素基础颜色
+  --radar-blip-color: rgba(180, 200, 180, 0.7); // 新增 雷达信号点颜色
+  --glitch-color-1: rgba(0, 255, 255, 0.3); // 新增 故障效果颜色 1 (青色)
+  --glitch-color-2: rgba(255, 0, 255, 0.3); // 新增 故障效果颜色 2 (品红)
 }
 
 // 加载屏幕主容器
@@ -72,6 +75,7 @@
   will-change: opacity, transform;
   box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
   @extend .variables;
+  animation: none; // 默认无动画
 }
 
 // 废土背景
@@ -89,6 +93,8 @@
   background-blend-mode: overlay;
   opacity: 0.9;
   overflow: hidden;
+  will-change: opacity;
+  animation: none; // 默认无动画
 }
 
 // 网格背景
@@ -762,7 +768,7 @@
   line-height: 1.35;
   overflow: hidden;
   white-space: nowrap;
-  animation: typing 0.6s steps(30, end);
+  animation: typing 0.3rs steps(30, end);
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1188,10 +1194,10 @@
   height: 18vh;
   max-width: 18vw;
   max-height: 18vw;
-  transform: translate(-50%, -50%) rotate(-90deg); // 旋转 -90 度使动画从顶部开始
+  transform: translate(-50%, -50%); // 移除旋转，让GSAP控制扫描线
   opacity: 0.5;
   pointer-events: none;
-  overflow: visible; // 确保描边可见
+  overflow: visible;
 }
 
 // 新增：圆形绘制动画
@@ -1227,14 +1233,14 @@
   stroke-width: 0.5; // 刻度线宽度
   stroke-linecap: round;
   opacity: 0; // 初始隐藏
-  animation: fadeInDot 0.5s linear 1.25s forwards; // 与中心点一起淡入
+  animation: fadeInDot 0.5s linear 1.05s forwards; // 修改：提前淡入延迟 (从 1.25s)
 }
 
 // 新增：中心实心圆点样式
 .center_solid_dot {
   fill: rgba(180, 180, 180, 0.25); // 填充颜色与描边一致
   opacity: 0; // 初始隐藏
-  animation: fadeInDot 0.5s linear 1.25s forwards; // 与中心点一起淡入
+  animation: fadeInDot 0.5s linear 1.05s forwards; // 修改：提前淡入延迟 (从 1.25s)
 }
 
 // 新增：内层空心圆样式
@@ -1243,7 +1249,7 @@
   stroke: rgba(180, 180, 180, 0.10); // 稍浅的描边颜色
   stroke-width: 0.5; // 较细的描边
   opacity: 0; // 初始隐藏
-  animation: fadeInDot 0.5s linear 1.35s forwards; // 比中心点稍晚淡入
+  animation: fadeInDot 0.5s linear 1.15s forwards; // 修改：提前淡入延迟 (从 1.35s)
 }
 
 // 新增：淡入动画
@@ -1254,18 +1260,14 @@
 }
 
 // 新增：扇形淡入动画 (可能需要不同的目标透明度)
-@keyframes fadeInSector {
- to {
-    opacity: 0.8; // Or adjust as needed for the sector
- }
-}
+@keyframes fadeInSector { to { opacity: 0.8; } }
 
 // 新增：旋转扇形样式
 .rotating_sector {
-  fill: rgba(180, 180, 180, 0.08); // 填充颜色
-  stroke: none; // 无描边
-  opacity: 0; // 初始隐藏
-  animation: fadeInSector 0.5s linear 1.0s forwards; // 在外圈绘制后稍早淡入
+  fill: rgba(180, 180, 180, 0.08);
+  stroke: none;
+  opacity: 0;
+  animation: fadeInSector 0.5s linear 0.8s forwards;
 }
 
 // 新增：旋转内圈组的样式
@@ -1273,7 +1275,7 @@
   transform-origin: center center; // 设置旋转中心为 SVG 中心
   // GSAP 会控制 transform: rotate()
   opacity: 0; // 初始隐藏
-  animation: fadeInDot 0.5s linear 1.45s forwards; // 保持其淡入动画
+  animation: fadeInDot 0.5s linear 1.25s forwards; // 修改：提前淡入延迟 (从 1.45s)
 }
 
 // 新增：旋转内圈样式
@@ -1307,8 +1309,8 @@
   // Original Endpoint X=30, Y=140
   // Previous Endpoint X=70, Y=180; Adjusted Top-Right: top: calc(30% + 2.6vh); left: calc(70% + 24.9vh);
   // New Adjustment: Top-Left (-1vh top, -1vh left)
-  top: calc(22% + 3.5vh); // 更新视觉垂直位置 (2.6vh - 1vh)
-  left: calc(67% + 12svh); // 更新视觉水平位置 (24.9vh - 1vh)
+  top: calc(22% + 2vh); // 进一步提高垂直位置
+  left: calc(68% + 12svh); // 更新视觉水平位置 (24.9vh - 1vh)
   transform: translateY(-50%); // 垂直居中
   font-family: 'Dosis', sans-serif;
   font-size: 1.1rem;
@@ -1709,4 +1711,81 @@
   -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%); // Safari 兼容
   opacity: 0.6; // 整体效果透明度，可调整
   z-index: 6; // 确保在圆圈等元素之上，如果需要的话
+}
+
+// --- 新增：故障效果 ---
+
+@keyframes glitchAnim {
+  0% { transform: translate(0, 0); opacity: 1; }
+  15% { transform: translate(var(--glitch-translate-x, -3px), var(--glitch-translate-y, 2px)); }
+  30% { transform: translate(var(--glitch-translate-x, 2px), var(--glitch-translate-y, -1px)); }
+  45% { transform: translate(var(--glitch-translate-x, -1px), var(--glitch-translate-y, 3px)); opacity: 0.8; }
+  60% { transform: translate(var(--glitch-translate-x, 3px), var(--glitch-translate-y, 1px)); }
+  75% { transform: translate(var(--glitch-translate-x, -2px), var(--glitch-translate-y, -2px)); }
+  90% { transform: translate(var(--glitch-translate-x, 1px), var(--glitch-translate-y, 0px)); opacity: 1; }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes glitchSkew {
+  0% { clip-path: inset(0% 0% 0% 0%); }
+  20% { clip-path: inset(calc(10% + var(--glitch-inset-v, 0%)) 0% calc(70% + var(--glitch-inset-v, 0%)) 0%); }
+  40% { clip-path: inset(calc(80% + var(--glitch-inset-v, 0%)) 0% calc(5% + var(--glitch-inset-v, 0%)) 0%); }
+  60% { clip-path: inset(calc(25% + var(--glitch-inset-v, 0%)) 0% calc(50% + var(--glitch-inset-v, 0%)) 0%); }
+  80% { clip-path: inset(calc(60% + var(--glitch-inset-v, 0%)) 0% calc(15% + var(--glitch-inset-v, 0%)) 0%); }
+  100% { clip-path: inset(0% 0% 0% 0%); }
+}
+
+.glitch_active {
+  // 主要应用在 loading_screen 上
+  animation: glitchAnim 0.15s linear infinite;
+
+  &::before,
+  &::after {
+    content: ''; // 使用伪元素创建颜色分离效果
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit; // 继承父元素的背景
+    z-index: -1; // 放在主元素后面
+    pointer-events: none;
+  }
+
+  &::before {
+    transform: translateX(-2px); // 水平偏移
+    mix-blend-mode: screen; // 混合模式
+    opacity: var(--glitch-opacity, 0.6);
+    background-color: var(--glitch-color-1); // 青色偏移
+    animation: glitchSkew 0.1s linear infinite reverse; // 切割动画
+     --glitch-inset-v: 5%; // 伪元素切割变化量
+  }
+
+  &::after {
+    transform: translateX(2px); // 反向水平偏移
+    mix-blend-mode: screen;
+    opacity: var(--glitch-opacity, 0.6);
+    background-color: var(--glitch-color-2); // 品红偏移
+    animation: glitchSkew 0.12s linear infinite; // 不同速度的切割动画
+    --glitch-inset-v: -3%; // 伪元素切割变化量
+  }
+}
+
+// 轻微的故障效果，可用于背景层
+.glitch_active_mild {
+   --glitch-opacity: 0.2; // 降低伪元素透明度
+   --glitch-translate-x: 1px; // 减小位移量
+   --glitch-translate-y: 1px;
+   animation: glitchAnim 0.2s linear infinite; // 动画稍慢
+
+   &::before {
+      transform: translateX(-1px);
+      opacity: var(--glitch-opacity, 0.2);
+      animation: glitchSkew 0.15s linear infinite reverse;
+   }
+   &::after {
+      transform: translateX(1px);
+      opacity: var(--glitch-opacity, 0.2);
+      animation: glitchSkew 0.18s linear infinite;
+   }
 }

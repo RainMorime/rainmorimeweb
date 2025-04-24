@@ -10,14 +10,21 @@
 
 .container {
   width: 100%;
-  min-height: 100vh;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+  height: 100vh; // 恢复: 固定高度
+  // min-height: 100vh; // 移除
+  display: flex; // 可以移除，因为子元素是绝对定位
+  flex-direction: column; // 可以移除
+  position: relative; // 保持 relative，作为绝对定位子元素的基准
   background-color: var(--ark-dark-blue);
   color: var(--ark-text);
-  overflow: hidden; /* 确保溢出内容被裁剪 */
+  overflow: hidden; // 恢复: 隐藏溢出，防止容器滚动条出现
+  // scroll-behavior: smooth; // 移除，滚动由 contentWrapper 处理
+  transition: filter 0.5s ease-in-out; // 新增: 为 filter 添加过渡效果
+}
+
+// --- 新增: 负色效果 --- 
+.inverted {
+  filter: invert(1) hue-rotate(180deg);
 }
 
 .main {
@@ -183,29 +190,125 @@
   z-index: 2;
 }
 
-.mainLayout {
-  flex: 1;
-  display: flex;
+.mainLayout, 
+.contentWrapper { // 新增 .contentWrapper
+  position: absolute; 
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  position: relative;
-  z-index: 5;
-  /* 添加 user-select */
+  // transition: opacity 0.5s ease-out; // 移除旧过渡
+  opacity: 0; // 初始状态设为透明 (动画会覆盖)
+  pointer-events: none; 
+}
+
+.mainLayout {
+  // flex: 1; // 移除 flex: 1
+  // display: flex; // 移除 flex
+  // 移除 width, height, top, left, position: relative
+  // 保留 position: absolute 和显隐控制
+  // overflow: hidden; // 移除，由内部 rightPanel 控制
   user-select: none;
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE/Edge */
+  -webkit-user-select: none; 
+  -moz-user-select: none; 
+  -ms-user-select: none; 
+}
+
+// --- visible / hidden 控制 (z-index 调整 + 动画) --- 
+.visible {
+  // opacity: 1; // 由动画控制
+  pointer-events: auto; 
+  z-index: 3; 
+  animation-fill-mode: forwards; // 保持动画结束状态
+}
+
+.hidden { 
+  // opacity: 0; // 由动画控制
+  pointer-events: none;
+  z-index: 1; 
+  animation-fill-mode: forwards; // 保持动画结束状态
+}
+
+// --- 应用特定视图的进入/退出动画 --- 
+.mainLayout.visible {
+  animation: slideDownInSkew 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+.mainLayout.hidden {
+  animation: slideUpOutSkew 0.5s ease-out forwards;
+}
+
+.contentWrapper.visible {
+  animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+.contentWrapper.hidden {
+  animation: slideOutToRight 0.5s ease-out forwards;
+}
+
+// --- 新增 Keyframes --- 
+@keyframes slideUpOutSkew {
+  from {
+    opacity: 1;
+    // transform: translateY(0); // 初始状态
+    // 模拟右侧面板向上滑出，可以只移动内容
+    // 对 mainLayout 本身做动画可能简单点
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-80px); // 向上移动一点
+    // 可以加一点 skew 或 rotate 使其倾斜消失，但这会影响整个 mainLayout
+    // 如果只想影响 rightPanel，需要更复杂的选择器或结构
+    // 暂时只做向上+淡出
+  }
+}
+
+@keyframes slideDownInSkew {
+  from {
+    opacity: 0;
+    transform: translateY(-80px); // 从上方进入
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%); // 从右侧屏幕外开始
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%); // 滑出到右侧屏幕外
+  }
 }
 
 .leftPanel {
-  flex: 1;
+  // flex: 1; // 移除 flex: 1
+  width: calc(100% / 1.618); // 设置明确宽度
+  height: 100vh; // 设置明确高度
+  position: fixed; // 修改为 fixed
+  top: 0; // 添加
+  left: 0; // 添加
   background-color: transparent; 
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  
+  // position: relative; // 移除
+  z-index: 6; // 提升层级 (高于视图切换层)
+
   // 添加.animated类用于触发动画
   &.animated {
     &::after {
@@ -223,13 +326,13 @@
   // 修改：边框初始状态为中心点
   &::after {
     content: '';
-    position: absolute;
+    position: absolute; // 边框相对于固定的 leftPanel 定位
     top: 50%;
     left: 50%;
     width: 0;
     height: 0;
     border: 0px solid var(--ark-border);
-    z-index: 1;
+    z-index: 1; // 在 leftPanel 内部的堆叠顺序
     pointer-events: none;
     background-color: transparent;
     transform: translate(-50%, -50%); // 确保从中心扩展
@@ -238,14 +341,14 @@
   // 修改：角标初始状态为透明
   &::before {
     content: '';
-    position: absolute;
-    top: 15%;
+    position: absolute; // 角标相对于固定的 leftPanel 定位
+    top: 17.5%; // 修改: 与边框 top 对齐
     left: 15%;
     width: 25px;
     height: 25px;
     border-top: 2px solid var(--ark-primary);
     border-left: 2px solid var(--ark-primary);
-    z-index: 2;
+    z-index: 2; // 在 leftPanel 内部的堆叠顺序
     background-color: transparent;
     opacity: 0; // 初始透明
   }
@@ -262,10 +365,10 @@
     transform: translate(-50%, -50%);
   }
   100% {
-    top: 15%;
+    top: 17.5%; // 修改: 实现垂直居中 (100 - 65) / 2
     left: 15%;
-    width: 70%;
-    height: 70%;
+    width: 65%; // 修改: 从 70% 缩小到 65%
+    height: 65%; // 修改: 从 70% 缩小到 65%
     border-width: 1px;
     transform: translate(0, 0); // 恢复正常位置
   }
@@ -288,9 +391,9 @@
   width: 100%;
   height: 100%;
   background-image: url('/pictures/RM2.png');
-  background-position: center;
+  background-position: 47% 48%; // 修改: 稍微向左上移动
   background-repeat: no-repeat;
-  background-size: 60%;
+  background-size: 50%; // 修改: 从 60% 缩小 到 50%
   filter: grayscale(100%) brightness(1.2) drop-shadow(0 0 10px rgba(200, 200, 200, 0.3));
   pointer-events: none;
   position: relative;
@@ -318,14 +421,28 @@
 }
 
 .rightPanel {
-  flex: 0.618;
-  display: flex;
+  // flex: 0.618; // 移除 flex
+  // 调整为绝对定位在 mainLayout 内部
+  position: absolute;
+  top: 0;
+  left: calc(100% / 1.618); // 设置左偏移，等于 leftPanel 宽度
+  width: calc(100% * 0.618 / 1.618); // 设置明确宽度
   height: 100%;
   background-color: transparent;
-  position: relative;
+  // position: relative; // 移除
   transform: skewX(-15deg);
   transform-origin: left center;
   overflow: hidden;
+  // z-index 不再重要，因为它在 mainLayout 内部
+
+  // --- 新增: 收回动画类 --- // 移除
+  /*
+  &.hidden {
+    opacity: 0;
+    transform: translateY(-50px) skewX(-15deg); // 向上移动并保持倾斜
+    pointer-events: none; // 隐藏后不响应事件
+  }
+  */
 }
 
 .column {
@@ -1841,15 +1958,15 @@
 
 // --- Decorative text in Left Panel ---
 .fateTextContainer {
-  position: absolute;
-  bottom: 17%; // Positioned relative to the bottom edge of the border (100% - 85% = 15% + 2% buffer)
-  right: 17%; // Positioned relative to the right edge of the border (100% - 85% = 15% + 2% buffer)
+  position: absolute; // 保持 absolute，相对于固定的 leftPanel 定位
+  bottom: 19%; // 修改: 适配新的边框底部位置
+  right: 21%;
   display: flex;
   flex-direction: column;
   align-items: flex-end; // Align items to the right
   opacity: 0; // Start hidden
   transition: opacity 0.5s ease-out;
-  z-index: 5; // Ensure it's above the border/corner elements
+  z-index: 5; // 在 leftPanel 内部的堆叠顺序
   pointer-events: none; // Prevent interaction
 
   // Fade in after main animations complete
@@ -2058,17 +2175,17 @@
 
 // --- 新增: 环境参数容器样式 (修改后) ---
 .envParamsContainer {
-  position: absolute;
+  position: absolute; // 保持 absolute，相对于固定的 leftPanel 定位
   // 定位在左侧面板边框 (15%) 的内侧左下角
-  bottom: 17%; // 与 fateTextContainer 的 right/bottom 对称
-  left: 17%;   // 与 fateTextContainer 的 right/bottom 对称
-  z-index: 10;
+  bottom: 19%; // 修改: 适配新的边框底部位置
+  left: 16.5%;   // 保持 17%，靠近内部左边框
+  z-index: 10; // 在 leftPanel 内部的堆叠顺序
   text-align: left;
   max-width: 220px;
   opacity: 0; // 初始隐藏
   transition: opacity 0.5s ease-out;
   // 与 fateTextContainer 使用相同的延迟
-  transition-delay: 2.0s; 
+  transition-delay: 2.0s;
   pointer-events: none; // 避免遮挡
 
   // 移除 .animated 选择器，改为依赖 leftPanel.animated
@@ -2076,7 +2193,7 @@
     opacity: 0.7; // 与 fateTextContainer 相同的透明度
     transform: none; // 移除 transform
   }
-  
+
   &.typingActive .envParamsText::after {
     content: '_';
     position: absolute;
@@ -2085,7 +2202,7 @@
     animation: blinkCursor 0.8s infinite;
     font-weight: bold;
     // 可能需要微调位置
-    right: -0.2em; 
+    right: -0.2em;
     bottom: -0.1em;
   }
 }
@@ -2132,3 +2249,428 @@
     opacity: 0.8;
   }
 }
+
+// --- 新增: 内容区域样式 ---
+.contentSection {
+  width: calc(100% * 0.618 / 1.618); // 设置宽度，匹配右侧面板区域
+  margin-left: calc(100% / 1.618); // 添加左边距，等于左面板宽度
+  margin-bottom: 10vh; // 新增: 添加区域间距 (视口高度的 10%)
+  min-height: 100vh; // 确保每个区域至少占一屏高，避免按钮重叠
+  // padding: 80px 40px; // 使用较小的左右内边距
+  padding: 200px 40px 80px 40px; // 修改: 显著增加顶部内边距 (T:200, R:40, B:80, L:40)
+  display: flex; 
+  flex-direction: column; 
+  // align-items: center; // 修改为左对齐
+  align-items: flex-start;
+  position: relative; // 保持相对定位，用于 backButton
+  color: var(--ark-text);
+  // background-color: var(--ark-dark-blue); // 背景由 wrapper 提供
+  
+  // 样式保持不变...
+  h2 {
+    // font-family: 'Dosis', sans-serif;
+    font-family: 'ZELDA Free', sans-serif; // 修改: 字体与主视图按钮一致
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--ark-primary);
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--ark-border);
+    padding-bottom: 10px;
+    // text-align: center; // 恢复居中
+    text-align: left; // 左对齐标题
+  }
+  
+  p {
+    font-family: 'Dosis', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    // max-width: 800px; // 移除或调整最大宽度
+    // text-align: center; // 恢复居中
+    text-align: left; // 左对齐段落
+    opacity: 0.8;
+    margin-bottom: 20px;
+  }
+}
+
+// --- 新增: 返回按钮样式 --- 
+.backButton {
+  position: absolute; // 定位在 contentSection 内
+  // top: 60px; // 修改: 移到右上角，与 padding-top 匹配
+  // right: 40px; // 修改: 移到右上角
+  top: 30px; // 修改: 进一步上移，更靠近角落
+  right: 30px; // 修改: 进一步右移，更靠近角落
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--ark-border);
+  color: var(--ark-primary);
+  font-family: 'Dosis', monospace;
+  font-size: 0.9rem;
+  padding: 8px 15px;
+  cursor: pointer;
+  z-index: 10; // 确保在内容之上
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background: var(--ark-primary);
+    color: var(--ark-dark-blue);
+  }
+}
+
+// --- 新增: 内容包裹器样式 --- 
+.contentWrapper {
+  // background-color: var(--ark-dark-blue); // 移除背景色，使其透明
+  overflow-y: auto; // 允许垂直滚动
+  scroll-behavior: smooth; // 平滑滚动内部
+  // 继承上面的 absolute 定位和显隐控制
+  // 确保 z-index 正确
+
+  /* 新增: 隐藏滚动条 */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar { 
+    display: none; /* WebKit browsers */
+  }
+}
+
+// --- 新增: 调整最后一个区域 (ABOUT) 的样式 --- 
+.aboutSection {
+  background-color: rgba(50, 50, 50, 0.8); // 修改: 降低 alpha 值使背景更透明
+  /* 删除圆角 */
+  border-radius: 0;
+  min-height: auto; // 移除最小高度限制
+  padding: 30px 40px 100px 40px; // 修改: 再次减小顶部内边距
+  margin-bottom: 0; // 底部外边距设为 0
+  position: relative; // 确保 position 不为 static，以便 overflow 生效
+  overflow: hidden; // 隐藏内部元素的溢出
+}
+
+// --- 新增: Power Display 容器样式 --- (尺寸调整)
+.powerDisplay {
+  position: absolute;
+  top: 19%; 
+  left: 17%; 
+  display: flex;
+  align-items: center;
+  gap: 10px; // 增大图标和文字间距
+  color: var(--ark-primary); 
+  font-family: 'Dosis', monospace;
+  font-size: 0.9rem; // 稍微增大字体
+  z-index: 10; 
+  opacity: 0;
+  transition: opacity 0.8s ease;
+
+  .leftPanel.animated & { 
+    transition-delay: 2.0s; 
+    opacity: 0.8;
+  }
+}
+
+// --- 新增: 电池图标样式 --- 
+.batteryIcon {
+  display: flex; // 使用 flex 布局内部格子
+  align-items: center; // 垂直居中格子
+  justify-content: space-around; // 格子均匀分布
+  padding: 1px; // 电池内部边距
+  width: 28px; // 增大电池宽度
+  height: 14px; // 增大电池高度
+  border: 1px solid var(--ark-primary);
+  // border-radius: 2px; // 移除圆角，变为方框
+  position: relative;
+  // margin-right: 4px; // 移除，使用 gap 代替
+
+  // 恢复电池正极
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -4px; // 调整位置使其在边框外
+    width: 2px;  // 调整宽度
+    height: 6px; // 调整高度
+    background-color: var(--ark-primary);
+    transform: translateY(-50%);
+    border-radius: 0 1px 1px 0; // 圆角
+  }
+}
+
+// --- 新增: 电池格子样式 --- 
+.batteryLevelSegment {
+  display: inline-block;
+  width: 4px; // 每个格子的宽度
+  height: 8px; // 每个格子的高度 (小于电池内部高度)
+  background-color: rgba(var(--ark-primary-rgb), 0.2); // 未填充时的颜色 (半透明)
+  // margin: 0 1px; // 格子间距 (使用 justify-content 代替)
+  transition: background-color 0.3s ease; // 填充颜色变化过渡
+}
+
+// --- 新增: 填充状态的格子样式 --- 
+.batteryLevelSegment.filled {
+  background-color: var(--ark-primary); // 填充时的颜色
+}
+
+// --- 新增: Power Text 样式 (可选) ---
+.powerText {
+  // 可以添加特定样式，例如字体粗细
+  font-weight: bold;
+}
+
+
+.leftPanel {
+  // flex: 1; // 移除 flex: 1
+  width: calc(100% / 1.618); // 设置明确宽度
+// ... (其余代码保持不变) ...
+}
+
+// --- 修改: 环境参数容器样式 (可能需要调整位置或边距) ---
+.envParamsContainer {
+  position: absolute; 
+  bottom: 19%; 
+  left: 16.5%; 
+  z-index: 10; 
+  text-align: left;
+  // max-width: 220px; // 保持或调整
+  opacity: 0; 
+  transition: opacity 0.5s ease-out;
+  transition-delay: 2.0s;
+  pointer-events: none; 
+
+  .leftPanel.animated & {
+    opacity: 0.7; 
+    transform: none; 
+  }
+  
+  &.typingActive .envParamsText::after {
+    content: ''; // 移除这里的打字机光标，避免冲突
+    /*
+    position: absolute;
+    color: var(--ark-text-secondary);
+    animation: blinkCursor 0.8s infinite;
+    font-weight: bold;
+    right: -0.2em; 
+    bottom: -0.1em;
+    */
+  }
+}
+
+.envParamsText {
+  // ... (样式保持不变) ...
+  // 如果需要为打字机光标腾出空间，可以添加 padding-right
+}
+
+// ... (envParamsText 样式结束) ...
+
+// --- 新增: Works Section 特定样式 ---
+.worksSection {
+  // 覆盖默认的 align-items，让网格可以正常排列
+  align-items: stretch; 
+}
+
+// --- 新增: 项目卡片网格布局 ---
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // 响应式网格
+  gap: 30px; // 网格间距
+  width: 100%; // 占满父容器宽度
+  margin-top: 40px; // 与标题的间距
+}
+
+// --- 新增: 项目卡片样式 ---
+.projectCard {
+  background-color: rgba(var(--ark-secondary-rgb), 0.1); // 轻微背景色
+  border: 1px solid var(--ark-border); 
+  padding: 20px;
+  position: relative; // 用于绝对定位角标
+  transition: all 0.3s ease;
+  overflow: hidden; // 隐藏溢出的伪元素效果
+  cursor: default; // 默认光标
+
+  &:hover {
+    background-color: rgba(var(--ark-secondary-rgb), 0.18);
+    border-color: var(--ark-primary);
+    transform: translateY(-5px); // 轻微上浮
+    box-shadow: 0 5px 15px rgba(var(--ark-primary-rgb), 0.1);
+
+    .cardBorderTopLeft,
+    .cardBorderBottomRight {
+      opacity: 1;
+      width: 30px;
+      height: 30px;
+    }
+    
+    .projectImagePlaceholder {
+      filter: brightness(1.1); // 图片变亮一点
+    }
+    .imageScanlineOverlay {
+       opacity: 0.4; // 扫描线更明显
+    }
+    .projectLink {
+      background-color: var(--ark-primary);
+      color: var(--ark-dark-blue);
+    }
+  }
+}
+
+// --- 新增: 卡片角标样式 --- 
+.cardBorderTopLeft,
+.cardBorderBottomRight {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--ark-primary); // 使用主高亮色
+  border-style: solid;
+  border-width: 0;
+  opacity: 0.6; // 默认半透明
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.cardBorderTopLeft { 
+  top: -1px;
+  left: -1px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.cardBorderBottomRight {
+  bottom: -1px;
+  right: -1px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+// --- 新增: 项目图片容器和占位符 --- 
+.projectImageContainer {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.projectImagePlaceholder {
+  width: 100%;
+  padding-top: 56.25%; // 16:9 宽高比
+  // background-color: #1a1f2b; // 深色背景
+  background-color: var(--ark-primary); // 修改: 使用主高亮绿色
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--ark-border);
+  position: relative;
+  overflow: hidden;
+  transition: filter 0.3s ease; // 保留 filter 过渡，即使默认不应用
+  // filter: brightness(0.9) saturate(0.8); // 移除: 影响纯色显示
+}
+
+// --- 新增: 图片扫描线叠加 --- 
+.imageScanlineOverlay {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.15) 50%
+  );
+  background-size: 100% 4px;
+  opacity: 0.2;
+  pointer-events: none;
+  animation: scanMove 10s linear infinite; // 复用之前的扫描线动画
+  transition: opacity 0.3s ease;
+}
+
+// --- 新增: 项目内容区域 --- 
+.projectContent {
+  // 布局由父级 flex 控制
+}
+
+// --- 新增: 项目标题样式 --- 
+.projectTitle {
+  font-family: 'Dosis', monospace; // 使用 Dosis 或等宽
+  font-size: 1.4rem;
+  font-weight: bold; // 加粗
+  color: var(--ark-primary); // 主高亮色
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase; // 大写
+}
+
+.titleBracket {
+  color: var(--ark-border); // 方括号用边框色
+  opacity: 0.7;
+  font-weight: normal;
+  margin: 0 5px;
+}
+
+// --- 新增: 项目描述样式 --- 
+.projectDescription {
+  font-family: 'Dosis', sans-serif;
+  font-size: 0.95rem;
+  color: var(--ark-text-secondary); // 次要文本颜色
+  line-height: 1.7;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+
+// --- 新增: 项目技术栈标签 --- 
+.projectTech {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.techTag {
+  background-color: rgba(var(--ark-primary-rgb), 0.15); // 标签背景
+  border: 1px solid rgba(var(--ark-primary-rgb), 0.3);
+  color: var(--ark-primary);
+  font-family: 'Consolas', monospace; // 等宽字体
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+// --- 新增: 项目链接样式 --- 
+.projectLink {
+  display: inline-block;
+  font-family: 'Dosis', monospace;
+  font-size: 0.9rem;
+  color: var(--ark-primary);
+  text-decoration: none;
+  border: 1px solid var(--ark-primary);
+  padding: 8px 15px;
+  transition: background-color 0.3s, color 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+
+  &:hover {
+    // Hover 效果已在 .projectCard:hover 中定义
+  }
+}
+
+// --- 新增: 警告脉冲动画 --- 
+
+// --- 新增: 备案号和版权信息样式 ---
+.footerInfo {
+  font-family: 'Dosis', sans-serif; // 与其他 UI 文本统一
+  font-size: 0.85rem; // 比 HUD (0.7rem) 稍大
+  color: var(--ark-text-secondary); // 使用次要文本颜色
+  opacity: 0.7; // 轻微透明
+  margin-top: 20px; // 与上方元素的间距
+  text-align: left; // 确保左对齐
+  line-height: 1.5; // 新增: 调整行高，让两行间距更舒适
+
+  a {
+    font-size: inherit; // 新增: 确保链接字体大小与父元素一致
+    color: inherit; // 继承父元素的颜色
+    text-decoration: none; // 去除下划线
+    transition: color 0.3s, opacity 0.3s;
+
+    &:hover {
+      color: var(--ark-primary); // 悬停时使用主高亮色
+      opacity: 1;
+    }
+  }
+}
+
