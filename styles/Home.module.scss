@@ -24,7 +24,268 @@
 
 // --- 新增: 负色效果 --- 
 .inverted {
-  filter: invert(1) hue-rotate(180deg);
+  // filter: invert(1) hue-rotate(180deg); // 移除滤镜
+  
+  /* 新增: 覆盖 CSS 变量以应用粉紫色主题 */
+  --ark-primary: #E08FFF; 
+  --ark-primary-rgb: 224, 143, 255;
+  --ark-highlight-green: #E08FFF; 
+  --ark-highlight-green-rgb: 224, 143, 255;
+  
+  // --- 新增: 手动模拟反转核心颜色 ---
+  --ark-dark-blue: #f0f0f0; // 浅灰色背景
+  --ark-text: #222222;     // 深灰色文字
+  --ark-border: rgba(0, 0, 0, 0.3); // 深色透明边框
+  --ark-border-rgb: 0, 0, 0;
+  --ark-text-secondary: #555555; // 中深灰次要文字
+  
+  // --- 新增: 特定元素样式覆盖 ---
+  &.container {
+    background-color: var(--ark-dark-blue); // 应用浅灰色背景
+    color: var(--ark-text); // 应用深灰色文字
+  }
+  
+  .glowEffect {
+    display: none; // 隐藏原有的辉光效果
+  }
+
+  .gridBackground {
+    // 使用深色线条
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+      
+    &::after {
+       // 使用深色六边形线条
+       background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0, 0, 0, 0.03) 20px, rgba(0, 0, 0, 0.03) 21px),
+        repeating-linear-gradient(60deg, transparent, transparent 20px, rgba(0, 0, 0, 0.03) 20px, rgba(0, 0, 0, 0.03) 21px),
+        repeating-linear-gradient(120deg, transparent, transparent 20px, rgba(0, 0, 0, 0.03) 20px, rgba(0, 0, 0, 0.03) 21px);
+    }
+  }
+  
+  .scanLines {
+    // 使用深色扫描线
+    background: linear-gradient(to bottom, 
+      transparent, 
+      transparent 49.9%, 
+      rgba(0, 0, 0, 0.06) 50%, 
+      transparent 50.1%, 
+      transparent
+    );
+    background-size: 100% 4px;
+  }
+  
+  // 左侧面板边框和角标颜色已通过变量覆盖
+  .leftPanel {
+    // 如果需要，可以添加特定调整
+  }
+  
+  // Logo 滤镜保持不变，在浅色背景下应变为深灰色
+  
+  // HUD 元素颜色已通过变量覆盖
+  
+  // 打字机文本和线条颜色已通过变量覆盖
+  .fateTextContainer, .envParamsContainer {
+     // 调整颜色变量
+    .fateText, .envParamsText {
+       color: var(--ark-text-secondary);
+    }
+    .fateLine {
+       border-bottom-color: var(--ark-border);
+       &::before, &::after {
+          background-color: var(--ark-border);
+       }
+    }
+    .envParamsText::after { // Typing cursor
+       color: var(--ark-text-secondary);
+    }
+    &.typingActive .envParamsText::after { // Ensure cursor override applies
+       color: var(--ark-text-secondary);
+    }
+     &.typingActive .fateText::after { // Ensure cursor override applies
+       color: var(--ark-text-secondary);
+    }
+  }
+  
+  // 电池图标和文字颜色已通过变量覆盖
+  .powerDisplay {
+     color: var(--ark-text-secondary); // 灰色文字
+     .batteryIcon {
+        border-color: var(--ark-text-secondary); // 灰色边框
+        &::after { // Positive terminal
+          background-color: var(--ark-text-secondary); // 灰色正极
+        }
+     }
+     .batteryLevelSegment {
+        background-color: rgba(0, 0, 0, 0.1); // 深色透明未填充
+        &.filled {
+           background-color: var(--ark-text-secondary); // 灰色填充
+        }
+     }
+     .powerText {
+        // Optional: Adjust if needed
+     }
+  }
+  
+  // 右侧面板和列的悬停效果等颜色已通过变量覆盖
+  .column:hover:not(.nonInteractive) {
+     &:not(.worksColumn) {
+       background-color: rgba(var(--ark-highlight-green-rgb), 0.08);
+       &::after, &::before {
+          background: var(--ark-highlight-green);
+       }
+       .verticalText .charItem > div {
+          color: var(--ark-highlight-green);
+          text-shadow: 0 0 8px var(--ark-highlight-green);
+       }
+     }
+     // ... 其他悬停效果中的颜色也会自动使用新变量值 ...
+     .hudOverlay::after { /* Scanlines inside column */
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent,
+          transparent 2px,
+          rgba(var(--ark-highlight-green-rgb), 0.2) 2px,
+          rgba(var(--ark-highlight-green-rgb), 0.2) 3px
+        );
+     }
+     .cornerHudTopLeft, .cornerHudBottomRight {
+        border-color: var(--ark-highlight-green);
+        filter: drop-shadow(0 0 3px var(--ark-highlight-green));
+     }
+     .imageHudSquare {
+        background-color: var(--ark-highlight-green);
+        filter: drop-shadow(0 0 2px var(--ark-highlight-green));
+     }
+     .imageHudText {
+        color: var(--ark-highlight-green);
+        text-shadow: 0 0 3px rgba(var(--ark-highlight-green-rgb), 0.5);
+     }
+     .taskSquare, .taskLine {
+        background-color: var(--ark-highlight-green);
+     }
+     .taskText {
+        color: var(--ark-highlight-green);
+     }
+     // Branch styles
+     .branchSquare {
+        background-color: var(--ark-highlight-green);
+     }
+     .branchText {
+        color: var(--ark-highlight-green);
+     }
+      // LIFE ECG
+     .column2:hover:not(.nonInteractive) .hudOverlay::before, 
+     .column2:hover:not(.nonInteractive) .hudOverlay::after {
+        // Update SVG stroke color - this is complex, might need inline style or JS
+        // For now, just update the drop shadow
+        filter: drop-shadow(0 0 2px var(--ark-highlight-green));
+     }
+     // CONTACT Ripples
+     @keyframes contactRippleExpandShadow {
+      0% {
+        // ... border/shadow using --ark-highlight-green-rgb ...
+        border: 1px solid rgba(178, 242, 187, 0.9);
+        box-shadow: 0 0 0 0px rgba(178, 242, 187, 0.5); 
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(0.1);
+      }
+      100% {
+        // ... border/shadow using --ark-highlight-green-rgb ...
+        border: 1px solid rgba(178, 242, 187, 0); 
+        box-shadow: 0 0 0 25px rgba(178, 242, 187, 0); 
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1); // Scale up slightly less than before
+      }
+    }
+  }
+  
+  // 内容区域
+  .contentWrapper {
+    // 继承 .container 的背景色和文字颜色
+  }
+  
+  .contentSection {
+     color: var(--ark-text); // 应用深色文字
+     h2 {
+        color: var(--ark-primary); // 粉紫标题
+        border-bottom-color: var(--ark-border); // 深色边框
+     }
+     p {
+        color: var(--ark-text); // 深色段落
+     }
+  }
+  
+  .backButton {
+     background: #555555; // 深灰背景
+     border-color: #444444; // 更深边框
+     color: #dddddd; // 浅灰文字
+     &:hover {
+       background: #777777; // 悬停时稍亮灰色背景
+       color: #ffffff; // 白色文字
+     }
+  }
+  
+  .aboutSection {
+     background-color: rgba(255, 255, 255, 0.8); // 浅色半透明背景
+     // 内部文字/按钮颜色已通过变量覆盖
+  }
+
+  .footerInfo {
+    color: var(--ark-text-secondary); // 深次要文字
+    a:hover {
+      color: var(--ark-primary); // 粉紫链接悬停
+    }
+  }
+  
+  // 项目卡片
+  .projectCard {
+     background-color: rgba(var(--ark-primary-rgb), 0.05); // 浅粉色背景
+     border-color: var(--ark-border); // 深色边框
+     &:hover {
+       background-color: rgba(var(--ark-primary-rgb), 0.1); // 稍深粉色背景
+       border-color: var(--ark-primary); // 粉色边框
+       .projectLink {
+         background-color: var(--ark-primary);
+         color: #ffffff; // 亮色文字
+       }
+     }
+  }
+  
+  .projectImagePlaceholder {
+     background-color: var(--ark-primary); // 粉紫占位符背景
+     border-color: var(--ark-border); // 深色边框
+  }
+  
+  .imageScanlineOverlay {
+     // 使用深色扫描线
+     background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 0, 0, 0.1) 50%
+    );
+  }
+  
+  .projectTitle {
+    color: var(--ark-primary); // 粉紫标题
+  }
+  .titleBracket {
+    color: var(--ark-border); // 深色括号
+  }
+  .projectDescription {
+    color: var(--ark-text-secondary); // 深次要文字
+  }
+  .techTag {
+    background-color: rgba(var(--ark-primary-rgb), 0.15); // 浅粉背景
+    border-color: rgba(var(--ark-primary-rgb), 0.3);
+    color: var(--ark-primary); // 粉紫文字
+  }
+  .projectLink {
+    color: var(--ark-primary); // 粉紫文字
+    border-color: var(--ark-primary); // 粉紫边框
+  }
+  
 }
 
 .main {
@@ -212,6 +473,7 @@
   -webkit-user-select: none; 
   -moz-user-select: none; 
   -ms-user-select: none; 
+  pointer-events: none; // --- ADD: Ensure layout containers don't block events --- 
 }
 
 // --- visible / hidden 控制 (z-index 调整 + 动画) --- 
@@ -232,6 +494,8 @@
 // --- 应用特定视图的进入/退出动画 --- 
 .mainLayout.visible {
   animation: slideDownInSkew 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  pointer-events: auto; // --- MODIFY: Allow events only when visible, but its children control specifics --- 
+  pointer-events: none; // Let children control
 }
 .mainLayout.hidden {
   animation: slideUpOutSkew 0.5s ease-out forwards;
@@ -239,6 +503,7 @@
 
 .contentWrapper.visible {
   animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  pointer-events: auto; // Allow scrolling
 }
 .contentWrapper.hidden {
   animation: slideOutToRight 0.5s ease-out forwards;
@@ -307,7 +572,17 @@
   justify-content: center;
   align-items: center;
   // position: relative; // 移除
-  z-index: 6; // 提升层级 (高于视图切换层)
+  z-index: 10; // 修改: 提升层级 (高于视图切换层 和 3D 视图)
+  pointer-events: none; // --- ADD: Disable pointer events by default --- 
+
+  // --- ADD: Enable pointer events for specific children --- 
+  & > * { // Target direct children initially, refine if needed
+    pointer-events: auto; 
+  }
+  // --- OR (More specific): ---
+  // .leverContainer, .powerDisplay /* other interactive elements */ {
+  //   pointer-events: auto;
+  // }
 
   // 添加.animated类用于触发动画
   &.animated {
@@ -394,7 +669,7 @@
   background-position: 47% 48%; // 修改: 稍微向左上移动
   background-repeat: no-repeat;
   background-size: 50%; // 修改: 从 60% 缩小 到 50%
-  filter: grayscale(100%) brightness(1.2) drop-shadow(0 0 10px rgba(200, 200, 200, 0.3));
+  filter: grayscale(100%) brightness(0.6) drop-shadow(0 0 5px rgba(0, 0, 0, 0.1)); // 降低亮度
   pointer-events: none;
   position: relative;
   z-index: 3;
@@ -434,6 +709,7 @@
   transform-origin: left center;
   overflow: hidden;
   // z-index 不再重要，因为它在 mainLayout 内部
+  pointer-events: none; // --- ADD: Disable pointer events by default --- 
 
   // --- 新增: 收回动画类 --- // 移除
   /*
@@ -450,11 +726,14 @@
   height: 100%;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  z-index: 2;
+  // --- MODIFIED: Increase z-index significantly ---
+  z-index: 10; 
+  pointer-events: auto; // --- ADD: Explicitly enable pointer events for columns --- 
   background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden; // 新增: 裁剪超出边界的子元素 (包括动画)
 
   &:hover {
     // 仅当交互启用时应用悬停效果
@@ -634,7 +913,7 @@
   position: fixed;
   font-family: 'Dosis', monospace;
   font-size: 0.7rem;
-  color: var(--ark-primary);
+  color: var(--ark-text-secondary); // 灰色文字
   padding: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -643,6 +922,7 @@
   z-index: 10;
   opacity: 0;
   transition: opacity 0.8s ease, transform 0.8s ease;
+  pointer-events: none; // --- ADD: Disable pointer events for HUDs by default --- 
   
   &.visible {
     opacity: 1;
@@ -654,7 +934,7 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    border-color: var(--ark-border);
+    border-color: var(--ark-border); // 深色边框
     border-style: solid;
     border-width: 0;
     background-color: transparent;
@@ -1338,7 +1618,9 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  overflow: hidden;
+  // overflow: hidden; // 移除: 允许雷达波纹溢出
+  // REMOVED overflow: visible !important; for testing
+  // Now relies on parent (.column/.rightPanel) overflow: hidden
 
   &::before, // Main canvas for unique hover animations
   &::after { // Scanlines (common animation)
@@ -1535,39 +1817,58 @@
 
 // Column 2 (LIFE - Pulse) - Replaced with ECG
 .column2:hover:not(.nonInteractive) {
-  // Remove base pulse style if any was applied to ::before directly before
-  .hudOverlay::before, .hudOverlay::after {
-    content: ''; // Ensure pseudo-elements are generated
+  // --- 恢复: 上方 ECG 波形样式 --- 
+  .hudOverlay::before {
+    content: ''; 
     position: absolute;
     left: 0;
     width: 100%;
-    height: 40px; // Height of the ECG line area
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 100 50'%3E%3Cpath d='M0,25 L20,25 L25,10 L35,40 L40,25 L60,25 L65,15 L75,35 L80,25 L100,25' stroke='%23B2F2BB' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    height: 40px; 
+    // 默认绿色 ECG
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 100 50'%3E%3Cpath d='M0,25 L20,25 L25,10 L35,40 L40,25 L60,25 L65,15 L75,35 L80,25 L100,25' stroke='rgb(178, 242, 187)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); 
     background-repeat: repeat-x;
-    background-size: 50px 40px; // Reduced width to increase density
-    opacity: 0; // Start hidden
-    animation-name: ecgScroll, fadeInEcg; // Combine scroll and fade-in
-    animation-duration: 1.5s, 0.4s;      // Faster scroll duration (halved) to match density, fade-in same
-    animation-timing-function: linear, ease-out; // Timing for scroll, fade-in
-    animation-iteration-count: infinite, 1; // Repeat scroll, play fade-in once
-    animation-fill-mode: none, forwards;     // Fill mode for fade-in
-    animation-delay: 0s, 0.1s; // Delay fade-in slightly
-    filter: drop-shadow(0 0 2px var(--ark-highlight-green));
-  }
-
-  .hudOverlay::before { // Top line
-    top: 50%; 
-    transform: translateY(-75px); // Increased upward shift
+    background-size: 50px 40px; 
+    opacity: 0; 
+    animation-name: ecgScroll, fadeInEcg; 
+    animation-duration: 1.5s, 0.4s;      
+    animation-timing-function: linear, ease-out; 
+    animation-iteration-count: infinite, 1; 
+    animation-fill-mode: none, forwards;     
+    animation-delay: 0s, 0.1s; 
+    filter: drop-shadow(0 0 2px var(--ark-highlight-green)); 
+    top: 50%;
+    transform: translateY(-75px); 
     background-position-x: 0;
-    animation-direction: normal, normal; // Scroll direction normal
+    animation-direction: normal, normal; 
   }
 
-  .hudOverlay::after { // Bottom line - reuse scanlines ::after for this
-    top: 50%; 
-    transform: translateY(35px) scaleY(-1); // Increased downward shift
-    background-position-x: 100px; // Start at end for reverse effect
-    animation-direction: reverse, normal; // Scroll direction reverse
+  // --- 恢复: 下方 ECG 波形样式 --- 
+  .hudOverlay::after {
+    content: ''; 
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 40px; // 恢复高度
+    // 默认绿色 ECG
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 100 50'%3E%3Cpath d='M0,25 L20,25 L25,10 L35,40 L40,25 L60,25 L65,15 L75,35 L80,25 L100,25' stroke='rgb(178, 242, 187)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); 
+    background-repeat: repeat-x;
+    background-size: 50px 40px; // 恢复背景尺寸
+    opacity: 0; // 初始隐藏
+    animation-name: ecgScroll, fadeInEcg; // 恢复动画
+    animation-duration: 1.5s, 0.4s;      
+    animation-timing-function: linear, ease-out; 
+    animation-iteration-count: infinite, 1; 
+    animation-fill-mode: none, forwards;     
+    animation-delay: 0s, 0.1s; // 恢复动画延迟
+    filter: drop-shadow(0 0 2px var(--ark-highlight-green)); // 恢复辉光效果
+    top: 50%;
+    transform: translateY(35px) scaleY(-1); // 恢复向下移动和垂直翻转
+    background-position-x: 100px; // 恢复背景起始位置
+    animation-direction: reverse, normal; // 恢复动画方向
+    // 移除水平线特有的 background-color
+    // background-color: transparent;
   }
+  // --- END RESTORATION ---
 
   .imageHud { // Unique Position (keep from original)
     bottom: 15px;
@@ -1575,8 +1876,9 @@
   }
 }
 
-// Column 3 (CONTACT - Center Scan + 3 Scattered Shadow Ripples)
+// Column 3 (CONTACT - Radar/Ripple - Inverted Pink)
 .column3:hover:not(.nonInteractive) {
+  // --- 雷达扫描样式 --- (保持不变)
   .hudOverlay::before { 
     // Restore 15deg conic-gradient scan
     animation: radarScan 2.5s linear infinite; 
@@ -1589,18 +1891,22 @@
         transparent 15.1deg 360deg);
     border: none; 
     opacity: 0.8; 
+    // Ensure z-index is appropriate if not already set
+    z-index: 1; 
   }
   
-  // Ripples animation and positions remain unchanged
+  // --- 波纹动画和位置 --- (修改: 调整位置，保持错开动画)
   .ripple1, .ripple2, .ripple3 {
       animation-name: contactRippleExpandShadow;
       animation-duration: 1.8s; 
       animation-iteration-count: infinite;
       animation-timing-function: ease-out;
+      // Base styles like position absolute should be on .radarRipple
   }
-  .ripple1 { top: 20%; left: 15%; width: 40px; height: 40px; animation-delay: 0s; }
-  .ripple2 { top: 65%; left: 70%; width: 60px; height: 60px; animation-delay: 0.4s; }
-  .ripple3 { top: 40%; left: 40%; width: 80px; height: 80px; animation-delay: 0.8s; }
+  // --- 修改: 调整位置使其更错落 --- 
+  .ripple1 { top: 25%; left: 15%; width: 40px; height: 40px; animation-delay: 0s; } // 修改: left 从 20% 改为 15% (向左)
+  .ripple2 { top: 70%; left: 60%; width: 60px; height: 60px; animation-delay: 0.4s; } // 修改: left 从 55% 改为 60% (向右)
+  .ripple3 { top: 45%; left: 75%; width: 50px; height: 50px; animation-delay: 0.8s; } // 也调整了大小和位置
 
   .imageHud { /* position unchanged */ top: 15px; left: 15px; }
 }
@@ -1636,7 +1942,7 @@
 
 // 共享动画 (保持不变)
 @keyframes scanHud { 0% { background-position: 0 0; } 100% { background-position: 0 6px; } }
-@keyframes fadeInScanlines { from { opacity: 0; } to { opacity: 0.8; } }
+@keyframes fadeInScanlines { from { opacity: 0; } to { opacity: 0.2; } } // 修改: 透明度从 0.8 降到 0.2
 @keyframes fadeInArkCorner { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeInImageHud { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeInImageHudCentered { from { opacity: 0; transform: translateY(calc(50% + 5px)); } to { opacity: 1; transform: translateY(50%); } }
@@ -1693,22 +1999,37 @@
   }
 }
 
-// CONTACT: Single Ripple Expand Animation with Shadow - Remains the same
-@keyframes contactRippleExpandShadow {
+// --- 新增: 扩展绿色空心环动画 (修改: 从细变粗, 保持透明度变化) ---
+@keyframes expandGreenRing {
   0% {
-    transform: scale(0.1);
-    opacity: 1;
-    border: 1px solid rgba(178, 242, 187, 0.9);
-    box-shadow: 0 0 0 0px rgba(178, 242, 187, 0.5); 
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0.7; // 修改: 初始透明度稍低
+    border-width: 1px; // 修改: 初始边框宽度为 1px (细)
+  }
+  70% { // 在动画 70% 时达到最大宽度
+    opacity: 0.1; // 透明度降低
+    border-width: 4px; // 修改: 边框宽度增加到 4px (粗)
   }
   100% {
-    // Increase scale for wider expansion
-    transform: scale(1.8); 
-    opacity: 0;
-    border: 1px solid rgba(178, 242, 187, 0); 
-    // Adjust shadow expansion if needed, maybe slightly larger max size
-    box-shadow: 0 0 0 25px rgba(178, 242, 187, 0); 
+    transform: translate(-50%, -50%) scale(4); // 保持放大到 4
+    opacity: 0; // 完全透明
+    border-width: 4px; // 修改: 保持最终边框宽度
   }
+}
+
+// --- 修改: radarRipple 基础样式 (修改: 初始边框宽度设为 1px) ---
+.radarRipple {
+  position: absolute;
+  // top/left 将在 hover 中为每个 ripple 单独设置
+  width: 35px; // 保持大小
+  height: 35px; // 保持大小
+  border-radius: 50%;
+  border: 1px solid rgba(178, 242, 187, 0.9); // 直接使用绿色 
+  opacity: 0; // 初始隐藏
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.1); // 初始缩小并居中
+  transform-origin: center center; 
+  z-index: 2; // 在雷达扫描之上
 }
 
 // ABOUT: Focus (corner lines moving inwards)
@@ -1746,12 +2067,20 @@
 // --- Add base styles for the new ripple elements --- 
 .radarRipple {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  // --- RESTORED Base size ---
+  width: 20px; // Restore base size
+  height: 20px; // Restore base size
   border-radius: 50%;
-  opacity: 0; // Start hidden
+  opacity: 0; // Start transparent
   pointer-events: none;
-  // Border will be set by the animation
-  // Ensure ripples are above the scan line (::before is z-index 2)
-  z-index: 3; 
+  transform: translate(-50%, -50%); // Base centering
+  transform-origin: center center; 
+  // --- RESTORED z-index ---
+  z-index: 2; // Ripple should be above radar scan (z-index: 1)
+  // --- Applied animation in hover rule now ---
+  // animation: contactRippleExpandShadow 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite; 
 }
 
 // --- Column 默认上下线 --- (保持不变)
@@ -1953,6 +2282,23 @@
   .column2:hover:not(.nonInteractive) & {
     animation: scanHud 1.5s linear infinite, fadeInScanlines 0.2s ease-out forwards;
     animation-delay: 0.2s, 0.2s; // Delay slightly after ECG fade-in
+  }
+}
+
+// --- 新增: 倒置状态下的心电图扫描线（粉色）---
+.invertedScanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(var(--ark-primary-rgb), 0.2) 2px,
+    rgba(var(--ark-primary-rgb), 0.2) 3px
+  );
+  
+  // Ensure animations still apply when column is hovered
+  .column2:hover:not(.nonInteractive) & {
+    animation: scanHud 1.5s linear infinite, fadeInScanlines 0.2s ease-out forwards;
+    animation-delay: 0.2s, 0.2s;
   }
 }
 
@@ -2195,14 +2541,12 @@
   }
 
   &.typingActive .envParamsText::after {
-    content: '_';
+    content: '_'; // Display the cursor character
     position: absolute;
-    // --- 修改: 光标颜色与 fateText 一致 ---
     color: var(--ark-text-secondary);
     animation: blinkCursor 0.8s infinite;
     font-weight: bold;
-    // 可能需要微调位置
-    right: -0.2em;
+    right: -0.2em; 
     bottom: -0.1em;
   }
 }
@@ -2330,6 +2674,7 @@
   &::-webkit-scrollbar { 
     display: none; /* WebKit browsers */
   }
+  pointer-events: none; // --- ADD: Ensure layout containers don't block events --- 
 }
 
 // --- 新增: 调整最后一个区域 (ABOUT) 的样式 --- 
@@ -2397,14 +2742,14 @@
   display: inline-block;
   width: 4px; // 每个格子的宽度
   height: 8px; // 每个格子的高度 (小于电池内部高度)
-  background-color: rgba(var(--ark-primary-rgb), 0.2); // 未填充时的颜色 (半透明)
+  background-color: rgba(0, 0, 0, 0.1); // 深色透明未填充
   // margin: 0 1px; // 格子间距 (使用 justify-content 代替)
   transition: background-color 0.3s ease; // 填充颜色变化过渡
 }
 
 // --- 新增: 填充状态的格子样式 --- 
 .batteryLevelSegment.filled {
-  background-color: var(--ark-primary); // 填充时的颜色
+  background-color: var(--ark-text-secondary); // 灰色填充
 }
 
 // --- 新增: Power Text 样式 (可选) ---
@@ -2439,15 +2784,13 @@
   }
   
   &.typingActive .envParamsText::after {
-    content: ''; // 移除这里的打字机光标，避免冲突
-    /*
+    content: '_'; // Display the cursor character
     position: absolute;
     color: var(--ark-text-secondary);
     animation: blinkCursor 0.8s infinite;
     font-weight: bold;
     right: -0.2em; 
     bottom: -0.1em;
-    */
   }
 }
 
@@ -2671,6 +3014,58 @@
       color: var(--ark-primary); // 悬停时使用主高亮色
       opacity: 1;
     }
+  }
+}
+
+// --- 新增: 倒置状态下的心电图波形为粉色 --- 
+.inverted {
+  .column2:hover:not(.nonInteractive) {
+    // --- 保持上方 ECG 波形为粉色 --- 
+    .hudOverlay::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='50' viewBox='0 0 100 50'%3E%3Cpath d='M0,25 L20,25 L25,10 L35,40 L40,25 L60,25 L65,15 L75,35 L80,25 L100,25' stroke='rgb(224, 143, 255)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      filter: drop-shadow(0 0 2px rgba(var(--ark-primary-rgb), 0.8));
+      // 动画等其他属性保持不变
+    }
+    // --- 修改下方为粉色水平扫描线 (覆盖默认的下方 ECG 样式) ---
+    .hudOverlay::after {
+      // 覆盖 ECG 的样式
+      background-image: none; // 移除 SVG 背景
+      background-color: var(--ark-primary); // 使用粉色作为背景色（即线条颜色）
+      height: 2px; // 设置线条高度
+      transform: translateY(35px) scaleY(1); // 移除 scaleY(-1) 翻转
+      animation-name: fadeInScanlines; // 仅使用淡入动画
+      animation-duration: 0.4s;
+      animation-timing-function: ease-out;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      animation-delay: 0.1s;
+      animation-direction: normal;
+      filter: drop-shadow(0 0 2px rgba(var(--ark-primary-rgb), 0.8));
+      // 其他 ECG 特定属性如 background-size, background-repeat, background-position-x 无需设置
+    }
+  }
+}
+
+// --- 新增或修改: contactRippleExpandShadow 动画 --- 
+@keyframes contactRippleExpandShadow {
+  0% {
+    // Start slightly visible, thin border, no shadow
+    border: 8px solid rgba(178, 242, 187, 0.8); // 调整: 稍粗的初始边框
+    box-shadow: none; // 修改: 移除阴影
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.1); // 保持初始小尺寸
+  }
+  50% { // 新增: 中间帧用于过渡
+    border-width: 8px; // 边框变粗
+    opacity: 0.4; // 透明度降低
+    box-shadow: none; // 确保无阴影
+  }
+  100% {
+    // Expand border width, fade out border, increase scale
+    border: 8px solid rgba(178, 242, 187, 0); // 修改: 更粗的边框，完全透明
+    box-shadow: none; // 修改: 移除阴影
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3.5); // 修改: 最终缩放增大到 3.5
   }
 }
 

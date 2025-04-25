@@ -457,7 +457,13 @@ export default function Home() {
 
     const intervalId = setInterval(() => {
       const decrease = Math.floor(Math.random() * 3) + 1; // 随机减 1-3
-      setPowerLevel(prevLevel => Math.max(0, prevLevel - decrease)); // 更新并确保不低于0
+      // --- MODIFIED: Prevent decrease if power is already 100% ---
+      setPowerLevel(prevLevel => {
+        if (prevLevel >= 100) {
+          return 100; // Keep it at 100
+        }
+        return Math.max(0, prevLevel - decrease); // Otherwise, decrease and ensure not below 0
+      });
     }, 5000); // 每 5 秒
 
     return () => clearInterval(intervalId); // 清理 interval
@@ -726,8 +732,8 @@ export default function Home() {
       
       <HomeLoadingScreen onComplete={handleLoadingComplete} />
 
-      {/* --- 修改: 条件渲染 Tesseract 并传递激活状态 --- */}
-      {mainVisible && (
+      {/* --- MODIFIED: Render TesseractExperience only when activated --- */}
+      {isTesseractActivated && (
         <TesseractExperience 
           chargeBattery={chargeBattery} 
           isActivated={isTesseractActivated} // Pass activation state
@@ -899,7 +905,7 @@ export default function Home() {
                         </>
                       )}
                       {/* Column 2 (LIFE) - ECG Scanlines */}
-                      {index === 2 && <span className={styles.lifeScanlines}></span>}
+                      {index === 2 && <span className={`${styles.lifeScanlines} ${isInverted ? styles.invertedScanlines : ''}`}></span>}
 
                       {/* Column 3 (CONTACT) - Ripples (Elements added dynamically if needed, or keep static SVG/CSS) */}
                       {index === 3 && (

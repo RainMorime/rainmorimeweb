@@ -53,6 +53,8 @@ const TesseractExperience = ({ chargeBattery, isActivated }) => {
   const [batteryPosition3D, setBatteryPosition3D] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const tesseractRef = useRef(); // Ref to access Tesseract component
+  const [isTesseractDragging, setIsTesseractDragging] = useState(false);
+  const glRef = useRef(null);
   const [connectionLinePoints, setConnectionLinePoints] = useState([
     new THREE.Vector3(0, 0, 0),
     new THREE.Vector3(0, 0, 0),
@@ -60,42 +62,97 @@ const TesseractExperience = ({ chargeBattery, isActivated }) => {
 
   // Get battery DOM element position and convert to NDC
   useEffect(() => {
+    console.log('[TesseractExperience] useEffect for battery position triggered.'); // DEBUG LOG
     // Use attribute selector which is more robust with CSS Modules
     const batterySelector = '[class*="powerDisplay"]'; 
     const batteryElement = document.querySelector(batterySelector);
+    console.log('[TesseractExperience] Querying for battery element with selector:', batterySelector); // DEBUG LOG
 
     if (!batteryElement) {
-      console.error("Could not find battery element using selector:", batterySelector);
+      console.error("[TesseractExperience] Could not find battery element using selector:", batterySelector);
+      setBatteryPosition3D(null); // Ensure state is null if element not found early
       return; // Stop if element not found
     }
+    console.log('[TesseractExperience] Found battery element:', batteryElement); // DEBUG LOG
 
     const updatePosition = () => {
-      const rect = batteryElement.getBoundingClientRect();
+      console.log('[TesseractExperience] updatePosition function called.'); // DEBUG LOG
+      const batteryRect = batteryElement.getBoundingClientRect();
+      // --- NEW: Get canvas element and its bounding box ---
+      const canvasElement = glRef.current?.domElement;
+      // --- NEW: Find the specific battery icon element ---
+      const iconSelector = '[class*="batteryIcon"]'; // Selector for the icon
+      const iconElement = batteryElement.querySelector(iconSelector);
+      console.log('[TesseractExperience] Querying for icon element with selector:', iconSelector); // DEBUG LOG
+
+      if (!canvasElement) {
+        console.error("[TesseractExperience] Canvas element not found via glRef.");
+        setBatteryPosition3D(null);
+        return;
+      }
+      // --- NEW: Check if icon element was found ---
+      if (!iconElement) {
+        console.error("[TesseractExperience] Battery icon element not found inside powerDisplay.");
+        setBatteryPosition3D(null);
+        return;
+      }
+      console.log('[TesseractExperience] Found icon element:', iconElement); // DEBUG LOG
+
+      // --- NEW: Get icon bounding box ---
+      const canvasRect = canvasElement.getBoundingClientRect();
+      const iconRect = iconElement.getBoundingClientRect(); 
+      console.log('[TesseractExperience] Canvas Rect:', canvasRect); // DEBUG LOG
+      console.log('[TesseractExperience] Icon Rect:', iconRect); // DEBUG LOG
+
       // Ensure rect dimensions are valid before calculating
-      if (rect.width > 0 && rect.height > 0 && window.innerWidth > 0 && window.innerHeight > 0) {
-        const x = (rect.left + rect.width / 2) / window.innerWidth * 2 - 1;
-        const y = -(rect.top + rect.height / 2) / window.innerHeight * 2 + 1;
+      // --- MODIFIED: Use iconRect for calculation ---
+      if (iconRect.width > 0 && iconRect.height > 0 && canvasRect.width > 0 && canvasRect.height > 0) {
+        
+        // Calculate position relative to the canvas
+        // --- MODIFIED: Target the right edge of the ICON + offset (positive terminal) ---
+        const relativeX = (iconRect.right + 4) - canvasRect.left; // Use iconRect.right + offset
+        // --- MODIFIED: Target the vertical center of the ICON ---
+        const relativeY = (iconRect.top + iconRect.height / 2) - canvasRect.top; // Use iconRect center
+
+        // Convert relative position to Canvas NDC
+        const canvasNdcX = (relativeX / canvasRect.width) * 2 - 1;
+        const canvasNdcY = -(relativeY / canvasRect.height) * 2 + 1;
+        
         // Use a small positive z-value to ensure it's in front of the camera's near plane
-        setBatteryPosition3D({ x, y, z: 0.1 }); 
+        // --- MODIFIED: Use canvas NDC ---
+        const newPosition = { x: canvasNdcX, y: canvasNdcY, z: 0.1 };
+        console.log('[TesseractExperience] Calculated new batteryPosition3D (NDC):', newPosition); // DEBUG LOG
+        setBatteryPosition3D(newPosition); 
       } else {
+        console.warn('[TesseractExperience] Invalid rect dimensions, setting batteryPosition3D to null.'); // DEBUG LOG
         setBatteryPosition3D(null); 
       }
     };
 
-    updatePosition(); // Initial position
+    // --- MODIFIED: Add a delay before the initial call --- 
+    const initialTimeoutId = setTimeout(() => {
+        updatePosition(); // Initial position calculation after delay
+    }, 100); // 100ms delay, adjust if needed
+
     window.addEventListener('resize', updatePosition);
     
     // Also update on scroll potentially, if layout shifts
     const scrollSelector = '[class*="contentWrapper"]'; // Use attribute selector
     const scrollContainer = document.querySelector(scrollSelector); // Adjust if needed
+    console.log('[TesseractExperience] Querying for scroll container with selector:', scrollSelector); // DEBUG LOG
     
     if (scrollContainer) {
+        console.log('[TesseractExperience] Found scroll container, adding scroll listener.'); // DEBUG LOG
         scrollContainer.addEventListener('scroll', updatePosition);
     } else {
+        console.warn('[TesseractExperience] Scroll container not found, adding listener to window.'); // DEBUG LOG
         window.addEventListener('scroll', updatePosition);
     }
 
     return () => {
+      // --- MODIFIED: Clear the timeout on cleanup --- 
+      clearTimeout(initialTimeoutId);
+      console.log('[TesseractExperience] Cleaning up useEffect for battery position.'); // DEBUG LOG
       window.removeEventListener('resize', updatePosition);
        if (scrollContainer) {
           scrollContainer.removeEventListener('scroll', updatePosition);
@@ -103,7 +160,23 @@ const TesseractExperience = ({ chargeBattery, isActivated }) => {
           window.removeEventListener('scroll', updatePosition);
        }
     };
-  }, []);
+  }, []); // Keep dependencies empty for DOM element finding
+
+  // --- NEW: useEffect to control canvas pointerEvents based on Tesseract dragging state ---
+  useEffect(() => {
+    const canvas = glRef.current?.domElement; // Get canvas from stored gl instance
+    if (canvas) {
+      // console.log(`[TesseractExperience] Setting canvas pointerEvents to: ${isTesseractDragging ? 'auto' : 'none'}`); // DEBUG LOG
+      canvas.style.pointerEvents = isTesseractDragging ? 'auto' : 'none';
+    }
+    // Cleanup function (optional but good practice)
+    return () => {
+       if (canvas) {
+        // console.log("[TesseractExperience] Resetting pointerEvents on cleanup");
+        // canvas.style.pointerEvents = 'none'; // Reset if component unmounts while dragging
+      }
+    };
+  }, [isTesseractDragging]); // Depend only on the dragging state
 
   const handleConnectChange = (connecting) => {
     if (connecting !== isConnecting) {
@@ -112,11 +185,30 @@ const TesseractExperience = ({ chargeBattery, isActivated }) => {
   };
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 2, pointerEvents: 'none' }}>
+    <div style={{ 
+      position: 'fixed', 
+      top: '17.5vh',      // Red Box Top Edge (Estimated)
+      left: '9.32vw',     // Red Box Left Edge (Estimated)
+      width: '40.2vw',    // Red Box Width (Estimated)
+      height: '65vh',   // Red Box Height (Estimated)
+      zIndex: 7, 
+      pointerEvents: 'none',
+    }}>
       <Canvas
         shadows
-        camera={{ position: [0, 1.5, 8], fov: 50 }}
-        style={{ background: 'transparent' }}
+        camera={{ position: [-3, -1, 8], fov: 50 }}
+        style={{ 
+          background: 'transparent',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none'
+        }}
+        gl={{ alpha: true }}
+        onCreated={({ gl }) => {
+          glRef.current = gl; // Store gl instance
+          gl.setClearColor(new THREE.Color(0, 0, 0), 0);
+        }}
       >
         <Suspense fallback={null}>
           <ambientLight intensity={0.4} />
@@ -130,35 +222,32 @@ const TesseractExperience = ({ chargeBattery, isActivated }) => {
           <pointLight position={[-5, -5, -5]} intensity={0.5} color="red" />
           <pointLight position={[0, 5, -10]} intensity={0.8} color="blue" />
 
-          {/* Conditionally render Physics and Tesseract only when activated */}
           {isActivated && (
             <Physics gravity={[0, -9.82, 0]}>
-              {/* <Debug color="black" scale={1.1}> */}
-                <Plane position={[0, -3, 0]} /> {/* --- MODIFY: Lower the ground plane from -2.23 --- */}
-                {batteryPosition3D && (
-                  <Tesseract
-                    ref={tesseractRef}
-                    position={[-3, 5, 0]} // Start position
-                    batteryPosition3D={batteryPosition3D}
-                    onConnectChange={handleConnectChange}
-                    chargeBattery={chargeBattery}
-                  />
-                )}
-              {/* </Debug> */} 
+              <Plane position={[0, -3, 0]} />
+              {batteryPosition3D ? ( // Conditional rendering based on batteryPosition3D
+                <Tesseract
+                  ref={tesseractRef}
+                  position={[0, 1, 0]}
+                  batteryPosition3D={batteryPosition3D}
+                  onConnectChange={handleConnectChange}
+                  chargeBattery={chargeBattery}
+                  onDraggingChange={setIsTesseractDragging}
+                />
+              ) : (
+                // Optionally log or render a placeholder if batteryPosition3D is null
+                 null // Render nothing if position is not ready
+              )}
             </Physics>
           )}
-
-          {/* Render connection line (conditionally based on isConnecting state) */}
           {isActivated && isConnecting && (
             <Line
               points={connectionLinePoints}
-              color="cyan"
+              color="#888888"
               lineWidth={2}
               dashed={false}
             />
           )}
-
-          {/* Render SceneLogic only when activated and potentially connecting */}
           {isActivated && (
              <SceneLogic 
                 isConnecting={isConnecting} 

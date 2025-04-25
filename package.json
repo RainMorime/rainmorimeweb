@@ -14,7 +14,7 @@
   "description": "",
   "dependencies": {
     "@react-three/cannon": "^6.6.0",
-    "@react-three/drei": "^9.88.17",
+    "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.15.11",
     "@types/three": "^0.175.0",
     "cannon-es": "^0.20.0",
