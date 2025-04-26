@@ -14,6 +14,8 @@ import Noise from '../components/Noise';
 import TesseractExperience from '../components/TesseractExperience';
 // --- 新增: 引入激活拉杆 --- 
 import ActivationLever from '../components/ActivationLever';
+// --- 新增: 引入音乐播放器 ---
+import MusicPlayer from '../components/MusicPlayer';
 
 // --- 新增: 引入 GSAP 和 ScrollTrigger ---
 import { gsap } from 'gsap';
@@ -785,6 +787,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {/* --- 修改: 渲染音乐播放器并传递 powerLevel --- */}
+      <MusicPlayer powerLevel={powerLevel} />
+
       <CustomCursor />
       <RainMorimeEffect />
       
@@ -1063,8 +1068,9 @@ export default function Home() {
 
             <div id="about-section" ref={aboutSectionRef} className={`${styles.contentSection} ${styles.aboutSection}`}> 
               <Noise />
-              {/* --- 新增: 内容包裹器，应用动画 --- */}
+              {/* --- 修改: 移除 flex 容器类 --- */}
               <div ref={aboutContentRef}>
+                 {/* --- 保持内容结构，移除外层 text content div --- */} 
                 <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
                 <h2>ABOUT</h2>
                 {/* 修改: 将 "ICP备案: " 包含在链接内 */}
@@ -1073,10 +1079,17 @@ export default function Home() {
                     ICP备案: 陕ICP备2023011267号-1
                   </a>
                 </div>
-
                 {/* 修改: 版权信息文本 */} 
                 <div className={styles.footerInfo}> 
                   © 2025 朴相霖 / RainMorime 版权所有
+                </div>
+                {/* --- 修改: 将图片容器移到版权信息下方 --- */}
+                <div className={styles.aboutImageContainer}>
+                  <img 
+                    src="/pictures/www.rainmorime.com.png" 
+                    alt="Website QR Code" 
+                    className={styles.aboutImage} 
+                  />
                 </div>
               </div>
             </div>

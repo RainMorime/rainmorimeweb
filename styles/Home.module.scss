@@ -3114,3 +3114,31 @@
   pointer-events: auto; // 允许容器内的元素响应事件
 }
 
+// --- 修改: About Section 内的容器布局 --- 
+.aboutContentContainer {
+  display: flex; // 保持 flex 布局
+  // gap: 20px; // 移除 gap，使用 margin 控制间距
+  align-items: flex-start; // 顶部对齐
+}
+
+.aboutTextContent {
+  // flex: 1; // 移除 flex: 1，让其自然宽度
+  margin-right: 60px; // 在文本和图片之间添加一些右边距
+}
+
+.aboutImageContainer {
+  // flex-shrink: 0; // 不再需要
+  width: 150px; // 可以调整图片宽度
+  // margin-left: auto; // 移除，不再推到右侧
+  margin-top: 20px; // 在图片上方添加间距
+  margin-bottom: 20px; // 在图片下方添加间距 (可选)
+}
+
+.aboutImage {
+  display: block; // 确保图片表现为块级元素
+  width: 100%; // 图片宽度充满容器
+  height: auto; // 保持图片比例
+  filter: grayscale(100%); // 应用灰度滤镜
+  opacity: 0.8; // 可以稍微降低透明度，使其更融入背景
+}
+
