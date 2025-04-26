@@ -10,9 +10,9 @@ import styles from '../styles/Home.module.scss';
 import React from 'react';
 import ProjectCard from '../components/ProjectCard';
 import Noise from '../components/Noise';
-// --- 新增: 引入 Tesseract 体验 --- 
+// --- 新增: 引入 Tesseract 体验 ---
 import TesseractExperience from '../components/TesseractExperience';
-// --- 新增: 引入激活拉杆 --- 
+// --- 新增: 引入激活拉杆 ---
 import ActivationLever from '../components/ActivationLever';
 // --- 新增: 引入音乐播放器 ---
 import MusicPlayer from '../components/MusicPlayer';
@@ -40,7 +40,7 @@ const sampleProjects = [
     description: 'Real-time data analysis platform with a retro terminal interface.',
     tech: ['Next.js', 'Chart.js', 'Python (Flask)', 'PostgreSQL'],
     link: '#',
-    imageUrl: '/placeholders/aether.png' 
+    imageUrl: '/placeholders/aether.png'
   },
   {
     id: 3,
@@ -1045,11 +1045,56 @@ export default function Home() {
               </div>
             </div>
 
-            <div id="experience-section" className={`${styles.contentSection} ${styles.experienceSection}`}> 
+            <div id="experience-section" className={`${styles.contentSection} ${styles.experienceSection}`}>
               <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
               <h2>EXPERIENCE</h2>
-              <p>这里是 Experience 部分的内容...</p>
-              {/* 在这里填充 Experience 相关的内容 */}
+              <div className={styles.experienceTimeline}>
+                {/* Item 1: High School (Right, Add Education Class) */}
+                <div className={`${styles.timelineItem} ${styles.timelineItemRight} ${styles.educationItem}`}> {/* 添加 educationItem 类 */}
+                  <div className={styles.timelinePoint}></div>
+                  <div className={styles.timelineContent}>
+                    <div className={styles.timelineYear}><span className={styles.timelineNumber}>2016</span> - <span className={styles.timelineNumber}>2022</span></div>
+                    <h3>初中 / 高中</h3>
+                    <p>吉林师范大学附属中学</p>
+                    <p>四平市第一高级中学</p>
+                  </div>
+                </div>
+                {/* Item 2: University (Left, Add Education Class) */}
+                <div className={`${styles.timelineItem} ${styles.timelineItemLeft} ${styles.educationItem}`}> {/* 添加 educationItem 类 */}
+                  <div className={styles.timelinePoint}></div>
+                  <div className={styles.timelineContent}>
+                    <div className={styles.timelineYear}><span className={styles.timelineNumber}>2022</span> - 2026</div>
+                    <h3>大学</h3>
+                    <p>西安外国语大学</p>
+                    <p>英语 (语言学方向)</p>
+                  </div>
+                </div>
+                {/* Item 3: Internship (Left - Moved from Right) */}
+                <div className={`${styles.timelineItem} ${styles.timelineItemLeft}`}> {/* 修改为 timelineItemLeft */}
+                  <div className={styles.timelinePoint}></div>
+                  <div className={styles.timelineContent}>
+                    <div className={styles.timelineYear}>
+                      <span className={styles.timelineNumber}>2024.07.15</span> - <span className={styles.timelineNumber}>08.16</span>
+                    </div>
+                    <h3>实习</h3>
+                    <p>吉林泰斯特生物电子工程有限公司</p>
+                    <p>国内销售部</p>
+                    <p>负责产品翻译、校对；市场调研</p>
+                  </div>
+                </div>
+                {/* Item 4: Volunteer (Left) */}
+                <div className={`${styles.timelineItem} ${styles.timelineItemLeft}`}> {/* 保持 timelineItemLeft */}
+                   <div className={styles.timelinePoint}></div>
+                   <div className={styles.timelineContent}>
+                     <div className={styles.timelineYear}>
+                       <span className={styles.timelineNumber}>2024.11.11</span> - <span className={styles.timelineNumber}>11.17</span>
+                     </div>
+                     <h3>志愿者</h3>
+                     <p><span className={styles.timelineNumber}>2024</span>中国整合肿瘤学大会</p>
+                     <p>试片区小组长</p>
+                   </div>
+                 </div>
+              </div>
             </div>
 
             <div id="life-section" className={`${styles.contentSection} ${styles.lifeSection}`}> 

@@ -1258,12 +1258,21 @@
 }
 
 .timeline_year {
-  display: inline-block;
-  padding: 0.3rem 1rem;
-  background: rgba(255,255,255,0.1);
-  border-radius: 20px;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+  display: inline-block; // 使其可以应用 padding 和 margin
+  font-family: 'Consolas', monospace; // 保持 Consolas
+  font-size: 0.8rem;
+  color: var(--ark-text-secondary);
+  background-color: rgba(var(--ark-border-rgb), 0.2);
+  padding: 3px 8px;
+  margin-bottom: 15px; // 与标题的间距
+  border-radius: 3px;
+  opacity: 0.7;
+}
+
+// --- 新增: 为时间线内的数字指定字体 ---
+.timelineNumber {
+  font-family: 'Consolas', monospace; // 应用与年份范围相同的字体
+  // 可以根据需要添加其他样式，例如颜色或字重
 }
 
 .timeline_content {
@@ -3141,4 +3150,195 @@
   filter: grayscale(100%); // 应用灰度滤镜
   opacity: 0.8; // 可以稍微降低透明度，使其更融入背景
 }
+
+// --- 新增: Experience Section 特定样式 ---
+.experienceSection {
+  align-items: center; // 让时间线居中
+}
+
+.experienceTimeline {
+  position: relative;
+  width: 100%;
+  max-width: 800px; // 时间线最大宽度
+  margin-top: 40px; // 与标题的间距
+  padding: 20px 0; // 上下内边距
+
+  // 中心垂直线
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px; // 线条宽度
+    height: 100%;
+    background-color: var(--ark-border); // 使用边框颜色
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+}
+
+.timelineItem {
+  position: relative;
+  width: 50%; // 占据一半宽度
+  margin-bottom: 15px; // 统一使用较小的项目间距
+  padding: 10px 40px; // 内边距，给线条和点留出空间
+  box-sizing: border-box;
+  z-index: 2; // 在线条之上
+  transition: opacity 0.3s, margin-bottom 0.3s;
+
+  // 时间点 (圆圈或方块)
+  .timelinePoint {
+    content: '';
+    position: absolute;
+    top: 15px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--ark-dark-blue);
+    border: 2px solid var(--ark-primary);
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 0 5px rgba(var(--ark-primary-rgb), 0.5);
+    transition: background-color 0.3s, border-color 0.3s, top 0.3s;
+  }
+
+  // 左右交错布局
+  &.timelineItemLeft {
+    left: 0;
+    padding-right: 52px;
+    text-align: right; // Item container alignment
+
+    .timelinePoint {
+      right: -6px;
+    }
+
+    .timelineContent {
+      text-align: right; // Content alignment
+      margin-left: auto;
+    }
+  }
+
+  &.timelineItemRight {
+    left: 50%;
+    padding-left: 52px;
+    text-align: left; // Item container alignment
+
+    .timelinePoint {
+      left: -6px;
+    }
+    .timelineContent {
+      text-align: left; // Default Content alignment for right items
+      margin-right: auto;
+    }
+  }
+
+  // 最后一个元素移除底部外边距
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  // --- 调整非教育条目的视觉权重 ---
+  &:not(.educationItem) {
+    opacity: 0.8;
+
+    .timelinePoint {
+      top: 10px;
+    }
+
+     &:hover {
+        opacity: 1;
+     }
+  }
+}
+
+.timelineContent {
+  background-color: rgba(var(--ark-secondary-rgb), 0.08);
+  border: 1px solid var(--ark-border);
+  padding: 15px 20px; // 默认内边距
+  position: relative;
+  transition: border-color 0.3s, background-color 0.3s, padding 0.3s, max-width 0.3s;
+  max-width: none; // 默认无宽度限制
+
+  &:hover {
+    border-color: var(--ark-primary);
+    background-color: rgba(var(--ark-secondary-rgb), 0.15);
+  }
+
+  h3 {
+    font-family: 'Dosis', monospace;
+    font-size: 1.3rem;
+    color: var(--ark-primary);
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-weight: bold;
+    transition: font-size 0.3s, margin-bottom 0.3s;
+  }
+
+  p {
+    font-family: 'Dosis', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ark-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 4px;
+    opacity: 0.8;
+    transition: font-size 0.3s, line-height 0.3s;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // --- 减小非教育条目内容框的内边距、字体和宽度限制 ---
+  .timelineItem:not(.educationItem) & {
+    padding: 8px 12px;
+    max-width: 280px;
+    h3 {
+        font-size: 1.0rem;
+        margin-bottom: 4px;
+    }
+    p {
+        font-size: 0.8rem;
+        line-height: 1.4;
+        margin-bottom: 2px;
+    }
+    .timelineYear {
+        margin-bottom: 8px;
+    }
+  }
+}
+
+// --- 调整教育经历框的内边距 ---
+.educationItem .timelineContent {
+  padding: 18px 18px; // 上下变小，左右变大
+  max-width: none;
+  p {
+    line-height: 1.6;
+    margin-bottom: 5px;
+  }
+}
+
+// --- 新增: 强制右侧教育条目内容右对齐 ---
+.timelineItemRight.educationItem .timelineContent {
+   text-align: right;   // 覆盖默认的 text-align: left
+   margin-left: auto; // 确保内容框在容器内靠右
+   margin-right: 0;
+}
+
+.timelineYear {
+  display: inline-block;
+  font-family: 'Consolas', monospace;
+  font-size: 0.8rem;
+  color: var(--ark-text-secondary);
+  background-color: rgba(var(--ark-border-rgb), 0.2);
+  padding: 3px 8px;
+  margin-bottom: 15px;
+  border-radius: 3px;
+  opacity: 0.7;
+  transition: margin-bottom 0.3s;
+}
+
+.timelineNumber {
+  font-family: 'Consolas', monospace;
+}
+
+// ... rest of the styles ...
 
