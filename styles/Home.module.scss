@@ -668,8 +668,8 @@
   background-image: url('/pictures/RM2.png');
   background-position: 47% 48%; // 修改: 稍微向左上移动
   background-repeat: no-repeat;
-  background-size: 50%; // 修改: 从 60% 缩小 到 50%
-  filter: grayscale(100%) brightness(0.6) drop-shadow(0 0 5px rgba(0, 0, 0, 0.1)); // 降低亮度
+  background-size: 57%; // 修改: 从 50% 增大到 65%
+  filter: grayscale(100%) brightness(0.8) drop-shadow(0 0 5px rgba(0, 0, 0, 0.1)); // 修改: 亮度从 0.6 提高到 0.8
   pointer-events: none;
   position: relative;
   z-index: 3;
@@ -707,7 +707,8 @@
   // position: relative; // 移除
   transform: skewX(-15deg);
   transform-origin: left center;
-  overflow: hidden;
+  // 修改: 允许子元素溢出 (为了 ABOUT 列的 HUD)
+  overflow: visible; 
   // z-index 不再重要，因为它在 mainLayout 内部
   pointer-events: none; // --- ADD: Disable pointer events by default --- 
 
@@ -1913,6 +1914,7 @@
 
 // Column 4 (ABOUT - Focus + 5 Random HUDs)
 .column4:hover:not(.nonInteractive) {
+  overflow: visible; // 新增: 允许 HUD 溢出此列
   .hudOverlay::before { 
     animation: aboutFocus 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
@@ -2011,7 +2013,7 @@
     border-width: 4px; // 修改: 边框宽度增加到 4px (粗)
   }
   100% {
-    transform: translate(-50%, -50%) scale(4); // 保持放大到 4
+    transform: translate(-50%, -50%) scale(6); // 修改: 增大最终缩放比例从 4 到 6
     opacity: 0; // 完全透明
     border-width: 4px; // 修改: 保持最终边框宽度
   }
@@ -2742,14 +2744,15 @@
   display: inline-block;
   width: 4px; // 每个格子的宽度
   height: 8px; // 每个格子的高度 (小于电池内部高度)
-  background-color: rgba(0, 0, 0, 0.1); // 深色透明未填充
+  // 修改: 默认未填充应该是浅色透明，而不是深色
+  background-color: rgba(var(--ark-text-secondary-rgb, 200, 200, 200), 0.2); // 浅灰色未填充
   // margin: 0 1px; // 格子间距 (使用 justify-content 代替)
   transition: background-color 0.3s ease; // 填充颜色变化过渡
 }
 
-// --- 新增: 填充状态的格子样式 --- 
+// --- 新增: 恢复默认的填充状态样式 --- 
 .batteryLevelSegment.filled {
-  background-color: var(--ark-text-secondary); // 灰色填充
+  background-color: var(--ark-highlight-green); // 默认使用高亮绿色填充
 }
 
 // --- 新增: Power Text 样式 (可选) ---
@@ -3044,28 +3047,70 @@
       // 其他 ECG 特定属性如 background-size, background-repeat, background-position-x 无需设置
     }
   }
+
+  // --- 新增: 倒置状态下的 CONTACT 列悬停效果 --- 
+  .column3:hover:not(.nonInteractive) {
+    // --- 修改雷达扫描颜色 --- 
+    .hudOverlay::before {
+      // Use pink/purple conic-gradient
+      background: conic-gradient(from 0deg, 
+          rgba(var(--ark-primary-rgb), 0.5) 0deg 15deg, // Use inverted primary color
+          transparent 15.1deg 360deg);
+      // Keep other radar styles (animation, size, etc.)
+    }
+
+    // --- 波纹动画和位置保持不变，但动画本身会使用下面的倒置版本 --- 
+    // .ripple1, .ripple2, .ripple3 ... 
+  }
+
+  // --- 新增: 倒置状态下的波纹动画 (粉色) --- 
+  /* --- MODIFIED: Comment out the inverted ripple animation ---
+  @keyframes contactRippleExpandShadow {
+    0% {
+      border: 8px solid rgba(var(--ark-primary-rgb), 0.8); // 使用倒置颜色
+      box-shadow: none;
+      opacity: 0.9;
+      transform: translate(-50%, -50%) scale(0.1);
+    }
+    50% {
+      border-width: 8px; 
+      opacity: 0.4;
+      box-shadow: none;
+    }
+    100% {
+      border: 8px solid rgba(var(--ark-primary-rgb), 0); // 使用倒置颜色
+      box-shadow: none;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(3.5); 
+    }
+  }
+  */ // --- END MODIFICATION ---
+
+  // ... potentially other inverted styles ...
+
+  .backButton {
+     // --- 修改: 满电状态下的默认样式 --- 
+     background: #ffffff; // 白色背景
+     border-color: #cccccc; // 浅灰色边框
+     color: #333333; // 深灰色文字
+     &:hover {
+       // --- 修改: 满电状态下的悬停样式 --- 
+       background: #aaaaaa; // 灰色背景
+       border-color: #888888; // 深一点的灰色边框
+       color: #ffffff; // 白色文字
+     }
+  }
 }
 
-// --- 新增或修改: contactRippleExpandShadow 动画 --- 
-@keyframes contactRippleExpandShadow {
-  0% {
-    // Start slightly visible, thin border, no shadow
-    border: 8px solid rgba(178, 242, 187, 0.8); // 调整: 稍粗的初始边框
-    box-shadow: none; // 修改: 移除阴影
-    opacity: 0.9;
-    transform: translate(-50%, -50%) scale(0.1); // 保持初始小尺寸
-  }
-  50% { // 新增: 中间帧用于过渡
-    border-width: 8px; // 边框变粗
-    opacity: 0.4; // 透明度降低
-    box-shadow: none; // 确保无阴影
-  }
-  100% {
-    // Expand border width, fade out border, increase scale
-    border: 8px solid rgba(178, 242, 187, 0); // 修改: 更粗的边框，完全透明
-    box-shadow: none; // 修改: 移除阴影
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(3.5); // 修改: 最终缩放增大到 3.5
-  }
+// --- 新增: 拉杆容器样式 ---
+.leverGroup {
+  position: absolute;
+  top: 17.5%; // 保持垂直位置
+  right: 21%; // 修改: 从 10% 增加到 25%，将组向左移动
+  display: flex;
+  flex-direction: row; // 水平排列
+  gap: 15px; // 拉杆之间的间距 (可调整)
+  z-index: 11; // 保持层级
+  pointer-events: auto; // 允许容器内的元素响应事件
 }
 

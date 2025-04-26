@@ -4,8 +4,9 @@ import { useBox } from '@react-three/cannon';
 import * as THREE from 'three';
 
 // Restore the Tesseract component with custom drag handlers and interaction mesh
-const Tesseract = forwardRef(({ position, batteryPosition3D, onConnectChange, chargeBattery, onDraggingChange }, ref) => {
+const Tesseract = forwardRef(({ position, batteryPosition3D, onConnectChange, chargeBattery, onDraggingChange, isInverted }, ref) => {
   const groupRef = useRef(); // Use groupRef as the main reference
+  const coreRef = useRef();
   const [hovered, setHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const chargeCooldownRef = useRef(false);
@@ -28,11 +29,14 @@ const Tesseract = forwardRef(({ position, batteryPosition3D, onConnectChange, ch
   // Apply physics to the group
   const [physicsRef, api] = useBox(() => ({
     mass: 1,
-    position: position || [0, 5, 0],
+    position: position ? [position[0], Math.max(position[1], 8), position[2]] : [0, 8, 0],
     args: [outerSize, outerSize, outerSize],
     linearDamping: 0.1,
     angularDamping: 0.5,
     allowSleep: false,
+    material: {
+      restitution: 0.8,
+    }
   }), groupRef);
 
   // Geometry calculations (unchanged)
@@ -94,9 +98,16 @@ const Tesseract = forwardRef(({ position, batteryPosition3D, onConnectChange, ch
   useImperativeHandle(ref, () => ({ getPosition: () => groupRef.current?.position, meshRef: groupRef }));
 
   // Frame logic
-  useFrame(({ camera }) => { 
-    if (!groupRef.current) return; 
-    
+  useFrame(({ camera }) => {
+    if (!groupRef.current) return;
+
+    // --- 新增: 旋转能量核心 ---
+    if (coreRef.current) {
+      coreRef.current.rotation.x += 0.015;
+      coreRef.current.rotation.y += 0.02;
+    }
+    // --- 结束新增 ---
+
     let currentlyConnecting = false; // Default state for this frame
 
     // --- Logic for when the Tesseract is being dragged ---
@@ -174,7 +185,6 @@ const Tesseract = forwardRef(({ position, batteryPosition3D, onConnectChange, ch
 
     // --- Update connection state at the end of the frame logic ---
     onConnectChange(currentlyConnecting);
-
   });
 
   return (
@@ -183,6 +193,17 @@ const Tesseract = forwardRef(({ position, batteryPosition3D, onConnectChange, ch
       <lineSegments geometry={lineGeometry}>
         <lineBasicMaterial color={hovered ? "#aaaaff" : "#888888"} linewidth={3} />
       </lineSegments>
+
+      {/* --- 新增: 能量核心 --- */}
+      <mesh ref={coreRef} castShadow> {/* 核心也投射阴影 */}
+        <octahedronGeometry args={[0.08]} /> {/* 菱形几何体，尺寸略小于内部空间 */}
+        <meshBasicMaterial 
+          color={isInverted ? '#E08FFF' : '#B2F2BB'} // 满电粉紫，否则高亮绿
+          wireframe={true}      // 设置为线框模式
+        />
+      </mesh>
+      {/* --- 结束新增 --- */}
+
       {/* Interaction Helper Mesh */}
       <mesh
         visible={false}

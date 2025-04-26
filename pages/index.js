@@ -123,6 +123,9 @@ export default function Home() {
   const [isInverted, setIsInverted] = useState(false);
   // --- 新增: Tesseract 激活状态 --- 
   const [isTesseractActivated, setIsTesseractActivated] = useState(false);
+  // --- 新增: 放电状态 ---
+  const [isDischarging, setIsDischarging] = useState(false);
+  const dischargeIntervalRef = useRef(null); // 用于存储放电 interval ID
 
   // 处理加载完成
   const handleLoadingComplete = () => {
@@ -451,48 +454,103 @@ export default function Home() {
     }
   }, [textVisible]);
 
-  // --- 新增: Power Level 更新逻辑 ---
+  // --- 修改: Power Level 随机减少逻辑 ---
   useEffect(() => {
-    if (!mainVisible) return; // 只在主界面可见时更新
+    if (!mainVisible) return;
 
     const intervalId = setInterval(() => {
-      const decrease = Math.floor(Math.random() * 3) + 1; // 随机减 1-3
-      // --- MODIFIED: Prevent decrease if power is already 100% ---
       setPowerLevel(prevLevel => {
-        if (prevLevel >= 100) {
-          return 100; // Keep it at 100
+        // --- MODIFIED: 只有在非放电且电量小于100时才随机减少 ---
+        if (!isDischarging && prevLevel < 100) {
+          const decrease = Math.floor(Math.random() * 3) + 1;
+          return Math.max(0, prevLevel - decrease);
         }
-        return Math.max(0, prevLevel - decrease); // Otherwise, decrease and ensure not below 0
+        return prevLevel; // 否则保持不变
       });
-    }, 5000); // 每 5 秒
+    }, 5000);
 
-    return () => clearInterval(intervalId); // 清理 interval
-  }, [mainVisible]); // 依赖 mainVisible
+    return () => clearInterval(intervalId);
+  }, [mainVisible, isDischarging]); // 添加 isDischarging 作为依赖
 
-  // --- 新增: 电池充电函数 --- 
+  // --- 电池充电函数 (保持不变) ---
   const chargeBattery = () => {
     setPowerLevel(prevLevel => {
-      // Don't charge if already inverted (or at 100)
       if (prevLevel >= 100) return 100;
-      const newLevel = Math.min(100, prevLevel + 5); // Increase by 5, cap at 100
-      console.log("Charging... New Power Level:", newLevel); // Log charging
+      const newLevel = Math.min(100, prevLevel + 5);
+      console.log("Charging... New Power Level:", newLevel);
       return newLevel;
     });
   };
 
-  // --- 新增: 监听电量以触发负色效果 --- 
-  useEffect(() => {
-    if (powerLevel === 100 && !isInverted) {
-      console.log("Power at 100%! Activating inverted mode.");
-      setIsInverted(true);
-      // Optional: You could add sound effects or other visual cues here
+  // --- 新增: 处理放电拉杆的回调函数 ---
+  const handleDischargeLeverPull = () => {
+    // 只有在电量满且未处于放电状态时才能启动放电
+    if (powerLevel === 100 && !isDischarging) {
+      console.log("Discharge Lever Pulled! Starting discharge...");
+      setIsDischarging(true);
+      // 放电逻辑将在下面的 useEffect 中处理
+    } else if (isDischarging) {
+        console.log("Already discharging.");
+    } else {
+        console.log("Cannot discharge, power level is not 100%.");
     }
-    // Optional: Add logic here if you want to revert the effect 
-    // if the power level drops below 100 for some reason.
-    // else if (powerLevel < 100 && isInverted) {
-    //   setIsInverted(false);
-    // }
-  }, [powerLevel, isInverted]);
+  };
+
+  // --- 新增: 处理放电过程的 useEffect ---
+  useEffect(() => {
+    if (isDischarging) {
+      // 清除可能存在的旧 interval
+      if (dischargeIntervalRef.current) {
+        clearInterval(dischargeIntervalRef.current);
+      }
+      // 启动新的放电 interval
+      dischargeIntervalRef.current = setInterval(() => {
+        setPowerLevel(prevLevel => {
+          if (prevLevel > 0) {
+            const decreaseAmount = 1; // 每次减少 1%
+            return Math.max(0, prevLevel - decreaseAmount);
+          } else {
+            // 电量已为 0，停止放电
+            console.log("Discharge complete.");
+            clearInterval(dischargeIntervalRef.current);
+            dischargeIntervalRef.current = null;
+            setIsDischarging(false); // 重置放电状态
+            return 0;
+          }
+        });
+      }, 80); // 放电速度，例如每 80ms 减少 1%
+
+      // 返回清理函数
+      return () => {
+        if (dischargeIntervalRef.current) {
+          console.log("Cleaning up discharge interval.");
+          clearInterval(dischargeIntervalRef.current);
+          dischargeIntervalRef.current = null;
+        }
+      };
+    } else {
+        // 如果 isDischarging 变为 false (例如手动停止或完成)，确保 interval 清除
+        if (dischargeIntervalRef.current) {
+             console.log("Clearing discharge interval because isDischarging is false.");
+             clearInterval(dischargeIntervalRef.current);
+             dischargeIntervalRef.current = null;
+        }
+    }
+  }, [isDischarging]); // 依赖 isDischarging 状态
+
+  // --- 修改: 监听电量以触发负色效果 (加入放电状态判断) ---
+  useEffect(() => {
+    // --- MODIFIED: 只有在电量满且*未*放电时才进入负色模式 ---
+    if (powerLevel === 100 && !isDischarging && !isInverted) {
+      console.log("Power at 100% and not discharging! Activating inverted mode.");
+      setIsInverted(true);
+    }
+    // --- MODIFIED: 如果电量低于100或开始放电，则退出负色模式 ---
+    else if ((powerLevel < 100 || isDischarging) && isInverted) {
+      console.log("Power below 100 or discharging! Deactivating inverted mode.");
+      setIsInverted(false);
+    }
+  }, [powerLevel, isInverted, isDischarging]); // 添加 isDischarging 作为依赖
 
   // 定义列的数量
   const numberOfColumns = 6; // 共6条边界，产生5个可点击区域
@@ -737,6 +795,7 @@ export default function Home() {
         <TesseractExperience 
           chargeBattery={chargeBattery} 
           isActivated={isTesseractActivated} // Pass activation state
+          isInverted={isInverted} // --- 新增: 传递 inverted 状态 ---
         />
       )}
       
@@ -764,13 +823,27 @@ export default function Home() {
           </div>
           {/* 左侧面板 */} 
           <div className={`${styles.leftPanel} ${leftPanelAnimated ? styles.animated : ''}`}> 
-            {/* --- 新增: 将激活拉杆移到这里 --- */}
-            {mainVisible && (
-              <ActivationLever 
-                onActivate={handleActivateTesseract} 
-                isActive={isTesseractActivated} 
-              />
-            )}
+            {/* --- 修改: 将拉杆放入一个 flex 容器中 --- */}
+            <div className={styles.leverGroup}>
+              {/* --- 第一个拉杆 (激活 Tesseract) --- */}
+              {mainVisible && (
+                <ActivationLever
+                  onActivate={handleActivateTesseract}
+                  isActive={isTesseractActivated}
+                  label="Power" // 添加标签
+                />
+              )}
+              {/* --- 新增: 第二个拉杆 (释放电源) --- */}
+              {mainVisible && (
+                <ActivationLever
+                  onActivate={handleDischargeLeverPull} // 使用新的回调
+                  isActive={isDischarging}             // 关联放电状态
+                  label="Release"                      // 添加标签
+                  // 移除内联样式
+                  // style={{ right: '10%' }} 
+                />
+              )}
+            </div>
             {/* --- 修改: Power Display --- */}
             <div className={styles.powerDisplay}>
               <div className={styles.batteryIcon}>

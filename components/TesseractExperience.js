@@ -7,7 +7,13 @@ import Tesseract from './Tesseract'; // Import the Tesseract component
 
 // Invisible plane for the ground
 function Plane(props) {
-  const [ref] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0], ...props }));
+  const [ref] = usePlane(() => ({
+    rotation: [-Math.PI / 2, 0, 0],
+    material: {
+      restitution: 0.3, // 给地面一点弹性
+    },
+    ...props
+  }));
   return (
     <mesh ref={ref} receiveShadow> {/* Make plane receive shadows if needed */} 
       <planeGeometry args={[100, 100]} />
@@ -49,7 +55,7 @@ function SceneLogic({ isConnecting, tesseractRef, batteryPosition3D, setConnecti
 }
 
 // Main 3D Scene Component
-const TesseractExperience = ({ chargeBattery, isActivated }) => {
+const TesseractExperience = ({ chargeBattery, isActivated, isInverted }) => {
   const [batteryPosition3D, setBatteryPosition3D] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const tesseractRef = useRef(); // Ref to access Tesseract component
@@ -233,6 +239,7 @@ const TesseractExperience = ({ chargeBattery, isActivated }) => {
                   onConnectChange={handleConnectChange}
                   chargeBattery={chargeBattery}
                   onDraggingChange={setIsTesseractDragging}
+                  isInverted={isInverted}
                 />
               ) : (
                 // Optionally log or render a placeholder if batteryPosition3D is null

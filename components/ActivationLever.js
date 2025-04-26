@@ -1,32 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ActivationLever.module.scss';
 
-const ActivationLever = ({ onActivate, isActive }) => {
-  const [isPulled, setIsPulled] = useState(isActive);
-  const [hasBeenActivatedOnce, setHasBeenActivatedOnce] = useState(isActive);
-
-  useEffect(() => {
-    setIsPulled(isActive);
-    if (isActive) {
-      setHasBeenActivatedOnce(true);
-    }
-  }, [isActive]);
-
+const ActivationLever = ({ onActivate, isActive, label }) => {
   const handleLeverClick = () => {
-    const nextIsPulled = !isPulled;
-    setIsPulled(nextIsPulled);
-
-    if (nextIsPulled && !hasBeenActivatedOnce) {
-      setHasBeenActivatedOnce(true);
-      onActivate();
-    }
+    onActivate();
   };
 
-  const handleY = isPulled ? 45 : 15;
+  const handleY = isActive ? 45 : 15;
 
   return (
     <div 
-      className={`${styles.leverContainer}`}
+      className={`${styles.leverContainer} ${isActive ? '' : ''}`}
       onClick={handleLeverClick}
     >
       <svg viewBox="0 0 50 80" className={styles.leverSvg}>
@@ -61,15 +45,15 @@ const ActivationLever = ({ onActivate, isActive }) => {
         <circle 
           cx="25" cy="70" 
           r="4" 
-          className={`${styles.indicatorLight} ${isPulled ? styles.on : styles.off}`}
+          className={`${styles.indicatorLight} ${isActive ? styles.on : styles.off}`}
         />
         
         {/* Optional Label */}
-        {/* 
-        <text x="25" y="90" className={styles.labelText}>
-          ПУСК
-        </text> 
-        */}
+        {label && (
+          <text x="25" y="80" className={styles.labelText}>
+            {label}
+          </text>
+        )}
       </svg>
     </div>
   );
