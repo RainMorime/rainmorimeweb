@@ -3153,44 +3153,46 @@
 
 // --- 新增: Experience Section 特定样式 ---
 .experienceSection {
-  align-items: center; // 让时间线居中
+  display: flex; // 使用 flex 布局
+  flex-direction: column; // 竖直排列
+  align-items: center; // 水平居中内容
+  padding: 40px 20px; // 内边距
 }
 
 .experienceTimeline {
   position: relative;
   width: 100%;
-  max-width: 800px; // 时间线最大宽度
-  margin-top: 40px; // 与标题的间距
-  padding: 20px 0; // 上下内边距
+  max-width: 800px; // 限制时间线最大宽度
+  margin-top: 30px; // 与标题间距
 
-  // 中心垂直线
+  // The central vertical line
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 50%;
-    width: 2px; // 线条宽度
-    height: 100%;
-    background-color: var(--ark-border); // 使用边框颜色
     transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background-color: var(--ark-border); // Using border color for the line
     z-index: 1;
   }
 }
 
 .timelineItem {
   position: relative;
-  width: 50%; // 占据一半宽度
-  margin-bottom: 15px; // 统一使用较小的项目间距
-  padding: 10px 40px; // 内边距，给线条和点留出空间
+  width: 50%; // Each item takes half the width
+  margin-bottom: 15px; // Unified small vertical spacing between all items
+  padding: 0 40px; // Padding for spacing from the center line and content
   box-sizing: border-box;
-  z-index: 2; // 在线条之上
-  transition: opacity 0.3s, margin-bottom 0.3s;
+  z-index: 2;
+  transition: opacity 0.3s;
 
-  // 时间点 (圆圈或方块)
+  // Timeline point (circle)
   .timelinePoint {
     content: '';
     position: absolute;
-    top: 15px;
+    top: 15px; // Default vertical position (will be adjusted for secondary items)
     width: 12px;
     height: 12px;
     background-color: var(--ark-dark-blue);
@@ -3201,62 +3203,68 @@
     transition: background-color 0.3s, border-color 0.3s, top 0.3s;
   }
 
-  // 左右交错布局
+  // Left-side items
   &.timelineItemLeft {
-    left: 0;
-    padding-right: 52px;
-    text-align: right; // Item container alignment
+    left: 0; // Position on the left half
+    padding-right: 52px; // Adjust padding (40px + half point width + border)
+    text-align: right; // Align text to the right
 
     .timelinePoint {
-      right: -6px;
+      right: -8px; // Position point to the left of the center line (adjust value as needed)
     }
 
     .timelineContent {
-      text-align: right; // Content alignment
-      margin-left: auto;
+      text-align: right;
+      margin-left: auto; // Ensure content aligns right when max-width is set
     }
   }
 
+  // Right-side items
   &.timelineItemRight {
-    left: 50%;
-    padding-left: 52px;
-    text-align: left; // Item container alignment
+    left: 50%; // Position on the right half
+    padding-left: 52px; // Adjust padding
+    text-align: left; // Align text to the left
 
     .timelinePoint {
-      left: -6px;
+      left: -8px; // Position point to the right of the center line
     }
-    .timelineContent {
-      text-align: left; // Default Content alignment for right items
-      margin-right: auto;
+     .timelineContent {
+      text-align: left;
+      margin-right: auto; // Ensure content aligns left when max-width is set
     }
   }
 
-  // 最后一个元素移除底部外边距
+  // Remove margin from the last item
   &:last-child {
     margin-bottom: 0;
   }
 
-  // --- 调整非教育条目的视觉权重 ---
+  // --- Styling for Secondary Items (Internship, Volunteer) ---
   &:not(.educationItem) {
-    opacity: 0.8;
+    opacity: 0.8; // Slightly lower opacity
 
     .timelinePoint {
-      top: 10px;
+      top: 10px; // Adjust point position for smaller boxes
+      // Optional: make point smaller/different for secondary items
+      // width: 10px;
+      // height: 10px;
+      // border-width: 1px;
     }
 
-     &:hover {
-        opacity: 1;
-     }
+    &:hover {
+       opacity: 1; // Full opacity on hover
+    }
   }
 }
 
 .timelineContent {
   background-color: rgba(var(--ark-secondary-rgb), 0.08);
   border: 1px solid var(--ark-border);
-  padding: 15px 20px; // 默认内边距
+  padding: 15px 18px; // Default padding (will be overridden)
   position: relative;
+  border-radius: 4px; // Add slight rounding
   transition: border-color 0.3s, background-color 0.3s, padding 0.3s, max-width 0.3s;
-  max-width: none; // 默认无宽度限制
+  max-width: none; // Default: no width limit
 
   &:hover {
     border-color: var(--ark-primary);
@@ -3265,7 +3273,7 @@
 
   h3 {
     font-family: 'Dosis', monospace;
-    font-size: 1.3rem;
+    font-size: 1.3rem; // Default title size
     color: var(--ark-primary);
     margin-top: 0;
     margin-bottom: 6px;
@@ -3275,7 +3283,7 @@
 
   p {
     font-family: 'Dosis', sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.95rem; // Default paragraph size
     color: var(--ark-text-secondary);
     line-height: 1.5;
     margin-bottom: 4px;
@@ -3287,40 +3295,39 @@
     }
   }
 
-  // --- 减小非教育条目内容框的内边距、字体和宽度限制 ---
+  // --- Specific Styles for Secondary Item Content ---
   .timelineItem:not(.educationItem) & {
-    padding: 8px 12px;
-    max-width: 280px;
+    padding: 8px 12px; // Smaller padding for compactness
+    max-width: 280px; // Limit width to make it narrower
     h3 {
-        font-size: 1.0rem;
-        margin-bottom: 4px;
+      font-size: 1.0rem; // Smaller title
+      margin-bottom: 4px;
     }
     p {
-        font-size: 0.8rem;
-        line-height: 1.4;
-        margin-bottom: 2px;
+      font-size: 0.8rem; // Smaller text
+      line-height: 1.4; // Tighter line height
+      margin-bottom: 2px;
     }
     .timelineYear {
-        margin-bottom: 8px;
+      margin-bottom: 8px; // Reduce space below year tag
     }
   }
 }
 
-// --- 调整教育经历框的内边距 ---
+// --- Specific Styles for Primary (Education) Item Content ---
 .educationItem .timelineContent {
-  padding: 18px 18px; // 上下变小，左右变大
-  max-width: none;
+  padding: 18px 18px; // Maintain shorter vertical, wider horizontal padding
+  max-width: none; // Ensure no width limit
+
   p {
     line-height: 1.6;
     margin-bottom: 5px;
   }
 }
 
-// --- 新增: 强制右侧教育条目内容右对齐 ---
-.timelineItemRight.educationItem .timelineContent {
-   text-align: right;   // 覆盖默认的 text-align: left
-   margin-left: auto; // 确保内容框在容器内靠右
-   margin-right: 0;
+// --- NEW: Right-align specific paragraphs in the first education item ---
+.timelineItemRight.educationItem .timelineContent p {
+  text-align: right; // Override text-align for these specific paragraphs
 }
 
 .timelineYear {
@@ -3330,14 +3337,15 @@
   color: var(--ark-text-secondary);
   background-color: rgba(var(--ark-border-rgb), 0.2);
   padding: 3px 8px;
-  margin-bottom: 15px;
+  margin-bottom: 15px; // Default space below year tag (overridden for secondary)
   border-radius: 3px;
   opacity: 0.7;
   transition: margin-bottom 0.3s;
 }
 
+// --- Style for numbers within timeline text ---
 .timelineNumber {
-  font-family: 'Consolas', monospace;
+  font-family: 'Consolas', monospace; // Use monospace font for numbers
 }
 
 // ... rest of the styles ...

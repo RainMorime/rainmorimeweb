@@ -5,8 +5,8 @@
   // position: absolute;
   // top: 17.5%;
   // right: 20%;
-  width: 50px;
-  height: 100px;
+  width: 45px;
+  height: 90px;
   z-index: 11;
   cursor: pointer;
   // transform: skewX(-15deg); // Remove skew as it's relative to the non-skewed left panel
@@ -16,6 +16,11 @@
 
   display: flex;
   transition: filter 0.3s ease;
+  
+  // --- 新增: 动画初始状态和过渡 ---
+  opacity: 0; // 初始透明
+  transform: translateY(10px); // 初始稍微向下偏移
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.3s ease; // 添加 opacity 和 transform 过渡
 }
 
 .leverContainer.disabled {
@@ -59,6 +64,8 @@
 .indicatorLight {
   stroke-width: 1;
   transition: fill 0.3s ease, stroke 0.3s ease, filter 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .indicatorLight.off {
@@ -68,11 +75,14 @@
 
 .indicatorLight.on {
   fill: var(--ark-highlight-green, #B2F2BB); /* Bright green/cyan on */
-  stroke: none;
+  stroke: var(--ark-highlight-green, #B2F2BB);
+  stroke-width: 0.5;
   /* Optional: Add a subtle glow */
-  filter: drop-shadow(0 0 3px var(--ark-highlight-green, #B2F2BB)); 
+  filter: drop-shadow(0 0 2px var(--ark-highlight-green, #B2F2BB));
 }
 
+/* --- 移除 .labelText 样式 (或注释掉) --- */
+/*
 .labelText {
   fill: var(--ark-text-secondary, #aaaaaa);
   font-family: 'Dosis', monospace;
@@ -81,7 +91,23 @@
   user-select: none;
   dominant-baseline: middle;
 }
+*/
 
+/* --- 新增: 图标样式 --- */
+.leverIcon {
+  fill: none;
+  stroke: var(--ark-text-secondary, #aaaaaa);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.3s ease;
+
+  .leverContainer.activeState & {
+    stroke: var(--ark-highlight-green, #B2F2BB); // 激活时变色
+  }
+}
+
+/* --- 移除 .leverLine 样式 (或注释掉) --- */
+/*
 .leverLine {
   stroke: var(--ark-primary);
   stroke-width: 2;
@@ -94,4 +120,16 @@
   &.horizontal {
     // Optional: specific styles for horizontal line
   }
+}
+*/
+
+.leverContainer.activeState {
+  // 可以添加特殊效果，比如轻微发光边框？
+  // filter: drop-shadow(0 0 1px var(--ark-highlight-green, #B2F2BB)); 
+}
+
+// --- 新增: 动画触发后的状态 ---
+.leverContainer.animated {
+  opacity: 1; // 完全不透明
+  transform: translateY(0); // 恢复原始位置
 } 

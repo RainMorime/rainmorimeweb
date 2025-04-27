@@ -1,0 +1,107 @@
+/* components/Timeline.module.scss */
+
+.timelineContainer {
+  position: relative;
+  padding-left: 40px; /* 为线条和点留出空间 */
+  margin-top: 20px;
+}
+
+.timelineItem {
+  position: relative;
+  margin-bottom: 30px; /* 项目之间的间距 */
+  padding-bottom: 10px; /* 增加底部内边距确保线条不重叠 */
+
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0; /* 最后一个项目不需要底部内边距 */
+  }
+}
+
+.timelineDot {
+  position: absolute;
+  left: -28px; /* 将点定位到容器左侧 */
+  top: 4px; /* 微调垂直位置，使其与标题对齐 */
+  width: 16px;
+  height: 16px;
+  background-color: var(--ark-primary); /* 使用主题高亮色 */
+  border-radius: 50%;
+  border: 2px solid var(--ark-dark-blue); /* 背景色边框，使其看起来镂空 */
+  box-shadow: 0 0 5px rgba(var(--ark-primary-rgb), 0.5); /* 添加辉光 */
+  z-index: 1;
+}
+
+.timelineLine {
+  position: absolute;
+  left: -20px; /* 线条位置，与点的中心对齐 */
+  top: 12px; /* 从点的下方开始 */
+  bottom: -30px; /* 一直延伸到下一个项目的间距处，需要微调 */
+  width: 2px;
+  background-color: rgba(var(--ark-border-rgb), 0.4); /* 使用半透明边框色 */
+}
+
+/* 最后一个项目的线条处理 (如果需要隐藏) */
+.timelineItem:last-child .timelineLine {
+  display: none;
+}
+
+
+.timelineContent {
+  position: relative;
+  background-color: rgba(var(--ark-dark-blue-rgb), 0.2); /* 可选：给内容区加个浅背景 */
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid rgba(var(--ark-border-rgb), 0.3);
+}
+
+.timelineDate {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ark-text-secondary);
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+
+.timelineTitle {
+  font-size: 1.1rem;
+  color: var(--ark-text);
+  margin: 0 0 5px 0; /* 调整标题边距 */
+}
+
+.timelineInstitution {
+  font-size: 0.95rem;
+  color: var(--ark-text);
+  font-style: italic; /* 斜体显示机构名 */
+  margin: 0 0 10px 0;
+}
+
+.timelineDescription {
+  font-size: 0.9rem;
+  color: var(--ark-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* 满电反色状态下的调整 */
+:global(.inverted) .timelineDot {
+  border-color: #ffffff; /* 反色背景 */
+  background-color: var(--ark-primary); /* 保持高亮色 */
+}
+
+:global(.inverted) .timelineLine {
+   background-color: rgba(var(--ark-border-rgb), 0.5); /* 反色下边框可能更亮 */
+}
+
+:global(.inverted) .timelineContent {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(var(--ark-border-rgb), 0.6);
+}
+
+:global(.inverted) .timelineDate,
+:global(.inverted) .timelineInstitution,
+:global(.inverted) .timelineDescription {
+   color: var(--ark-text-secondary);
+}
+
+:global(.inverted) .timelineTitle {
+   color: var(--ark-text);
+} 
