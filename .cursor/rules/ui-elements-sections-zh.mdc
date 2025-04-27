@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 关键 UI 元素与区域
+
+项目界面由多个关键元素和内容区域组成，其布局和样式在 `[styles/Home.module.scss](mdc:styles/Home.module.scss)` 定义，交互逻辑在 `[pages/index.js](mdc:pages/index.js)` 实现。
+
+*   **左侧面板 (`.leftPanel`):** 固定在屏幕左侧，包含：
+    *   网站 Logo (`.logoContainer`)。
+    *   状态显示：电源 (`.powerDisplay` 包含电池图标 `.batteryIcon`)、打字机文本 (`.fateTextContainer`, `.envParamsContainer`)。
+    *   交互元素：激活拉杆 (`.leverGroup` 包含 `ActivationLever` 组件)、全局返回按钮 (`.globalBackButton`)。
+    *   装饰性边框和角标。
+*   **右侧面板 (`.rightPanel`):** 位于左侧面板右侧，呈倾斜状，包含导航列。
+*   **导航列 (`.column`):** 右侧面板内的垂直区域，每个代表一个内容分区 (WORKS, EXPERIENCE, LIFE, CONTACT, ABOUT)。
+    *   包含垂直文本 (`.verticalText` 使用 `VerticalShinyText`)。
+    *   悬停时显示复杂的 HUD 特效 (`.hudOverlay`, `.cornerHudTopLeft`, `.imageHud` 等)，具体效果因列而异（如任务列表、分支、ECG、雷达波纹、焦点框）。
+    *   点击后导航至对应的内容区域。
+*   **内容包裹器 (`.contentWrapper`):** 绝对定位的容器，用于显示详细内容，可垂直滚动。
+*   **内容区域 (`.contentSection`):** 在 `contentWrapper` 内，每个对应一个导航列（如 `.worksSection`, `.experienceSection`）。包含标题、段落、特定组件（如 `ProjectCard`, `experienceTimeline`）。通过 `activeSection` 状态控制 `mainLayout` (导航视图) 和 `contentWrapper` (内容视图) 的显隐切换。
+*   **全局 HUD (`.hudElement`):** 固定在屏幕四角的文本信息显示。
+*   **氛围组件:** `CustomCursor`, `RainMorimeEffect`, `Noise` 等增强视觉和氛围。
+*   **Tesseract 体验 (`TesseractExperience`):** 一个可能覆盖全屏的独立视觉/交互体验。
+
+
+

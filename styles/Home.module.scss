@@ -566,7 +566,7 @@
   height: 100vh; // 设置明确高度
   position: fixed; // 修改为 fixed
   top: 0; // 添加
-  left: 0; // 添加
+  left: -2vw; // 修改: 向左偏移 2vw
   background-color: transparent; 
   display: flex;
   justify-content: center;
@@ -574,6 +574,7 @@
   // position: relative; // 移除
   z-index: 10; // 修改: 提升层级 (高于视图切换层 和 3D 视图)
   pointer-events: none; // --- ADD: Disable pointer events by default --- 
+  overflow: hidden; // 新增: 添加遮罩效果，隐藏溢出内容
 
   // --- ADD: Enable pointer events for specific children --- 
   & > * { // Target direct children initially, refine if needed
@@ -2607,24 +2608,19 @@
 
 // --- 新增: 内容区域样式 ---
 .contentSection {
-  width: calc(100% * 0.618 / 1.618); // 设置宽度，匹配右侧面板区域
-  margin-left: calc(100% / 1.618); // 添加左边距，等于左面板宽度
-  margin-bottom: 10vh; // 新增: 添加区域间距 (视口高度的 10%)
-  min-height: 100vh; // 确保每个区域至少占一屏高，避免按钮重叠
-  // padding: 80px 40px; // 使用较小的左右内边距
-  padding: 200px 40px 80px 40px; // 修改: 显著增加顶部内边距 (T:200, R:40, B:80, L:40)
-  display: flex; 
-  flex-direction: column; 
-  // align-items: center; // 修改为左对齐
+  width: calc(100% * 0.618 / 1.618 + 2vw);
+  margin-left: calc(100% / 1.618 - 2vw);
+  margin-bottom: 10vh;
+  min-height: 100vh;
+  padding: 200px 40px 80px 0px;
+  display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  position: relative; // 保持相对定位，用于 backButton
+  position: relative;
   color: var(--ark-text);
-  // background-color: var(--ark-dark-blue); // 背景由 wrapper 提供
-  
-  // 样式保持不变...
+
   h2 {
-    // font-family: 'Dosis', sans-serif;
-    font-family: 'ZELDA Free', sans-serif; // 修改: 字体与主视图按钮一致
+    font-family: 'ZELDA Free', sans-serif;
     font-size: 3rem;
     font-weight: 300;
     color: var(--ark-primary);
@@ -2633,42 +2629,18 @@
     text-transform: uppercase;
     border-bottom: 1px solid var(--ark-border);
     padding-bottom: 10px;
-    // text-align: center; // 恢复居中
-    text-align: left; // 左对齐标题
+    text-align: left;
+    width: 100%; // 确保标题元素占满可用宽度
+    box-sizing: border-box; // 确保 padding 不会影响总宽度计算
   }
-  
+
   p {
     font-family: 'Dosis', sans-serif;
     font-size: 1.1rem;
     line-height: 1.8;
-    // max-width: 800px; // 移除或调整最大宽度
-    // text-align: center; // 恢复居中
-    text-align: left; // 左对齐段落
+    text-align: left;
     opacity: 0.8;
     margin-bottom: 20px;
-  }
-}
-
-// --- 新增: 返回按钮样式 --- 
-.backButton {
-  position: absolute; // 定位在 contentSection 内
-  // top: 60px; // 修改: 移到右上角，与 padding-top 匹配
-  // right: 40px; // 修改: 移到右上角
-  top: 30px; // 修改: 进一步上移，更靠近角落
-  right: 30px; // 修改: 进一步右移，更靠近角落
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--ark-border);
-  color: var(--ark-primary);
-  font-family: 'Dosis', monospace;
-  font-size: 0.9rem;
-  padding: 8px 15px;
-  cursor: pointer;
-  z-index: 10; // 确保在内容之上
-  transition: background-color 0.3s, color 0.3s;
-
-  &:hover {
-    background: var(--ark-primary);
-    color: var(--ark-dark-blue);
   }
 }
 
@@ -2727,7 +2699,7 @@
   align-items: center; // 垂直居中格子
   justify-content: space-around; // 格子均匀分布
   padding: 1px; // 电池内部边距
-  width: 28px; // 增大电池宽度
+  width: 28.5px; // 增大电池宽度
   height: 14px; // 增大电池高度
   border: 1px solid var(--ark-primary);
   // border-radius: 2px; // 移除圆角，变为方框
@@ -3153,10 +3125,10 @@
 
 // --- 新增: Experience Section 特定样式 ---
 .experienceSection {
-  display: flex; // 使用 flex 布局
-  flex-direction: column; // 竖直排列
-  align-items: center; // 水平居中内容
-  padding: 40px 20px; // 内边距
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; // 修改: 从 center 改为 flex-start，使其与 .lifeSection 等对齐
+  padding: 40px 20px;
 }
 
 .experienceTimeline {
@@ -3349,4 +3321,78 @@
 }
 
 // ... rest of the styles ...
+
+// --- 新增: 全局返回按钮样式 (位于左侧面板) ---
+.globalBackButton {
+  position: absolute;
+  top: calc(17.5% + 100px); // 稍微再下移一点
+  right: calc(21% + 10px); // 水平位置微调，更靠近拉杆组
+  width: 80px;  // 修改: 减小宽度
+  height: 20px; // 修改: 减小高度
+  background: rgba(var(--ark-secondary-rgb), 0.15);
+  border: 1px solid var(--ark-border);
+  color: var(--ark-text-secondary);
+  font-family: 'Dosis', monospace;
+  font-size: 0.8rem;
+  padding: 0; // 保持无内边距
+  cursor: pointer;
+  z-index: 5;
+  // 修改: 提高初始透明度
+  opacity: 0; // 从 0 改为 0.3，减轻淡入
+  pointer-events: none;
+  transform: translateX(50px); // 修改: 增加初始向右偏移量，确保从外部滑入
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out, background-color 0.3s, color 0.3s, border-color 0.3s;
+  white-space: nowrap;
+  // border-radius: 0; // 保持无圆角
+
+  // 添加箭头图标样式
+  &::before {
+    content: '←'; // 使用左箭头字符
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem; // 调整箭头大小
+    line-height: 1;
+    color: inherit; // 继承按钮颜色
+    transition: color 0.3s; // 添加颜色过渡
+  }
+
+
+  &.visible {
+    opacity: 0.7; // 显示时半透明
+    pointer-events: auto;
+    transform: translateX(0); // 移回原位
+  }
+
+  &:hover {
+    background: var(--ark-primary);
+    border-color: var(--ark-primary);
+    opacity: 1; // 悬停时不透明
+    // 修改: 悬停时箭头颜色
+    &::before {
+       color: var(--ark-dark-blue);
+    }
+  }
+
+  // --- 倒置模式下的样式 ---
+  :global(.inverted) & {
+     background: rgba(0, 0, 0, 0.1);
+     border-color: var(--ark-border);
+     color: var(--ark-text-secondary);
+
+     &:hover {
+       background: var(--ark-primary);
+       border-color: var(--ark-primary);
+       // 修改: 倒置模式下悬停时箭头颜色
+       &::before {
+          color: #ffffff;
+       }
+     }
+     // 倒置模式下箭头的默认颜色
+     &::before {
+       color: var(--ark-text-secondary);
+     }
+  }
+}
 

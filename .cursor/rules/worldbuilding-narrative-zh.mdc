@@ -1,0 +1,28 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 世界观与叙事概念 (来自 Story.txt)
+
+本规则概述了在 `[Story.txt](mdc:.cursor/rules/Story.txt)` 中详细描述的世界观和叙事框架，这些概念在项目的代码和设计中有所体现。
+
+*   **背景:** 后末日设定，地球因“大溃乱”（环境灾难、失控纳米机器人“尘埃”、战争）而被毁灭，成为一颗死寂星球，大气剧毒，地貌诡异危险。
+*   **主角:** “守林人”，唯一幸存的人类，一名返航的宇航员，依靠着陆舱、宇航服和 AI 助手生存。
+*   **AI助手:** “森雨 (RAINMORIME)”，提供数据支持和陪伴，但可能存在数据缺失或不稳定。AI 的名字直接用于网站标题，并在多个 HUD 元素中提及。
+*   **核心任务:** “森雨行动”，一项旨在利用“莱茵计划”（大气改造）和“伊甸计划”（生命再造）缓慢恢复地球生态的长期、孤独的任务。
+*   **关键元素与代码实现:**
+    *   **特殊地形:** 概念启发了网站的视觉风格和可能的背景元素。
+    *   **动态地图系统:** 虽然没有直接的地图绘制，但导航列 (`.column`) 和内容切换 (`.contentWrapper`) 模拟了区域探索的概念。
+    *   **HUD 界面:** `[pages/index.js](mdc:pages/index.js)` 和 `[styles/Home.module.scss](mdc:styles/Home.module.scss)` 中大量实现了 HUD 元素（`.hudElement`, `.powerDisplay`, `.fateTextContainer`, `.envParamsContainer` 等），其显示内容（时间、系统状态、模拟环境参数、电源电量）与 `Story.txt` 中的设计文案高度相关。
+    *   **环境威胁:** 负色模式 (`.inverted`) 可能象征着环境变化或能源过载状态。电源耗尽/充满的机制 (`powerLevel` state, `chargeBattery`, `handleDischargeLeverPull`) 直接关联到负色模式的切换。
+    *   **孤独感:** 打字机效果的文本 (`fateText`) 和 AI 助手的环境参数播报 (`envParamsText`) 营造了孤独对话的氛围。
+*   **网站概念映射:**
+    *   **守林人日志:** 当前 LIFE/ABOUT 部分可以扩展为此概念。
+    *   **探索记录:** WORKS 部分 (`.worksSection`, `ProjectCard`) 可视为任务档案或样本记录。
+    *   **行动蓝图:** EXPERIENCE 部分 (`.experienceSection`, `.experienceTimeline`) 可以解读为守林人的历程或行动计划。
+    *   **信号发射塔:** CONTACT 部分可包装为此概念。
+
+请参考 `[Story.txt](mdc:.cursor/rules/Story.txt)` 获取完整的世界观细节、地形描述和 HUD 设计原文。
+
+

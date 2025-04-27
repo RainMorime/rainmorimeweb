@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 项目结构与入口
+
+项目的主要入口文件是 `[pages/index.js](mdc:pages/index.js)`。
+
+它负责渲染主页、管理状态和协调动画。
+
+主要的样式定义在 `[styles/Home.module.scss](mdc:styles/Home.module.scss)` 文件中。
+

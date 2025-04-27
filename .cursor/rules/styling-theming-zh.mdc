@@ -1,0 +1,18 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 样式与主题
+
+样式使用 SCSS Modules 编写，位于 `[styles/Home.module.scss](mdc:styles/Home.module.scss)`。
+
+*   **SCSS 特性:** 利用了 SCSS 的嵌套规则、变量（如 `--ark-primary` 等颜色变量）和 `@keyframes` 定义动画。
+*   **明日方舟风格:** 整体视觉受到"明日方舟" UI 风格的启发，使用深色背景、科技感线条、几何图形和特定的高亮色（如 `--ark-highlight-green`）。
+*   **主题化:** 广泛使用 CSS 变量（定义在 `:root` 或特定类下，如 `.inverted`）进行主题化，便于全局颜色管理和切换。
+*   **负色主题 (`.inverted`):** 通过覆盖核心 CSS 变量（如 `--ark-dark-blue` 变为浅色, `--ark-text` 变为深色, `--ark-primary` 变为粉紫色）并调整特定元素的样式（如 `gridBackground`, `scanLines`, `projectCard`, `batteryIcon` 等）来实现视觉反转效果。
+*   **布局与定位:** 大量使用 `position: absolute` 和 `position: fixed` 进行元素定位，结合 `flexbox` 进行内部布局。
+*   **透明度:** 普遍使用 `rgba()` 来实现半透明背景和效果。
+
+
+

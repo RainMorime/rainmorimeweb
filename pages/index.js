@@ -682,6 +682,12 @@ export default function Home() {
                 />
               )}
             </div>
+            <button
+              className={`${styles.globalBackButton} ${activeSection === 'content' ? styles.visible : ''}`}
+              onClick={handleGoHome}
+            >
+              {/* ← */}
+            </button>
             <div className={styles.powerDisplay}>
               <div className={styles.batteryIcon}>
                 {[...Array(5)].map((_, i) => {
@@ -841,7 +847,6 @@ export default function Home() {
             className={`${styles.contentWrapper} ${activeSection === 'content' ? styles.visible : styles.hidden}`}
           >
             <div id="works-section" className={`${styles.contentSection} ${styles.worksSection}`}> 
-              <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
               <h2>WORKS</h2>
               <div className={styles.projectGrid}>
                 {sampleProjects.map(project => (
@@ -851,7 +856,6 @@ export default function Home() {
             </div>
 
             <div id="experience-section" className={`${styles.contentSection} ${styles.experienceSection}`}> 
-              <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
               <h2>EXPERIENCE</h2>
               <div className={styles.experienceTimeline}>
                 <div className={`${styles.timelineItem} ${styles.timelineItemRight} ${styles.educationItem}`}>
@@ -897,13 +901,11 @@ export default function Home() {
             </div>
 
             <div id="life-section" className={`${styles.contentSection} ${styles.lifeSection}`}> 
-              <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
               <h2>LIFE</h2>
               <p>这里是 Life 部分的内容...</p>
             </div>
 
             <div id="contact-section" className={`${styles.contentSection} ${styles.contactSection}`}> 
-              <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
               <h2>CONTACT</h2>
               <p>这里是 Contact 部分的内容...</p>
             </div>
@@ -911,7 +913,6 @@ export default function Home() {
             <div id="about-section" ref={aboutSectionRef} className={`${styles.contentSection} ${styles.aboutSection}`}> 
               <Noise />
               <div ref={aboutContentRef}>
-                <button className={styles.backButton} onClick={handleGoHome}>← BACK</button>
                 <h2>ABOUT</h2>
                 <div className={styles.footerInfo}>
                   <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">

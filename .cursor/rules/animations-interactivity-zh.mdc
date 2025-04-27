@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 动画与交互
+
+动画和交互是项目体验的核心部分，主要在 `[pages/index.js](mdc:pages/index.js)` (逻辑) 和 `[styles/Home.module.scss](mdc:styles/Home.module.scss)` (样式与动画) 中实现。
+
+*   **动画实现:**
+    *   **CSS `keyframes`:** 定义了大量的视觉动画，如加载动画、`leftPanel` 边框/Logo 展开 (`expandBorder`, `revealLogo`)、垂直线条出现/脉冲 (`lineAppearTopDown`, `pulseMeteor`)、列悬停效果 (`hudExpandBox0`, `radarScan`, `ecgScroll` 等)、背景扫描线 (`scanMove`) 等。
+    *   **React State/Hooks (`useState`, `useEffect`):** 在 `index.js` 中控制动画的触发时机和状态（如 `isLoading`, `mainVisible`, `linesAnimated`, `hudVisible`, `leftPanelAnimated`, `pulsingNormalIndices`）。例如，通过设置 boolean 状态来添加/移除 CSS 类以启动动画。
+    *   **GSAP (`ScrollTrigger`):** 用于实现内容区域（特别是 `aboutSection`）的滚动触发动画。
+    *   **背景效果:** 包含网格背景 (`.gridBackground`)、辉光 (`.glowEffect`)、扫描线 (`.scanLines`) 和雨景 (`RainMorimeEffect` 组件) 等多种氛围动画。
+    *   **文本动画:** 包含打字机效果 (`fateText`, `envParamsText`) 和闪光文字 (`ShinyText`, `VerticalShinyText` 组件)。
+
+*   **交互性:**
+    *   **列导航 (`.column`):** 鼠标悬停时触发复杂的视觉反馈（HUD 动画、文本高亮），点击后切换到对应的内容区域 (`handleColumnClick`)。
+    *   **激活拉杆 (`ActivationLever`):** 用于触发 Tesseract 体验和电源放电功能 (`handleActivateTesseract`, `handleDischargeLeverPull`)。
+    *   **自定义光标 (`CustomCursor`):** 提供独特的鼠标指针样式。
+    *   **音乐播放器 (`MusicPlayer`):** 根据电源状态控制音乐。
+    *   **状态驱动交互:** 许多交互（如列点击、拉杆）在动画完成 (`animationsComplete` 状态为 true) 后才启用。
+
+
+
