@@ -6,10 +6,17 @@
   to { transform: rotate(360deg); }
 }
 
+// --- 新增: 波浪动画 --- 
+@keyframes waveEffect {
+  0%   { width: 30%; } /* Start */
+  50%  { width: 60%; } /* 修改: 减小最大宽度 */
+  100% { width: 30%; } /* End */
+}
+
 .playerContainer {
   position: fixed;
   left: 0;
-  top: 50%;
+  top: 28%;
   transform: translateY(-50%) translateX(-100%);
   width: 280px; // 修改: 稍微加宽以容纳唱臂
   background-color: rgba(var(--ark-dark-blue-rgb), 0.9); // 修改: 背景更不透明
@@ -24,6 +31,11 @@
   font-family: 'Dosis', monospace;
   // --- 新增: 限制最大高度，防止过长 --- 
   max-height: 90vh; // 例如，视口高度的90%
+  // --- 新增: 禁用用户选择，防止拖动时选中文本 ---
+  user-select: none; 
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .playerContainer.open {
@@ -31,28 +43,100 @@
 }
 
 .handle { 
-  // --- 样式保持不变，但可能需要微调 right 值 --- 
   position: absolute;
   right: -20px; 
   top: 0; 
   width: 20px;
-  height: 50px; 
+  height: 50px; // 初始高度
   background-color: rgba(var(--ark-border-rgb), 0.7);
   border: 1px solid var(--ark-border);
   border-left: none;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: column; 
+  justify-content: center; 
   align-items: center;
-  gap: 3px;
-  transition: background-color 0.2s ease;
+  gap: 3.5px;
+  transition: background-color 0.2s ease, height 0.4s ease-in-out; // 添加 height transition
+  overflow: hidden; // 隐藏溢出内容
+  padding: 5px 0; // 上下内边距
+}
+
+// --- 修改: 展开状态样式 ---
+.handle.expanded {
+  height: 220px; // 增加高度以容纳线条和文字
+  padding: 10px 0; // 调整展开后的 padding
+  justify-content: flex-start; // 从顶部开始排列
 }
 
 .handle:hover { background-color: rgba(var(--ark-border-rgb), 0.9); }
-.handleLine { width: 60%; height: 1px; background-color: var(--ark-text-secondary); opacity: 0.7; }
 
-// --- 修改: 黑胶唱片机制容器样式，调整布局位置 --- 
+// --- 修改: 水平线条样式 --- 
+.handleBar {
+  width: 30%;
+  height: 2px;
+  background-color: #888888;
+  opacity: 0.7;
+  transition: width 0.3s ease-in-out, opacity 0.2s ease-out;
+  transform-origin: center;
+}
+
+// --- 新增: 线条容器样式 --- 
+.handleBarsContainer {
+  width: 100%;
+  height: 45px; // 给线条固定高度空间 (50px handle height - 2*padding)
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3.5px; 
+  flex-shrink: 0; // 防止被压缩
+}
+
+// --- 修改: 播放时应用动画 (仅在抽屉打开时 .playing 类才有效) --- 
+.handle.playing .handleBar {
+  animation: waveEffect 0.8s ease-in-out infinite;
+}
+
+// --- 修改: 为 7 个线条设置新的交错动画延迟 --- 
+.handle.playing .handleBar:nth-child(1) { animation-delay: 0.2s; }
+.handle.playing .handleBar:nth-child(2) { animation-delay: 0.7s; }
+.handle.playing .handleBar:nth-child(3) { animation-delay: 0.4s; }
+.handle.playing .handleBar:nth-child(4) { animation-delay: 0.9s; }
+.handle.playing .handleBar:nth-child(5) { animation-delay: 0.1s; }
+.handle.playing .handleBar:nth-child(6) { animation-delay: 1.1s; }
+.handle.playing .handleBar:nth-child(7) { animation-delay: 0.6s; }
+
+// --- 修改: 歌曲信息容器 --- 
+.handleTrackInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  align-items: center; 
+  width: 100%;
+  gap: 8px; // 垂直间距
+  margin-top: 15px; // 与上方线条的间距
+  padding: 0 2px; // 左右留一点空隙
+}
+
+// --- 新增: 竖排文字容器 --- 
+.handleTrackTitle,
+.handleTrackTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #888888;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.charItem {
+  display: block;
+  text-align: center;
+}
+
+// --- 修改: 黑胶唱片机制容器样式，调整布局位置，增加 overflow hidden --- 
 .vinylMechanismContainer {
   width: 100%;
   padding: 20px 10px 20px 10px; // 调整上下内边距
@@ -61,8 +145,13 @@
   justify-content: center; // 中央对齐
   align-items: center;
   flex-shrink: 0; // 防止容器被压缩
-  overflow: visible; // 修改为可见，允许唱臂超出容器
+  overflow: hidden; // 修改: 隐藏溢出的唱片
   height: 200px; // 固定高度，确保有足够空间
+  cursor: grab; // 添加抓取光标
+
+  &:active {
+    cursor: grabbing; // 拖动时光标变为抓紧
+  }
 }
 
 .vinylPlatter {
@@ -75,18 +164,34 @@
   justify-content: center;
   align-items: center;
   position: relative; // 用于定位唱片和标签
+  // --- 新增: 确保 platter 能够包含绝对定位的子元素 ---
+  overflow: visible; // Platter 本身不需要裁剪，由 container 裁剪
 }
 
 .vinylRecord {
   width: 150px; // 唱片直径，比唱盘稍小
   height: 150px;
   background-color: transparent; // 透明背景
-  border: 2px solid var(--ark-text-secondary); // 唱片线稿边框，颜色稍深
+  // border: 2px solid var(--ark-text-secondary); // Original color, restored
+  border: 2px solid var(--ark-border); // Change to use --ark-border for better contrast
   border-radius: 50%;
-  position: absolute;
+  position: absolute; // 修改为 absolute 以便叠加和独立移动
   display: flex;
   justify-content: center;
   align-items: center;
+  // --- 新增: 添加过渡效果 ---
+  transition: transform 0.3s ease-out; 
+  // --- 新增: 确保在最顶层，且可以被拖动 ---
+  z-index: 1; 
+  pointer-events: none; // 避免唱片本身捕获事件，让父容器处理
+}
+
+// --- 新增: 即将进入的唱片样式 ---
+.incomingVinylRecord {
+  z-index: 0; // 在当前唱片下方
+  opacity: 0; // 默认隐藏
+  pointer-events: none; // 不响应事件
+  // 过渡效果在 JS 中根据 isDragging 控制
 }
 
 .recordSpinning {

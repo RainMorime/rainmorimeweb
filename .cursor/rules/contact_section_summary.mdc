@@ -1,0 +1,50 @@
+---
+description: Contact内容区域的更改和细节
+globs: 
+alwaysApply: false
+---
+# CONTACT Section Modifications Summary
+
+This rule summarizes the key changes and features implemented in the CONTACT section based on our recent conversation, primarily affecting `[pages/index.js](mdc:pages/index.js)` and `[styles/Home.module.scss](mdc:styles/Home.module.scss)`.
+
+## Conceptual Framework
+
+*   The CONTACT section was redesigned based on the "Signal Tower" / "RAINMORIME Data Interface" concept from `[Story.txt](mdc:.cursor/rules/Story.txt)`.
+*   It aims to represent the "守林人" attempting to transmit data or signals in a post-apocalyptic setting.
+
+## Key Features Implemented
+
+1.  **Radar Display:**
+    *   A circular radar element (`.radarDisplay`) was added, positioned towards the right of the section.
+    *   It includes a rotating scanner effect (`.scanner`) using `conic-gradient`.
+        *   The scanner color changes from green to pink/purple in the `.inverted` state.
+        *   Rotation direction is reversed.
+    *   An animated grid background (`::before`, `::after` with `repeating-linear-gradient` and `moveGrid` animation) was added inside the radar.
+    *   Multiple ripple effects were added:
+        *   One simplified central ripple (`.ripple1` using `contactRippleExpandShadow`).
+        *   Three smaller ripples originating from different points (`.smallRipple1` to `.smallRipple3` using `contactRippleExpandShadowSmall`).
+    *   In the `.inverted` state, all ripples are hidden (`opacity: 0; animation: none;`).
+
+2.  **Contact Information Integration:**
+    *   The user's contact details (Email, GitHub, Bilibili) are presented as interactive icons positioned outside the radar circle but within the Contact section (`.logItem`, `.radarContact1` to `.radarContact3`).
+    *   Icons (`.logIcon`) are displayed within background squares (`.logIconContainer`).
+    *   The Bilibili icon uses an inline SVG from `[public/pictures/bilibili-svgrepo-com.svg](mdc:public/pictures/bilibili-svgrepo-com.svg)` to ensure proper styling.
+    *   Each icon has a dedicated, continuous ripple effect originating from its center (`.contactIconRipple`).
+        *   The ripple animation (`contactRippleExpandShadow`) was adjusted for visibility.
+        *   In the `.inverted` state, these icon ripples are hidden.
+
+3.  **Email Interaction:**
+    *   The email item is implemented as a `<button>`.
+    *   Clicking the button copies the email address (`rainmorime@qq.com`) to the clipboard using `navigator.clipboard.writeText` (`handleCopyEmail` function in `[pages/index.js](mdc:pages/index.js)`).
+    *   A "Copied!" feedback message (`.copyFeedback`) appears briefly above the icon after copying, using a float-up-fade-out animation (`floatUpFadeOut`).
+    *   Hovering over the email button reveals the full email address (`.emailText`) sliding in from the right.
+
+4.  **Styling and Layout:**
+    *   The overall layout uses absolute positioning for the contact icons relative to the `.contactSection`.
+    *   The `CONTACT` section has a background image (`[public/pictures/h.png](mdc:public/pictures/h.png)`) applied, positioned towards the bottom (`background-position: center 300px`).
+    *   A negative `margin-bottom` was added to `.contactSection` to create an overlap with the `.aboutSection` below it.
+    *   The `EXPERIENCE` section (`.experienceSection`) had its `min-height` set to `auto` and `padding-bottom` reduced to minimize empty space.
+    *   The content slide-in animation duration (`slideInFromRight`, `slideOutToRight`) for `.contentWrapper` was increased.
+
+Refer to `[pages/index.js](mdc:pages/index.js)` for the component structure and JavaScript logic, and `[styles/Home.module.scss](mdc:styles/Home.module.scss)` for detailed CSS rules and animations.
+

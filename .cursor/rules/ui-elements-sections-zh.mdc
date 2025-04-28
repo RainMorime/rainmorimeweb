@@ -1,5 +1,5 @@
 ---
-description: 
+description: 关键UI元素和区域，包括左侧面板 右侧面板 导航 内容区域 全局HUD
 globs: 
 alwaysApply: false
 ---

@@ -3554,10 +3554,13 @@
   border-radius: 50%;
   position: relative;
   margin: 20px 0 30px auto;
-  background-color: rgba(var(--ark-border-rgb), 0.05);
+  // 修改: 将背景色改为不透明的 --ark-dark-blue
+  // background-color: rgba(var(--ark-border-rgb), 0.05);
+  background-color: var(--ark-dark-blue);
   border: 1px solid var(--ark-border);
   overflow: hidden;
-  box-shadow: inset 0 0 15px rgba(var(--ark-primary-rgb), 0.1);
+  // 移除内部阴影
+  // box-shadow: inset 0 0 15px rgba(var(--ark-primary-rgb), 0.1);
   background-image: none;
 
   // --- 新增: 内部网格线 --- 
@@ -3810,6 +3813,33 @@
      opacity: 1;
      animation-name: contactRippleExpandShadowInverted; // Use inverted (larger) animation
   }
+
+  // ... other inverted styles ...
+
+  // --- ADD: Inverted styles for Radar Ripples ---
+  .radarDisplay .radarRipple { // Larger ripples in radar
+    border-color: rgba(var(--ark-primary-rgb), 0.9);
+    box-shadow: 0 0 0 0px rgba(var(--ark-primary-rgb), 0.5);
+    animation-name: contactRippleExpandShadowInverted; // Use inverted (larger) animation
+  }
+  .radarDisplay .radarRippleSmall { // Smaller ripples in radar
+    border-color: rgba(var(--ark-primary-rgb), 0.9);
+    box-shadow: 0 0 0 0px rgba(var(--ark-primary-rgb), 0.5);
+    animation-name: contactRippleExpandShadowSmallInverted; // Use inverted (smaller) animation
+  }
+  // --- END ADD ---
+
+  // --- ADD: Inverted style for Radar Scanner ---
+  .radarDisplay .scanner {
+    background: conic-gradient(
+      from 0deg,
+      rgba(var(--ark-primary-rgb), 0.6) 0deg, // Use inverted primary color
+      rgba(var(--ark-primary-rgb), 0.1) 30deg,
+      transparent 30.1deg 360deg
+    );
+    // Keep other scanner styles (animation, opacity, etc.)
+  }
+  // --- END ADD ---
 
   // ... other inverted styles ...
 }
