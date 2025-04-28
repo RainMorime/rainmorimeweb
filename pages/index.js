@@ -96,6 +96,7 @@ export default function Home() {
   const [isDischarging, setIsDischarging] = useState(false);
   const dischargeIntervalRef = useRef(null);
   const [leversVisible, setLeversVisible] = useState(false);
+  const [isEmailCopied, setIsEmailCopied] = useState(false);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -625,6 +626,19 @@ export default function Home() {
     };
   };
 
+  const handleCopyEmail = () => {
+    const email = 'rainmorime@qq.com';
+    navigator.clipboard.writeText(email).then(() => {
+      console.log('Email copied to clipboard!');
+      setIsEmailCopied(true);
+      setTimeout(() => {
+        setIsEmailCopied(false);
+      }, 1500);
+    }).catch(err => {
+      console.error('Failed to copy email: ', err);
+    });
+  };
+
   return (
     <div className={`${styles.container} ${isInverted ? styles.inverted : ''}`}>
       <Head>
@@ -810,8 +824,6 @@ export default function Home() {
                       {index === 3 && (
                           <>
                             <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
-                            <div className={`${styles.radarRipple} ${styles.ripple2}`}></div>
-                            <div className={`${styles.radarRipple} ${styles.ripple3}`}></div>
                           </>
                       )}
                     </div>
@@ -907,7 +919,51 @@ export default function Home() {
 
             <div id="contact-section" className={`${styles.contentSection} ${styles.contactSection}`}> 
               <h2>CONTACT</h2>
-              <p>这里是 Contact 部分的内容...</p>
+              <div className={styles.radarDisplay}>
+                <div className={styles.scanner}></div>
+                <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
+                <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple1}`}></div>
+                <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple2}`}></div>
+                <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple3}`}></div>
+              </div>
+
+              <button
+                type="button"
+                className={`${styles.logItem} ${styles.radarContact1}`}
+                onClick={handleCopyEmail}
+              >
+                <div className={styles.logIconContainer}>
+                  <svg className={styles.logIcon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M3.00977 5.83789C3 5.28561 3.44772 4.83789 4 4.83789H20C20.5523 4.83789 21 5.28561 21 5.83789V17.1621C21 17.7144 20.5523 18.1621 20 18.1621H4C3.44772 18.1621 3 17.7144 3 17.1621V5.83789H3.00977ZM5.01817 6.83789L11.0535 11.4847C11.6463 11.9223 12.4249 11.9223 13.0177 11.4847L19.053 6.83789H5.01817Z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div className={styles.contactIconRipple}></div>
+                <span className={styles.emailText}>rainmorime@qq.com</span>
+                {isEmailCopied && <span className={styles.copyFeedback}>Copied!</span>}
+              </button>
+              <div className={`${styles.logItem} ${styles.radarContact2}`}>
+                  <a href="https://github.com/RainMorime" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
+                    <div className={styles.logIconContainer}>
+                      <svg className={styles.logIcon} viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" fill="currentColor"></path>
+                      </svg>
+                    </div>
+                    <div className={styles.contactIconRipple}></div>
+                  </a>
+              </div>
+              <div className={`${styles.logItem} ${styles.radarContact3}`}>
+                  <a href="https://space.bilibili.com/28913719" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
+                    <div className={styles.logIconContainer}>
+                      <svg className={styles.logIcon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                          <path fill="none" d="M0 0h24v24H0z"/>
+                          <path fill="currentColor" d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768L17.08 5.996h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.166L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.18.199-.258l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.69-.56-1.25-1.25-1.25zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z"/>
+                        </g>
+                      </svg>
+                    </div>
+                    <div className={styles.contactIconRipple}></div>
+                  </a>
+              </div>
             </div>
 
             <div id="about-section" ref={aboutSectionRef} className={`${styles.contentSection} ${styles.aboutSection}`}> 

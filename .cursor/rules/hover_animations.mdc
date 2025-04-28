@@ -1,0 +1,52 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 主导航悬停动画规则
+
+本规则概述了在 `[pages/index.js](mdc:pages/index.js)` 中处理、并在 `[styles/Home.module.scss](mdc:styles/Home.module.scss)` 中定义的五个主导航列 (`.column0` 到 `.column4`) 的悬停 (`:hover`) 动画效果。这些动画在 `animationsComplete` 状态为 true 后激活。
+
+## 共享悬停效果
+
+当鼠标悬停在任何一个可交互的导航列上时（排除 `.nonInteractive` 类），会触发以下通用效果：
+
+*   **背景高亮:** 列背景色变为 `rgba(178, 242, 187, 0.08)`。
+*   **垂直文字:** 列中的垂直文字 (`.verticalText .charItem > div`) 会放大 (`scale(1.15)`) 并变为高亮绿色 (`--ark-highlight-green`)，同时带有辉光效果 (`text-shadow`)。
+*   **扫描线:** 列内部的 `.hudOverlay::after` 元素会显示重复的绿色扫描线动画 (`scanHud`, `fadeInScanlines`)。
+*   **角标:** 列的左上角和右下角会出现绿色角标 (`.cornerHudTopLeft`, `.cornerHudBottomRight`)，并伴有淡入动画 (`fadeInArkCorner`) 和辉光。
+*   **图像 HUD:** 一个包含绿色方块 (`.imageHudSquare`) 和文字 (`.imageHudText`) 的 HUD 元素会淡入 (`fadeInImageHud`, `fadeInImageHudCentered`)。其具体位置因列而异。
+
+## 特定列悬停动画
+
+每个列在共享效果之外，还有独特的 `.hudOverlay::before` 动画或其他特殊元素效果：
+
+1.  **`.column0` (WORKS):**
+    *   **任务列表:** 左侧显示一个任务列表 (`.taskContainer`)，任务项 (`.taskItem`) 包含方块 (`.taskSquare`) 和文字 (`.taskText`)，通过 `revealTaskSquare` 和 `revealTaskTextClip` 动画逐行显示，并通过 `.taskLine` 的 `drawTaskLine` 动画连接。
+    *   **图像 HUD 位置:** 左下角 (`bottom: 15px; left: 15px;`)。
+    *   **(旧/备用):** `.hudOverlay::before` 可能曾使用 `hudExpandBox0` 动画（倾斜扩展的方框）。
+
+2.  **`.column1` (EXPERIENCE):**
+    *   **主线条:** `.hudOverlay::before` 元素从底部向上扩展，模拟一个垂直生长的线条 (`buildTowerScale`)。
+    *   **分支:** 四个分支元素 (`.branchContainer`, `.branch1` 到 `.branch4`) 从主线条两侧滑出 (`slideOutLeft`, `slideOutRight`)，其内部文字 (`.branchText`) 随后淡入 (`fadeInTextDown`)。
+    *   **图像 HUD 位置:** 右上角 (`top: 15px; right: 15px;`)。
+
+3.  **`.column2` (LIFE):**
+    *   **ECG 波形:** `.hudOverlay::before` (上方) 和 `.hudOverlay::after` (下方，翻转) 显示滚动的绿色 ECG 波形动画 (`ecgScroll`, `fadeInEcg`)。
+    *   **专用扫描线:** 使用独立的 `.lifeScanlines` 元素显示绿色扫描线。
+    *   **图像 HUD 位置:** 右下角 (`bottom: 15px; right: 15px;`)。
+    *   **`.inverted` 状态:** 悬停时，上方 ECG 变为粉色，下方 ECG 变为粉色水平扫描线。
+
+4.  **`.column3` (CONTACT):**
+    *   **雷达扫描:** `.hudOverlay::before` 元素显示一个旋转的锥形渐变，模拟雷达扫描效果 (`radarScan`)。
+    *   **波纹:** 三个 `.radarRipple` 元素从中心扩展并消失，模拟雷达波纹 (`contactRippleExpandShadow`)。
+    *   **图像 HUD 位置:** 左上角 (`top: 15px; left: 15px;`)。
+    *   **`.inverted` 状态:** 悬停时，雷达扫描扇区和波纹都变为粉色。
+
+5.  **`.column4` (ABOUT):**
+    *   **聚焦框:** `.hudOverlay::before` 元素显示一个向内收缩的角框动画，模拟聚焦效果 (`aboutFocus`)。
+    *   **主图像 HUD 位置:** 左侧垂直居中 (`bottom: 50%; left: 15px; transform: translateY(50%);`)。
+    *   **随机 HUD:** 额外显示五个随机定位和动画延迟的 `.randomHud` 元素。
+
+这些动画共同构成了网站独特的交互反馈系统，与世界观中的 HUD 设计相呼应。
+

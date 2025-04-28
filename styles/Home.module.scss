@@ -187,7 +187,7 @@
       0% {
         // ... border/shadow using --ark-highlight-green-rgb ...
         border: 1px solid rgba(178, 242, 187, 0.9);
-        box-shadow: 0 0 0 0px rgba(178, 242, 187, 0.5); 
+        box-shadow: 0 0 0 0px rgba(178, 242, 187, 1); 
         opacity: 0.9;
         transform: translate(-50%, -50%) scale(0.1);
       }
@@ -196,7 +196,7 @@
         border: 1px solid rgba(178, 242, 187, 0); 
         box-shadow: 0 0 0 25px rgba(178, 242, 187, 0); 
         opacity: 0;
-        transform: translate(-50%, -50%) scale(1); // Scale up slightly less than before
+        transform: translate(-50%, -50%) scale(2.2); // Expand even larger
       }
     }
   }
@@ -494,7 +494,6 @@
 // --- 应用特定视图的进入/退出动画 --- 
 .mainLayout.visible {
   animation: slideDownInSkew 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-  pointer-events: auto; // --- MODIFY: Allow events only when visible, but its children control specifics --- 
   pointer-events: none; // Let children control
 }
 .mainLayout.hidden {
@@ -502,11 +501,13 @@
 }
 
 .contentWrapper.visible {
-  animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  // animation: slideInFromRight 1.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Increase duration
+  animation: slideInFromRight 1.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Further increase duration
   pointer-events: auto; // Allow scrolling
 }
 .contentWrapper.hidden {
-  animation: slideOutToRight 0.5s ease-out forwards;
+  // animation: slideOutToRight 0.9s ease-out forwards; // Increase duration
+  animation: slideOutToRight 1.3s ease-out forwards; // Further increase duration
 }
 
 // --- 新增 Keyframes --- 
@@ -2670,6 +2671,7 @@
   margin-bottom: 0; // 底部外边距设为 0
   position: relative; // 确保 position 不为 static，以便 overflow 生效
   overflow: hidden; // 隐藏内部元素的溢出
+  z-index: 2; // --- ADD: Ensure About is above Contact background ---
 }
 
 // --- 新增: Power Display 容器样式 --- (尺寸调整)
@@ -3128,7 +3130,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start; // 修改: 从 center 改为 flex-start，使其与 .lifeSection 等对齐
-  padding: 40px 20px;
+  padding: 40px 20px 0px 0px; // --- MODIFY: Reduce bottom padding --- 
+  min-height: auto; // --- ADD: Override min-height --- 
 }
 
 .experienceTimeline {
@@ -3395,4 +3398,421 @@
      }
   }
 }
+
+// --- 新增: Contact Section 特定样式 ---
+.contactSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  position: relative;
+  padding-bottom: 50px;
+  background-image: url('/pictures/h.png');
+  background-size: cover;
+  background-position: center 300px;
+  background-repeat: no-repeat;
+  margin-bottom: 0px; // --- ADD: Negative margin to pull About section up ---
+}
+
+// 单个日志条目 (MODIFIED for absolute positioning)
+.logItem {
+  position: absolute; // --- MODIFY: Use absolute positioning --- 
+  display: inline-flex; // --- MODIFY: Use inline-flex for better wrapping --- 
+  align-items: center;
+  font-family: 'Dosis', monospace;
+  font-size: 1rem;
+  // gap: 8px; // Gap between icon and text handled differently now
+  z-index: 3; // Ensure links are above scanner/grid
+  pointer-events: auto; // Ensure links are clickable
+  // Reset button styles if needed for the email item
+  &.radarContact1 {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+}
+
+// 日志链接 / Email Button Container
+.logLink, // Apply to GitHub/Bilibili links
+.logItem.radarContact1 // Apply to Email button
+{
+  // color: var(--ark-primary); // Color set by icon/text
+  text-decoration: none;
+  display: inline-block; 
+  position: relative; // Positioning context for ripple and text
+  // Remove transitions that might conflict
+  // transition: color 0.3s, background-color 0.3s, opacity 0.3s;
+
+  // .logItem:hover & { // Hover styles applied directly or via children
+  //   color: var(--ark-dark-blue); 
+  //   background-color: transparent; 
+  // }
+}
+
+// --- ADD: Email Text Hover Style --- 
+.emailText {
+  position: absolute;
+  left: 100%; // Position to the right of the icon container
+  top: 50%;
+  transform: translateY(-50%) scaleX(0); // Initially hidden and scaled down
+  transform-origin: left center; // Scale from the left
+  opacity: 0;
+  margin-left: 10px; // Space between icon and text
+  padding: 6px 12px;
+  background-color: var(--ark-primary);
+  color: var(--ark-dark-blue);
+  // border-radius: 3px; // --- REMOVE border-radius --- 
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  pointer-events: none; // Text itself is not interactive
+  z-index: 4; // Ensure text is above ripple
+}
+
+// Show email text on hover of the logItem (button)
+.logItem.radarContact1:hover .emailText {
+  transform: translateY(-50%) scaleX(1);
+  opacity: 1;
+}
+
+// --- ADD: Copy Feedback Style --- 
+.copyFeedback {
+  position: absolute;
+  bottom: 105%; // Position above the icon container
+  left: 50%;
+  // transform: translateX(-50%); // Transform handled by animation
+  // background-color: var(--ark-highlight-green); // --- REMOVE background --- 
+  color: var(--ark-highlight-green); // --- SET text color to green --- 
+  padding: 3px 8px;
+  // border-radius: 3px; // --- REMOVE border-radius --- 
+  font-size: 0.75rem;
+  font-family: 'Dosis', sans-serif;
+  white-space: nowrap;
+  opacity: 0; // Start hidden, animation handles fade-in/out
+  z-index: 5; // Highest priority
+  pointer-events: none;
+  // --- ADD: Apply new animation --- 
+  animation: floatUpFadeOut 1.5s ease-out forwards;
+}
+
+// --- ADD: Keyframe for Copy Feedback --- 
+@keyframes floatUpFadeOut {
+  0% {
+    transform: translate(-50%, 5px); // Start slightly below and visible
+    opacity: 0.8;
+  }
+  80% { // Hold visibility while floating up
+    transform: translate(-50%, -15px); // Float upwards
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -20px); // Continue slight float
+    opacity: 0; // Fade out completely
+  }
+}
+
+// 图标背景容器样式 (No changes needed initially)
+.logIconContainer {
+  width: 48px; // 修改: 增大容器宽度
+  height: 48px; // 修改: 增大容器高度
+  background-color: rgba(var(--ark-primary-rgb), 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  transition: background-color 0.3s, border-color 0.3s;
+
+  // 悬停时，通过父元素 .logItem 控制容器样式
+  .logItem:hover & {
+    background-color: var(--ark-primary); // 悬停时使用不透明主色
+  }
+}
+
+// 日志图标样式 (No changes needed initially)
+.logIcon {
+  width: 28px; // 修改: 增大图标宽度
+  height: 28px; // 修改: 增大图标高度
+  flex-shrink: 0;
+  fill: currentColor;
+  stroke: none; // 移除描边
+  color: var(--ark-primary); // 修改: 默认图标颜色为主色调 (在半透明背景上)
+  opacity: 0.8; // 修改: 调整默认透明度
+  transition: color 0.3s, opacity 0.3s;
+
+  // 悬停时，通过父元素 .logItem 控制图标颜色
+  .logItem:hover & {
+    color: var(--ark-dark-blue); // 修改: 悬停时图标颜色变为深色，与背景形成对比
+    opacity: 1;
+  }
+}
+
+// --- 新增: Contact 雷达样式 ---
+.radarDisplay {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  position: relative;
+  margin: 20px 0 30px auto;
+  background-color: rgba(var(--ark-border-rgb), 0.05);
+  border: 1px solid var(--ark-border);
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(var(--ark-primary-rgb), 0.1);
+  background-image: none;
+
+  // --- 新增: 内部网格线 --- 
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0; // 确保在扫描器和波纹下方
+    // --- ADD: Background size and animation --- 
+    background-size: 100px 100px; // Must be larger than the repeat distance (20px)
+    // animation: moveGrid 2s linear infinite; // --- MODIFY: Decrease duration --- 
+    animation: moveGrid 1s linear infinite; // Make grid move faster
+  }
+
+  // 横向网格线
+  &::before {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(200, 200, 200, 0.1) 0, // 灰色网格线
+      rgba(200, 200, 200, 0.1) 1px,
+      transparent 1px,
+      transparent 20px // 网格间距
+    );
+  }
+
+  // 纵向网格线
+  &::after {
+    background-image: repeating-linear-gradient(
+      to right,
+      rgba(200, 200, 200, 0.1) 0,
+      rgba(200, 200, 200, 0.1) 1px,
+      transparent 1px,
+      transparent 20px // 网格间距
+    );
+  }
+}
+
+// --- ADD: Keyframe for Grid Movement ---
+@keyframes moveGrid {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 20px 20px; // Move right and down by the grid spacing
+  }
+}
+
+// 扫描器扇区
+.scanner {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  // --- MODIFY: Add gradient to the scanner --- 
+  background: conic-gradient(
+    from 0deg,
+    rgba(178, 242, 187, 0.6) 0deg, // Start slightly more opaque green
+    rgba(178, 242, 187, 0.1) 30deg, // Fade to less opaque green at the end of sector
+    transparent 30.1deg 360deg
+  );
+  animation: rotateScanner 4s linear infinite;
+  animation-direction: reverse;
+  opacity: 0.8;
+  z-index: 1; // 确保在网格线上方
+}
+
+// --- RE-ADD Keyframe for Scanner Rotation ---
+@keyframes rotateScanner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// 雷达波纹
+.radarDisplay .radarRipple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px; // 初始大小
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(178, 242, 187, 0.9); // 使用 Contact 列悬停的绿色 (178, 242, 187)
+  box-shadow: 0 0 0 0px rgba(178, 242, 187, 0.5); // 使用 Contact 列悬停的阴影
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.1);
+  transform-origin: center center;
+  animation: contactRippleExpandShadow 3.5s ease-out infinite; // --- MODIFY: Increase duration --- 
+  z-index: 2; // 确保在扫描器和网格线上方
+}
+
+// 不同的波纹延迟
+.radarDisplay .ripple1 { animation-delay: 0s; }
+
+// 确保 contactRippleExpandShadow 动画定义是活跃的 (应该是在 .inverted 块中定义的那个)
+// 如果 @keyframes contactRippleExpandShadow 在别处被注释掉了，需要取消注释或确保 .inverted 中的定义全局可用
+// @keyframes contactRippleExpandShadow { ... } <--- 检查此定义是否有效
+
+// 移除之前添加的、可能重复的 @keyframes 定义
+/*
+@keyframes contactRippleExpandShadow {
+  ...
+}
+*/
+
+// ... rest of the styles ...
+
+// --- ADD: Keyframe for Smaller Ripples ---
+@keyframes contactRippleExpandShadowSmall {
+  0% {
+    border: 1px solid rgba(178, 242, 187, 0.9); // 保持样式一致
+    box-shadow: 0 0 0 0px rgba(178, 242, 187, 0.5); 
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+  100% {
+    border: 1px solid rgba(178, 242, 187, 0); 
+    box-shadow: 0 0 0 20px rgba(178, 242, 187, 0); // 阴影范围也略小
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.2); // 修改: 减小最终缩放
+  }
+}
+
+// --- ADD: Styles for Smaller Ripples ---
+.radarDisplay .radarRippleSmall {
+  // 继承 .radarRipple 的大部分样式
+  // 应用新的、较小的动画
+  animation-name: contactRippleExpandShadowSmall;
+}
+
+// 不同的波纹延迟 (原有)
+.radarDisplay .ripple1 { animation-delay: 0s; }
+
+// --- ADD: Delays for Smaller Ripples --- 
+.radarDisplay .smallRipple1 { animation-delay: 0.4s; }
+.radarDisplay .smallRipple2 { animation-delay: 1.2s; }
+.radarDisplay .smallRipple3 { animation-delay: 2.0s; }
+
+// --- ADD: Delays and Positions for Smaller Ripples --- 
+.radarDisplay .smallRipple1 {
+  animation-delay: 0.4s;
+  top: 25%; // 修改: 更靠上
+  left: 20%; // 修改: 更靠左
+}
+.radarDisplay .smallRipple2 {
+  animation-delay: 1.2s;
+  top: 75%; // 修改: 更靠下
+  left: 80%; // 修改: 更靠右
+}
+.radarDisplay .smallRipple3 {
+  animation-delay: 2.0s;
+  top: 80%; // 修改: 更靠下
+  left: 35%; // 修改: 水平位置微调
+}
+
+// ... rest of the styles ...
+
+// --- ADD: Positions for Radar Contact Links --- 
+.radarContact1 { 
+  // Position top-leftish, outside radar (radar is right-aligned)
+  top: -200px; // --- MODIFY: Decrease top value to move up ---
+  left: 18%; 
+  // transform: translate(-50%, -50%); // Maybe remove transform or adjust alignment 
+}
+.radarContact2 { 
+  // Position bottom-rightish, outside radar
+  top: 890px; // Adjust based on radar vertical position 
+  left: 84%; 
+  // transform: translate(-50%, -50%);
+}
+.radarContact3 { 
+  // Position bottom-leftish, outside radar
+  top: 1000px; // Adjust based on radar vertical position
+  left: 40%; 
+  // transform: translate(-50%, -50%); 
+}
+
+// --- ADD: Styles and Animation for Icon Ripples ---
+.contactIconRipple {
+  position: absolute;
+  top: 50%; // Center relative to logLink/IconContainer
+  left: 50%; // Center relative to logLink/IconContainer
+  // --- UPDATE: Match modified animation start state --- 
+  transform: translate(-50%, -50%) scale(0.1); 
+  width: 20px; 
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(178, 242, 187, 1); // Thicker, opaque border
+  box-shadow: 0 0 3px 1px rgba(178, 242, 187, 0.6); // Add initial shadow
+  opacity: 1; // Start fully opaque
+  pointer-events: none;
+  z-index: -1; // Place behind icon container
+  animation: contactRippleExpandShadow 3.5s ease-out infinite; // Use larger ripple animation and its duration
+}
+
+// ... existing code ...
+
+// --- Keyframes for Ripples (Original Green) ---
+@keyframes contactRippleExpandShadow {
+  0% {
+    // --- MODIFY: Make start more prominent --- 
+    border: 2px solid rgba(178, 242, 187, 1); // Thicker, opaque border
+    box-shadow: 0 0 3px 1px rgba(178, 242, 187, 0.6); // Add initial shadow
+    opacity: 1; // Start fully opaque
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+  100% {
+    // --- Keep end state the same --- 
+    border: 1px solid rgba(178, 242, 187, 0); 
+    box-shadow: 0 0 0 25px rgba(178, 242, 187, 0); // Keep shadow removed at end if intended
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.2); // Expand even larger
+  }
+}
+
+// ... existing contactRippleExpandShadowSmall keyframe ...
+
+// --- Keyframes for Ripples (Inverted Pink/Purple) ---
+@keyframes contactRippleExpandShadowInverted {
+  0% {
+    // --- MODIFY: Make start more prominent (inverted) --- 
+    border: 2px solid rgba(var(--ark-primary-rgb), 1); // Thicker, opaque border
+    box-shadow: 0 0 3px 1px rgba(var(--ark-primary-rgb), 0.6); // Add initial shadow
+    opacity: 1; // Start fully opaque
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+  100% {
+    // --- Keep end state the same (inverted) --- 
+    border: 1px solid rgba(var(--ark-primary-rgb), 0); // Use inverted color
+    box-shadow: 0 0 0 25px rgba(var(--ark-primary-rgb), 0); // Keep shadow removed at end
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.2); // Same scale as original
+  }
+}
+
+// ... existing contactRippleExpandShadowSmallInverted keyframe ...
+
+// --- .inverted styles ---
+.inverted {
+  // ... existing inverted styles ...
+
+  // Override Ripple Colors and Animations
+  // ... ripple1 and radarRippleSmall overrides ...
+
+  .contactIconRipple { // Icon ripples
+     // --- UPDATE: Match modified inverted animation start state --- 
+     border: 2px solid rgba(var(--ark-primary-rgb), 1); // Override base border
+     box-shadow: 0 0 3px 1px rgba(var(--ark-primary-rgb), 0.6); // Override base shadow
+     opacity: 1;
+     animation-name: contactRippleExpandShadowInverted; // Use inverted (larger) animation
+  }
+
+  // ... other inverted styles ...
+}
+
+// ... rest of the styles ...
 
