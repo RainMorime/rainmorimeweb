@@ -1,21 +1,35 @@
 import React from 'react';
 import styles from '../styles/Home.module.scss'; // 复用 Home 的样式
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, onClick }) => {
   const { title, description, tech, link, imageUrl } = project;
 
+  const imageStyle = imageUrl ? { backgroundImage: `url(${imageUrl})` } : {};
+
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick(project);
+    } else if (link && link !== '#') {
+      window.open(link, '_blank', 'noopener noreferrer');
+    }
+  };
+
+  const isClickable = !!onClick || (link && link !== '#');
+
   return (
-    <div className={styles.projectCard}>
+    <div 
+      className={`${styles.projectCard} ${isClickable ? styles.clickable : ''}`} 
+      onClick={isClickable ? handleCardClick : undefined}
+      role={isClickable ? "button" : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onKeyDown={isClickable ? (e) => (e.key === 'Enter' || e.key === ' ') && handleCardClick() : undefined}
+    >
       <div className={styles.cardBorderTopLeft}></div>
       <div className={styles.cardBorderBottomRight}></div>
       
       <div className={styles.projectImageContainer}>
-        {/* 暂时用 div 做占位符，可以设置背景图 */}
-        <div 
-          className={styles.projectImagePlaceholder} 
-          style={{ backgroundImage: `url(${imageUrl || '/placeholders/default.png'})` }}
-        >
-          <div className={styles.imageScanlineOverlay}></div> {/* 扫描线叠加 */}
+        <div className={styles.projectImagePlaceholder} style={imageStyle}>
+          <div className={styles.imageScanlineOverlay}></div>
         </div>
       </div>
       
@@ -29,14 +43,15 @@ const ProjectCard = ({ project }) => {
             <span key={index} className={styles.techTag}>{item}</span>
           ))}
         </div>
-        {link && link !== '#' && (
+        {!onClick && link && link !== '#' && (
           <a 
             href={link} 
             target="_blank" 
             rel="noopener noreferrer" 
             className={styles.projectLink}
+            onClick={(e) => e.stopPropagation()}
           >
-            &gt; VIEW PROJECT_
+            Visit
           </a>
         )}
       </div>

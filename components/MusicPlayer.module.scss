@@ -16,7 +16,7 @@
 .playerContainer {
   position: fixed;
   left: 0;
-  top: 28%;
+  top: 35%;
   transform: translateY(-50%) translateX(-100%);
   width: 280px; // 修改: 稍微加宽以容纳唱臂
   background-color: rgba(var(--ark-dark-blue-rgb), 0.9); // 修改: 背景更不透明
@@ -44,10 +44,10 @@
 
 .handle { 
   position: absolute;
-  right: -20px; 
+  right: -25px; /* 修改: 调整以匹配新宽度 */ 
   top: 0; 
-  width: 20px;
-  height: 50px; // 初始高度
+  width: 25px;  /* 修改: 增加宽度 */
+  height: 100px; // 保持高度
   background-color: rgba(var(--ark-border-rgb), 0.7);
   border: 1px solid var(--ark-border);
   border-left: none;
@@ -247,59 +247,91 @@
   }
 }
 
-// --- 修改: 唱臂增加真实性和底座 --- 
-.tonearm {
-  width: 6px; // 唱臂厚度
-  height: 145px; // 缩短唱臂长度
-  background-color: transparent; // 透明背景
-  border: 1px solid #f6b2ff; // 紫色线条
-  border-radius: 3px; // 轻微圆角
+// --- 新增: 包裹容器样式 ---
+.tonearmAssembly {
   position: absolute;
-  bottom: 40px; // 向上移动唱臂
-  right: 55px; // 向左移动唱臂 (增加 right 值)
-  transform-origin: top center; // 旋转基点在顶部
-  transform: rotate(0deg); // 初始状态垂直
-  transition: transform 0.4s ease-in-out; // 平滑移动动画
-  z-index: 5; // 确保在唱片之上
+  // 定位旋转中心点 (原唱臂 top center)
+  // right: 55px + (6px / 2) = 58px
+  // bottom: 40px + 145px = 185px
+  right: 58px;
+  bottom: 185px;
+  width: 1px; // 容器本身不需要尺寸
+  height: 1px;
+  transform-origin: top center; // 旋转中心是容器顶部中心 (即 (0,0))
+  transition: transform 0.4s ease-in-out; 
+  // border: 1px solid blue; // 调试用
+}
 
-  // --- 唱针头部分 --- 
+// --- 新增: 包裹容器旋转样式 ---
+.tonearmAssembly.tonearmPlaying {
+  transform: rotate(20deg);
+}
+
+// --- 修改: 唱臂点击区域样式 (相对父容器定位) ---
+.tonearmHitbox {
+  position: absolute;
+  // top: 0; left: 50%; transform: translateX(-50%); // 简单方式，可能不完全精确
+  // 根据计算：left 应该是 hitbox 宽度一半再向左移一点
+  left: -10px; // -(26px / 2) + 3px (唱臂中心偏移)
+  top: -10px; // 向上偏移一点
+  width: 26px; 
+  height: 165px; 
+  background-color: transparent; 
+  cursor: pointer;
+  z-index: 6; 
+  // 移除 bottom, right
+  // border: 1px dashed red; 
+}
+
+// --- 修改: 唱臂样式 (相对父容器定位, 移除旋转相关) ---
+.tonearm {
+  width: 6px; 
+  height: 145px; 
+  background-color: transparent; 
+  border: 1px solid #f6b2ff; 
+  border-radius: 3px; 
+  position: absolute; // 相对父容器
+  // 移除 bottom, right
+  left: -3px; // 唱臂宽度一半
+  top: 0;
+  // 移除 transform-origin, transform, transition
+  z-index: 5; 
+  // 移除 cursor
+
+  // --- 唱针头部分 (保持不变) --- 
   &::after {
     content: '';
     position: absolute;
-    top: -4px; // 放在顶部，作为唱针
+    top: -4px; 
     left: 50%;
     transform: translateX(-50%);
     width: 8px;
     height: 8px;
     background-color: transparent;
-    border: 1px solid #f6b2ff; // 更改为紫色
-    border-radius: 2px; // 方形或微圆角
+    border: 1px solid #f6b2ff; 
+    border-radius: 2px; 
   }
   
-  // --- 唱臂底座 --- 
+  // --- 唱臂底座 (保持不变) --- 
   &::before {
     content: '';
     position: absolute;
-    top: -10px; // 移到顶部
+    top: -10px; 
     left: 50%;
     transform: translateX(-50%);
     width: 16px;
     height: 16px;
     background-color: transparent;
-    border: 1px solid #f6b2ff; // 更改为紫色
+    border: 1px solid #f6b2ff; 
     border-radius: 50%;
     z-index: -1;
   }
 }
 
-.tonearmPlaying {
-  transform: rotate(20deg); // 播放时向左旋转
-}
-
-// --- 新增: 低电量时唱臂样式 --- 
+// --- 重新添加: 低电量时唱臂样式 ---
 .tonearmLowPower {
-  border-color: var(--ark-highlight-green); // 切换为绿色边框
-  // 唱针和底座也切换为绿色
+  border-color: var(--ark-highlight-green); /* 切换为绿色边框 */
+  /* 唱针和底座也切换为绿色 */
   &::after, &::before {
     border-color: var(--ark-highlight-green);
   }

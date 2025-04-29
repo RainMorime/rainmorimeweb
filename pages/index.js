@@ -15,6 +15,8 @@ import ActivationLever from '../components/ActivationLever';
 import MusicPlayer from '../components/MusicPlayer';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import SimpleImageCard from '../components/SimpleImageCard';
+import LifeDetailView from '../components/LifeDetailView';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -50,6 +52,114 @@ const sampleProjects = [
     tech: ['Tone.js', 'P5.js', 'JavaScript'],
     link: '#',
     imageUrl: '/placeholders/biosynth.png'
+  },
+];
+
+const gameData = [
+  {
+    id: 'mc',
+    title: 'Minecraft',
+    description: '我的启蒙，也愿成为我的始终。',
+    tech: ['沙盒', '生存', '建造'],
+    link: '#', // Optional: Add links if relevant
+    imageUrl: '/pictures/Minecraft/MC2025.png' // Updated image path
+  },
+  {
+    id: 'mh',
+    title: 'Monster Hunter',
+    description: '我动作游戏的引路人。',
+    tech: ['动作', '狩猎', '多人'],
+    link: '#',
+    imageUrl: '/pictures/Minecraft/MC2025.png'
+  },
+  {
+    id: 'stray',
+    title: 'Stray',
+    description: '在赛博朋克城市中扮演一只猫。',
+    tech: ['冒险', '解谜', '猫'],
+    link: '#',
+    imageUrl: '/pictures/Stray/stray15.jpg'
+  },
+   {
+    id: 'titanfall',
+    title: 'Titanfall',
+    description: '第一次酣畅淋漓的体验。',
+    tech: ['FPS', '机甲', '多人'],
+    link: '#',
+    imageUrl: '/pictures/Titalfall/titan13.jpg' // Updated image path
+  },
+  {
+    id: 'wa',
+    title: 'WHITE ALBUM',
+    description: '广场协议后的泡沫与追忆，让我写了第一份长评',
+    tech: ['视觉小说', '恋爱', '音乐'],
+    link: '#',
+    imageUrl: '/pictures/WHITE_ALBUM/w10.jpg'
+  },
+  {
+    id: 'thif',
+    title: 'Touhou',
+    description: '东方的同人总是令人惊叹。',
+    tech: ['东方Project', '动作', '粉丝创作'],
+    link: '#',
+    imageUrl: '/pictures/Touhou/TH3.png'
+  },
+  {
+    id: 'bmwk',
+    title: 'BLACK MYTH: WU KONG',
+    description: '备受期待的国产3A。',
+    tech: ['ARPG', '神话', '动作'],
+    link: '#',
+    imageUrl: '/pictures/Minecraft/MC2025.png'
+  },
+];
+
+const leftPanelCardData = {
+  id: 'left-showcase',
+  title: 'Showcase',
+  imageUrl: '/pictures/showcase_placeholder.png'
+};
+
+const travelData = [
+  {
+    id: 'jilin',
+    title: '吉林',
+    description: '长白山脉与松花江畔的风景。', // Example description
+    tech: ['自然', '冬季', '边境'], // Example tags
+    link: '#', // Optional link
+    imageUrl: '/travel_placeholders/jilin.png' // Placeholder image path
+  },
+  {
+    id: 'shaanxi',
+    title: '陕西',
+    description: '古都西安与秦岭风光。',
+    tech: ['历史', '文化', '美食'],
+    link: '#',
+    imageUrl: '/travel_placeholders/shaanxi.png'
+  },
+  {
+    id: 'guizhou',
+    title: '贵州',
+    description: '喀斯特地貌与少数民族风情。',
+    tech: ['自然', '民族', '山水'],
+    link: '#',
+    imageUrl: '/images/travel/guizhou/GZ20.jpg'
+  },
+  {
+    id: 'qinghai',
+    title: '青海',
+    description: '高原湖泊与广袤草原。',
+    tech: ['高原', '湖泊', '自然'],
+    link: '#',
+    imageUrl: '/travel_placeholders/qinghai.png'
+  },
+  {
+    id: 'korea',
+    title: '韩国',
+    description: '现代都市与传统文化的交融。',
+    tech: ['都市', '文化', '美食'],
+    link: '#',
+    imageUrl: '/images/travel/hanguo/HG2.jpg'
   },
 ];
 
@@ -97,6 +207,9 @@ export default function Home() {
   const dischargeIntervalRef = useRef(null);
   const [leversVisible, setLeversVisible] = useState(false);
   const [isEmailCopied, setIsEmailCopied] = useState(false);
+  const [activeLifeTab, setActiveLifeTab] = useState('game');
+  const [selectedLifeItem, setSelectedLifeItem] = useState(null);
+  const [isLifeDetailVisible, setIsLifeDetailVisible] = useState(false);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -580,6 +693,10 @@ export default function Home() {
 
   const handleGoHome = () => {
     setActiveSection('home');
+    if (isLifeDetailVisible) {
+        setIsLifeDetailVisible(false);
+        setSelectedLifeItem(null);
+    }
   };
 
   useEffect(() => {
@@ -639,6 +756,30 @@ export default function Home() {
     });
   };
 
+  const handleLifeItemClick = (item) => {
+    console.log("Life item clicked:", item);
+    setSelectedLifeItem(item);
+    setIsLifeDetailVisible(true);
+  };
+
+  const handleLifeDetailBack = () => {
+    console.log("Going back from life detail");
+    setIsLifeDetailVisible(false);
+    setTimeout(() => {
+      setSelectedLifeItem(null);
+    }, 500);
+  };
+
+  const handleGlobalBackClick = () => {
+    if (isLifeDetailVisible) {
+      handleLifeDetailBack();
+    } else if (activeSection === 'content') {
+      handleGoHome();
+    }
+  };
+
+  const isGlobalBackVisible = activeSection === 'content' || isLifeDetailVisible;
+
   return (
     <div className={`${styles.container} ${isInverted ? styles.inverted : ''}`}>
       <Head>
@@ -646,6 +787,7 @@ export default function Home() {
         <meta name="description" content="森雨(RainMorime)的个人网站" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className={styles.leftDotMatrix}></div>
       <MusicPlayer powerLevel={powerLevel} />
       <CustomCursor />
       <RainMorimeEffect />
@@ -678,6 +820,7 @@ export default function Home() {
             <div>SECURE_CONNECTION</div>
           </div>
           <div className={`${styles.leftPanel} ${leftPanelAnimated ? styles.animated : ''}`}> 
+            <div className={styles.topRightDecoration}></div>
             <div className={styles.leverGroup}>
               {mainVisible && (
                 <ActivationLever
@@ -697,8 +840,8 @@ export default function Home() {
               )}
             </div>
             <button
-              className={`${styles.globalBackButton} ${activeSection === 'content' ? styles.visible : ''}`}
-              onClick={handleGoHome}
+              className={`${styles.globalBackButton} ${isGlobalBackVisible ? styles.visible : ''}`}
+              onClick={handleGlobalBackClick}
             >
               {/* ← */}
             </button>
@@ -717,6 +860,12 @@ export default function Home() {
               </div>
               <span className={styles.powerText}>{powerLevel}%</span>
             </div>
+            <div className={styles.leftPanelCardWrapper}>
+              <SimpleImageCard
+                title={leftPanelCardData.title}
+                imageUrl={leftPanelCardData.imageUrl}
+              />
+            </div>
             <div className={styles.logoContainer}>
             </div>
             <div className={`${styles.fateTextContainer} ${isFateTypingActive ? styles.typingActive : ''}`}>
@@ -728,9 +877,16 @@ export default function Home() {
                   {displayedEnvParams}
                 </pre>
             </div>
+            <div className={styles.brailleText}>⠝⠊⠕⠍⠡⠸⠬⠉⠄⠅⠢⠛⠳⠟⠧⠃⠥⠓⠳</div>
+                        {/* Add the gradient line element here */}
+              <div
+              className={`${styles.gradientLine} ${isInverted ? styles.gradientLineInverted : styles.gradientLineDefault}`}
+            ></div>
           </div>
 
-          <main className={`${styles.mainLayout} ${activeSection === 'home' ? styles.visible : styles.hidden}`}>
+          <main 
+            className={`${styles.mainLayout} ${activeSection === 'home' && !isLifeDetailVisible ? styles.visible : styles.hidden}`}
+          >
             <div
               className={styles.rightPanel}
             >
@@ -854,9 +1010,9 @@ export default function Home() {
             </div>
           </main>
 
-          <div 
-            ref={contentWrapperRef} 
-            className={`${styles.contentWrapper} ${activeSection === 'content' ? styles.visible : styles.hidden}`}
+          <div
+            ref={contentWrapperRef}
+            className={`${styles.contentWrapper} ${activeSection === 'content' && !isLifeDetailVisible ? styles.visible : styles.hidden}`}
           >
             <div id="works-section" className={`${styles.contentSection} ${styles.worksSection}`}> 
               <h2>WORKS</h2>
@@ -914,7 +1070,78 @@ export default function Home() {
 
             <div id="life-section" className={`${styles.contentSection} ${styles.lifeSection}`}> 
               <h2>LIFE</h2>
-              <p>这里是 Life 部分的内容...</p>
+              {!isLifeDetailVisible && (
+                <div className={styles.lifeTabButtons}>
+                  <button
+                    className={`${styles.lifeTabButton} ${activeLifeTab === 'game' ? styles.activeTab : ''}`}
+                    onClick={() => setActiveLifeTab('game')}
+                  >
+                    Game
+                  </button>
+                  <button
+                    className={`${styles.lifeTabButton} ${activeLifeTab === 'travel' ? styles.activeTab : ''}`}
+                    onClick={() => setActiveLifeTab('travel')}
+                  >
+                    Travel
+                  </button>
+                  <button
+                    className={`${styles.lifeTabButton} ${activeLifeTab === 'art' ? styles.activeTab : ''}`}
+                    onClick={() => setActiveLifeTab('art')}
+                  >
+                    Art
+                  </button>
+                  <button
+                    className={`${styles.lifeTabButton} ${activeLifeTab === 'other' ? styles.activeTab : ''}`}
+                    onClick={() => setActiveLifeTab('other')}
+                  >
+                    Other
+                  </button>
+                </div>
+              )}
+
+              <div 
+                className={`${styles.lifeContentArea} ${isLifeDetailVisible ? styles.contentHiddenRight : styles.contentVisibleRight}`}
+              >
+                <div className={`${styles.lifeTabContent} ${activeLifeTab === 'game' ? styles.activeContent : ''}`}>
+                  <div className={styles.gameGrid}>
+                    {gameData.map(game => (
+                      <ProjectCard 
+                        key={game.id} 
+                        project={game} 
+                        onClick={() => handleLifeItemClick(game)}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className={`${styles.lifeTabContent} ${activeLifeTab === 'travel' ? styles.activeContent : ''}`}>
+                  <div className={styles.travelGrid}>
+                    {travelData.map(place => (
+                      <ProjectCard 
+                        key={place.id} 
+                        project={place} 
+                        onClick={() => handleLifeItemClick(place)}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
+                  <p>这是艺术部分的内容...</p>
+                </div>
+                <div className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''}`}>
+                  <p>这是其他部分的内容...</p>
+                </div>
+              </div>
+
+              {selectedLifeItem && (
+                <div 
+                    className={`${styles.lifeDetailOverlay} ${isLifeDetailVisible ? styles.lifeDetailVisible : styles.lifeDetailHidden}`}
+                >
+                    <LifeDetailView 
+                        item={selectedLifeItem} 
+                        onBack={handleLifeDetailBack} 
+                    />
+                </div>
+              )}
             </div>
 
             <div id="contact-section" className={`${styles.contentSection} ${styles.contactSection}`}> 

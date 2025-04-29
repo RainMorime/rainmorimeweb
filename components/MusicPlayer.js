@@ -296,8 +296,29 @@ const MusicPlayer = ({ powerLevel }) => {
     const setAudioPlaying = () => setIsPlaying(true);
     const setAudioPaused = () => setIsPlaying(false);
     const handleEnded = () => {
-        // Playback finished, go to the next song
-        handleNext(); // Call the function to change index
+        // Playback finished, go to the next song index first
+        // We call handleNext to update the index state correctly
+        handleNext(); 
+
+        // Then, directly try to play. This might be more reliable after 'ended'.
+        // Note: handleNext already updated currentTrackIndex, so useEffect will also run
+        // to load the correct source, but we attempt play here just in case.
+        // A short delay might help ensure the source is loaded by the useEffect before playing
+        setTimeout(() => {
+            if (audioRef.current && !audioRef.current.paused) {
+            } else if (audioRef.current) {
+                const playPromise = audioRef.current.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        setIsPlaying(true); // Ensure state is correct
+                    }).catch(error => {
+                        console.error("[handleEnded] Error directly playing next track after ended:", error);
+                        // If direct play fails, ensure state is paused
+                        setIsPlaying(false); 
+                    });
+                }
+            }
+        }, 50); // Small delay
     };
 
     audio.addEventListener('timeupdate', updateProgress);
@@ -349,14 +370,12 @@ const MusicPlayer = ({ powerLevel }) => {
     };
 
     if (isPlaying) {
-        console.log("Adding animation iteration listeners");
         bars.forEach(bar => {
             // 确保初始状态是 running
             bar.style.animationPlayState = 'running';
             bar.addEventListener('animationiteration', handleAnimationIteration);
         });
     } else {
-        console.log("Removing animation iteration listeners");
         // 清除所有 timeouts
         animationTimeouts.current.forEach(t => clearTimeout(t.id));
         animationTimeouts.current = [];
@@ -370,7 +389,6 @@ const MusicPlayer = ({ powerLevel }) => {
 
     // 清理函数
     return () => {
-        console.log("Cleaning up animation listeners and timeouts");
         // 清除所有 timeouts
         animationTimeouts.current.forEach(t => clearTimeout(t.id));
         animationTimeouts.current = [];
@@ -438,7 +456,7 @@ const MusicPlayer = ({ powerLevel }) => {
             `}
             style={{ 
               transform: `translateX(${dragOffsetX}px)`,
-              opacity: incomingTrackIndex !== -1 ? (1 - Math.abs(dragOffsetX) / (vinylContainerRef.current?.offsetWidth || 200)) : 1
+              opacity: 1 // 始终保持不透明
             }}
           >
             <div className={styles.vinylLabel}></div>
@@ -453,8 +471,8 @@ const MusicPlayer = ({ powerLevel }) => {
                 style={{ 
                   transform: `translateX(${incomingTrackOffsetX}px)`,
                   // 过渡由 isDragging 控制，拖动时无过渡，松开时有过渡
-                  transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out',
-                  opacity: isDragging ? (Math.abs(dragOffsetX) / DRAG_THRESHOLD) : (Math.abs(dragOffsetX) > DRAG_THRESHOLD ? 1 : 0)
+                  transition: isDragging ? 'none' : 'transform 0.3s ease-out', // 移除 opacity 过渡
+                  opacity: 1 // 始终保持不透明
                 }}
              >
                {/* 可以选择是否为 incoming 唱片也添加旋转和标签 */}
@@ -462,21 +480,27 @@ const MusicPlayer = ({ powerLevel }) => {
              </div>
           )}
         </div>
-        {/* 修改唱臂，添加提示和更流畅的交互 */}
-        <div 
-          className={`
-            ${styles.tonearm} 
-            ${isPlaying ? styles.tonearmPlaying : ''} 
-            ${!isFullPower ? styles.tonearmLowPower : ''} // 添加低电量样式
-          `}
-          onClick={togglePlay}
-          style={{ 
-            cursor: 'pointer',
-            // --- 修改: 仅在满电时显示悬浮光晕 --- 
-            boxShadow: isPlaying && isFullPower ? '0 0 5px rgba(var(--ark-primary-rgb), 0.3)' : 'none'
-          }}
-          title={isPlaying ? "暂停音乐" : "播放音乐"}
-        />
+
+        {/* 修改: 添加包裹容器并应用旋转类 */}
+        <div className={`${styles.tonearmAssembly} ${isPlaying ? styles.tonearmPlaying : ''}`}>
+          {/* 唱臂点击区域 */}  
+          <div 
+            className={styles.tonearmHitbox}
+            onClick={togglePlay}
+            title={isPlaying ? "暂停音乐" : "播放音乐"}
+          ></div>
+          {/* 唱臂: 移除旋转类 */}
+          <div 
+            className={`
+              ${styles.tonearm} 
+              ${!isFullPower ? styles.tonearmLowPower : ''} // 保留低电量样式
+            `}
+            style={{ 
+              // 保留阴影样式
+              boxShadow: isPlaying && isFullPower ? '0 0 5px rgba(var(--ark-primary-rgb), 0.3)' : 'none'
+            }}
+          />
+        </div>
       </div>
 
       <div className={styles.playerContent}>

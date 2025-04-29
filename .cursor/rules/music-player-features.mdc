@@ -1,0 +1,49 @@
+---
+description: 音乐播放器组件
+globs: 
+alwaysApply: false
+---
+# Music Player Component Summary
+
+本规则概述了 `[components/MusicPlayer.js](mdc:components/MusicPlayer.js)` 组件及其样式文件 `[components/MusicPlayer.module.scss](mdc:components/MusicPlayer.module.scss)` 的主要功能和交互效果。
+
+## 核心功能
+
+*   **播放列表:** 组件内部定义了一个包含多首歌曲的 `playlist` 数组（目前包含 5 首）。
+*   **音频控制:** 使用 HTML5 `<audio>` 元素处理音频播放、暂停、进度更新和结束事件。
+*   **状态管理:** 使用 React `useState` 和 `useRef` 管理播放状态 (`isPlaying`)、当前曲目索引 (`currentTrackIndex`)、抽屉状态 (`isOpen`)、拖动状态等。
+
+## 交互与视觉效果
+
+1.  **抽屉机制:**
+    *   播放器默认收起在屏幕左侧边缘。
+    *   点击把手 (`.handle`) 可以展开或收起播放器抽屉 (`.playerContainer`)。
+
+2.  **唱片与唱臂:**
+    *   **唱片旋转:** 当 `isPlaying` 为 `true` 时，`.vinylRecord` 应用 `spinRecord` 动画。
+    *   **拖动切换:** 在唱片区域 (`.vinylMechanismContainer`) 按住鼠标左键并水平拖动超过阈值 (`DRAG_THRESHOLD`) 后松开，可以切换上/下一首歌曲。拖动时会显示即将进入的唱片 (`.incomingVinylRecord`) 从侧面滑入的效果。此交互通过 `handleMouseDown`, `handleMouseMove`, `handleMouseUpOrLeave` 函数和相关状态 (`isDragging`, `dragOffsetX`, `incomingTrackIndex` 等) 实现。拖动时不改变唱片透明度。
+    *   **唱臂交互:**
+        *   点击唱臂上方的透明 hitbox (`.tonearmHitbox`) 可以触发 `togglePlay` 函数，切换播放/暂停状态。Hitbox 尺寸大于唱臂本身，方便点击。
+        *   当 `isPlaying` 为 `true` 时，包裹唱臂和 hitbox 的父容器 (`.tonearmAssembly`) 应用 `.tonearmPlaying` 类，实现旋转效果 (`transform: rotate(20deg)`), hitbox 会同步旋转。
+        *   唱臂 (`.tonearm`) 的边框颜色受 `powerLevel` prop 影响：非满电时应用 `.tonearmLowPower` 类，边框变为绿色 (`--ark-highlight-green`)；满电时恢复默认粉色 (`#f6b2ff`)。
+        *   播放且满电时，唱臂有辉光效果 (`box-shadow`)。
+
+3.  **把手 (`.handle`) 效果:**
+    *   **抽屉打开 (`isOpen: true`) 且播放 (`isPlaying: true`) 时:**
+        *   把手显示 7 条水平灰色短线 (`.handleBar`)。
+        *   `.handle` 应用 `.playing` 类。
+        *   每个 `.handleBar` 应用 `waveEffect` 动画（1s 时长，宽度在 30%-60% 间变化）。
+        *   通过 `animationiteration` 事件监听器和 `setTimeout`，每个线条在完成一次动画后会暂停一个随机时间 (0.3s-1.2s)，然后再继续，形成不规则的音浪效果。
+    *   **抽屉关闭 (`isOpen: false`) 且播放 (`isPlaying: true`) 时:**
+        *   `.handle` 应用 `.expanded` 类，其高度增加。
+        *   `.handle` 同时应用 `.playing` 类，顶部的 7 条短线仍然显示并执行上述的音浪动画。
+        *   在音浪线条下方，渲染 `.handleTrackInfo` div，垂直显示当前歌曲的标题 (`.handleTrackTitle`)。
+        *   标题文字垂直排列，字体为 'Times New Roman'，颜色为 `#888888`。
+
+4.  **播放列表视图:**
+    *   抽屉展开时，点击标题右侧的按钮 (`.playlistToggleButton`) 可以展开/收起播放列表 (`.playlistContainer`)。
+    *   播放列表显示所有歌曲的标题和艺术家。
+    *   点击列表中的歌曲项 (`.playlistItem`) 可以切换到该歌曲。当前播放的歌曲项有高亮样式 (`.activePlaylistItem`)。
+
+该组件整合了多种视觉反馈和交互方式，提供了一个风格化的音乐播放体验。
+

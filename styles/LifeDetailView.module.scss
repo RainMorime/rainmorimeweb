@@ -1,0 +1,148 @@
+/* styles/LifeDetailView.module.scss */
+
+.detailContainer {
+  width: 100%;
+  padding: 20px 0; // Add some vertical padding, no horizontal as it's within the section padding
+  position: relative; // For back button positioning
+}
+
+.detailTitle {
+  font-family: 'Dosis', monospace; // Consistent font
+  font-size: 2rem; // Larger title
+  font-weight: bold;
+  color: var(--ark-primary);
+  margin-bottom: 30px; // Space below title
+  margin-top: 50px; // Space above title (below back button)
+  text-align: left;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ark-border); // Separator line like section titles
+}
+
+.detailContent {
+  display: flex;
+  flex-direction: column; // Stack image and text vertically on smaller screens
+  gap: 30px;
+
+  @media (min-width: 768px) { // Side-by-side on larger screens
+    flex-direction: row;
+  }
+}
+
+.detailImageContainer {
+   flex: 1 1 40%; // Takes up ~40% width on larger screens
+   max-width: 400px; // Max width for the image container
+   margin: 0 auto; // Center image container when stacked vertically
+
+   @media (min-width: 768px) {
+      margin: 0; // Reset margin for side-by-side
+      max-width: none;
+   }
+}
+
+.detailImage {
+  width: 100%;
+  padding-top: 75%; // Maintain aspect ratio (adjust as needed)
+  background-color: rgba(var(--ark-primary-rgb), 0.1); // Placeholder bg
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--ark-border);
+  position: relative;
+  overflow: hidden;
+}
+
+// Reuse scanline overlay style if ProjectCard is not used
+.imageScanlineOverlay {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.15) 50%
+  );
+  background-size: 100% 4px;
+  opacity: 0.2;
+  pointer-events: none;
+  animation: scanMove 10s linear infinite; // Reuse existing animation
+  transition: opacity 0.3s ease;
+}
+
+.detailText {
+  flex: 1 1 60%; // Takes up ~60% width on larger screens
+}
+
+.detailDescription {
+  font-family: 'Dosis', sans-serif;
+  font-size: 1.1rem;
+  color: var(--ark-text-secondary);
+  line-height: 1.8;
+  margin-bottom: 25px;
+  opacity: 0.9;
+}
+
+.detailTechContainer {
+  display: flex;
+  align-items: baseline; // Align label and tags nicely
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.techLabel {
+  font-family: 'Dosis', monospace;
+  font-size: 0.9rem;
+  color: var(--ark-text-secondary);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0; // Prevent label from shrinking
+}
+
+.detailTechTags {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 8px;
+}
+
+// Reuse tech tag style from ProjectCard
+.detailTechTag {
+  background-color: rgba(var(--ark-primary-rgb), 0.15); 
+  border: 1px solid rgba(var(--ark-primary-rgb), 0.3);
+  color: var(--ark-primary);
+  font-family: 'Consolas', monospace; 
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+// --- Inverted Mode Specific Styles ---
+:global(.inverted) {
+  .detailTitle {
+    color: var(--ark-primary);
+    border-bottom-color: var(--ark-border);
+  }
+
+  .detailImage {
+    background-color: rgba(var(--ark-primary-rgb), 0.1);
+    border-color: var(--ark-border);
+  }
+  
+  .detailDescription {
+     color: var(--ark-text-secondary);
+  }
+
+  .techLabel {
+     color: var(--ark-text-secondary);
+  }
+
+  .detailTechTag {
+      background-color: rgba(var(--ark-primary-rgb), 0.15);
+      border-color: rgba(var(--ark-primary-rgb), 0.3);
+      color: var(--ark-primary);
+  }
+} 

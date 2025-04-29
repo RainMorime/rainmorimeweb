@@ -194,7 +194,7 @@ const TesseractExperience = ({ chargeBattery, isActivated, isInverted }) => {
     <div style={{ 
       position: 'fixed', 
       top: '17.5vh',      // Red Box Top Edge (Estimated)
-      left: '9.32vw',     // Red Box Left Edge (Estimated)
+      left: '7.3vw',     // Red Box Left Edge (Estimated)
       width: '40.2vw',    // Red Box Width (Estimated)
       height: '65vh',   // Red Box Height (Estimated)
       zIndex: 7, 

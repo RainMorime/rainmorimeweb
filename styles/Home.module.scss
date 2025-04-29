@@ -76,10 +76,10 @@
     background-size: 100% 4px;
   }
   
-  // 左侧面板边框和角标颜色已通过变量覆盖
-  .leftPanel {
+  // 左侧面板边框和角标颜色已通过变量覆盖.leftPanel 
     // 如果需要，可以添加特定调整
-  }
+  
+  
   
   // Logo 滤镜保持不变，在浅色背景下应变为深灰色
   
@@ -123,9 +123,8 @@
            background-color: var(--ark-text-secondary); // 灰色填充
         }
      }
-     .powerText {
-        // Optional: Adjust if needed
-     }
+    
+        // Optional: Adjust if needed  .powerText {
   }
   
   // 右侧面板和列的悬停效果等颜色已通过变量覆盖
@@ -201,10 +200,10 @@
     }
   }
   
-  // 内容区域
-  .contentWrapper {
+  // 内容区域 .contentWrapper {
     // 继承 .container 的背景色和文字颜色
-  }
+  
+ 
   
   .contentSection {
      color: var(--ark-text); // 应用深色文字
@@ -502,12 +501,14 @@
 
 .contentWrapper.visible {
   // animation: slideInFromRight 1.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Increase duration
-  animation: slideInFromRight 1.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Further increase duration
+  // animation: slideInFromRight 1.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Further increase duration
+  animation: slideInFromRight 1.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Increase duration further
   pointer-events: auto; // Allow scrolling
 }
 .contentWrapper.hidden {
   // animation: slideOutToRight 0.9s ease-out forwards; // Increase duration
-  animation: slideOutToRight 1.3s ease-out forwards; // Further increase duration
+  // animation: slideOutToRight 1.3s ease-out forwards; // Further increase duration
+  animation: slideOutToRight 1.6s ease-out forwards; // Increase duration further
 }
 
 // --- 新增 Keyframes --- 
@@ -517,6 +518,8 @@
     // transform: translateY(0); // 初始状态
     // 模拟右侧面板向上滑出，可以只移动内容
     // 对 mainLayout 本身做动画可能简单点
+    // 如果只想影响 rightPanel，需要更复杂的选择器或结构
+    // 暂时只做向上+淡出
     transform: translateY(0);
   }
   to {
@@ -2661,8 +2664,10 @@
   pointer-events: none; // --- ADD: Ensure layout containers don't block events --- 
 }
 
-// --- 新增: 调整最后一个区域 (ABOUT) 的样式 --- 
+// --- 新增: 调整最后一个区域 (ABOUT) 的样式 ---
 .aboutSection {
+  margin-left: calc(100% / 1.618 - 6vw); // 减少左边距，使其向左移动
+  width: calc(100% * 0.618 / 1.618 + 6vw); // 增加宽度以填充右侧
   background-color: rgba(50, 50, 50, 0.8); // 修改: 降低 alpha 值使背景更透明
   /* 删除圆角 */
   border-radius: 0;
@@ -2780,10 +2785,9 @@
   }
 }
 
-.envParamsText {
+
   // ... (样式保持不变) ...
-  // 如果需要为打字机光标腾出空间，可以添加 padding-right
-}
+  // 如果需要为打字机光标腾出空间，可以添加 padding-right .envParamsText {
 
 // ... (envParamsText 样式结束) ...
 
@@ -2907,10 +2911,10 @@
   transition: opacity 0.3s ease;
 }
 
-// --- 新增: 项目内容区域 --- 
-.projectContent {
+// --- 新增: 项目内容区域 --- .projectContent {
   // 布局由父级 flex 控制
-}
+
+
 
 // --- 新增: 项目标题样式 --- 
 .projectTitle {
@@ -2972,10 +2976,7 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-
-  &:hover {
-    // Hover 效果已在 .projectCard:hover 中定义
-  }
+    // Hover 效果已在 .projectCard:hover 中定义 &:hover
 }
 
 // --- 新增: 警告脉冲动画 --- 
@@ -3845,4 +3846,383 @@
 }
 
 // ... rest of the styles ...
+
+// --- ADD: Left Dot Matrix --- 
+.leftDotMatrix {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 7.5vw; // Width of the dot matrix area on the left
+  height: 100vh;
+  background-image: radial-gradient(circle, rgba(200, 200, 200, 0.2) 1px, transparent 1.1px); // Small, less opaque grey dots
+  background-size: 10px 10px; // Spacing of the dots
+  z-index: 5; // Behind leftPanel (z-index 10), above gridBackground (z-index 1)
+  pointer-events: none;
+  opacity: 0.6; // Slightly transparent
+}
+
+// --- 新增: 左侧面板右上角装饰 ---
+.topRightDecoration {
+  position: absolute;
+  top: 17.5%; 
+  right: 20%; 
+  width: 20px; 
+  height: 20px;
+  // 修改: 使用边框颜色作为背景
+  background-color: var(--ark-border); 
+  border-radius: 50%; 
+  transform: translate(50%, -50%); 
+  // 修改: 提高 z-index
+  z-index: 12; 
+  opacity: 0; 
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+
+  // 斜线使用 ::after 伪元素
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 110%; 
+    height: 1.5px; 
+    // 修改: 使用主高亮色作为斜线颜色
+    background-color: var(--ark-primary); 
+    transform: translate(-50%, -50%) rotate(45deg); 
+  }
+
+  // 动画：与电量显示等元素同步出现
+  .leftPanel.animated & { 
+    transition-delay: 2.0s; 
+    opacity: 0.7; // 修改: 稍微提高最终透明度
+  }
+}
+
+.leftPanel {
+  // flex: 1; // 移除 flex: 1
+  width: calc(100% / 1.618); // 设置明确宽度
+}
+
+// --- 新增: 盲文文本样式 ---
+.brailleText {
+  position: absolute;
+  bottom: 14.5%; // 比 fateTextContainer (19%) 稍低一点
+  right: 21%;   // 与 fateTextContainer 右对齐
+  color: var(--ark-text-secondary); // 使用次要文字颜色
+  font-size: 1rem; // 可以根据需要调整大小
+  font-family: monospace; // 等宽字体可能更适合盲文
+  letter-spacing: 2px; // 增加字符间距
+  z-index: 5; // 与 fateTextContainer 相同的层级
+  opacity: 0; // 初始隐藏
+  transition: opacity 0.5s ease-out;
+  pointer-events: none;
+  text-align: right; // 确保文本右对齐
+
+  // 动画：在 fateText 和 envParams 之后出现
+  .leftPanel.animated & { 
+    transition-delay: 2.4s; // 比 fate/env text (2.0s) 稍晚出现
+    opacity: 0.5; // 最终透明度 (比 fate/env text 稍低)
+  }
+}
+
+// --- 新增: 渐变线条样式 ---
+.gradientLine {
+  position: absolute;
+  bottom: 15.5%; // Keep user's position
+  right: 66.66%;   // Keep user's position
+  width: 270px;
+  height: 4px;   // Keep user's height
+  // background: ...; // Background is removed from base class
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+  pointer-events: none;
+
+  // Animation ends at opacity: 1
+  .leftPanel.animated & {
+    transition-delay: 2.8s;
+    opacity: 1;
+  }
+}
+
+// --- 新增: 默认状态渐变 ---
+.gradientLineDefault {
+  background: linear-gradient(
+    to right,
+    var(--ark-highlight-green) 0% 2%,  /* Green block */
+    #333333 2% 38%,       /* Darkest Gray block */
+    #444444 38% 62%,      /* New Darker Gray block */
+    #666666 62% 82%,      /* Original Darker Gray block */
+    #888888 82% 95%,      /* New Lighter Gray block */
+    #aaaaaa 95% 100%        /* Medium Gray block */
+  );
+}
+
+// --- 新增: 倒置状态渐变 ---
+.gradientLineInverted {
+   background: linear-gradient(
+      to right,
+      var(--ark-primary) 0% 2%,  /* Inverted Primary (Pink/Purple) block */
+      #888888 2% 38%,       /* Lighter Gray 1 */
+      #999999 38% 62%,      /* Lighter Gray 2 */
+      #aaaaaa 62% 82%,      /* Lighter Gray 3 */
+      #bbbbbb 82% 95%,      /* Lighter Gray 4 */
+      #cccccc 95% 100%        /* Lightest Gray */
+    );
+}
+
+// --- LIFE Section Tabs ---
+.lifeTabButtons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px; // Space between buttons and content
+  margin-top: -15px; // Move buttons slightly closer to the H2 title
+  border-bottom: 1px solid var(--ark-border); // Add a line below tabs
+  padding-bottom: 15px;
+}
+
+.lifeTabButton {
+  background: transparent;
+  border: 1px solid var(--ark-border);
+  color: var(--ark-text-secondary);
+  padding: 8px 20px;
+  font-family: 'Dosis', monospace;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.7;
+
+  &:hover {
+    background-color: rgba(var(--ark-primary-rgb), 0.1);
+    border-color: var(--ark-primary);
+    color: var(--ark-primary);
+    opacity: 1;
+  }
+
+  &.activeTab {
+    background-color: var(--ark-primary);
+    border-color: var(--ark-primary);
+    color: var(--ark-dark-blue);
+    opacity: 1;
+    font-weight: bold;
+  }
+}
+
+.lifeContentArea {
+  width: 100%;
+  position: relative;
+}
+
+.lifeTabContent {
+  display: none; // Hide all content by default
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+
+  &.activeContent {
+    display: block; // Show only the active content
+    opacity: 1;
+  }
+
+  // Specific styles for content within the tabs
+  p {
+    font-family: 'Dosis', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    text-align: left;
+    opacity: 0.8;
+    margin-bottom: 20px;
+  }
+
+  // Target ProjectCard specifically within the game grid if needed
+  .gameGrid .projectCard {
+    // Add any specific overrides for game cards here
+    // For example, maybe a slightly different background or hover effect
+  }
+
+  // Target ProjectCard specifically within the travel grid if needed
+  .travelGrid .projectCard {
+    // Add any specific overrides for travel cards here if desired
+  }
+}
+
+// Adjustments for inverted mode if needed
+.inverted {
+  .lifeTabButton {
+    border-color: var(--ark-border);
+    color: var(--ark-text-secondary);
+
+    &:hover {
+      background-color: rgba(var(--ark-primary-rgb), 0.1);
+      border-color: var(--ark-primary);
+      color: var(--ark-primary);
+    }
+
+    &.activeTab {
+      background-color: var(--ark-primary);
+      border-color: var(--ark-primary);
+      color: var(--ark-dark-blue); // Keep this contrast or adjust as needed
+    }
+  }
+  .lifeTabContent {
+      p {
+          color: var(--ark-text); // Ensure paragraph text is dark in inverted mode
+      }
+  }
+}
+
+// --- Left Panel Card Positioning ---
+.leftPanelCardWrapper {
+  position: absolute;
+  // Position it below powerDisplay (top: 19%) and above envParams (bottom: 19%)
+  // Let's try positioning from the top, leaving space for powerDisplay
+  top: calc(19% + 40px); // Below powerDisplay (adjust 40px as needed)
+  left: 17%; // Align with powerDisplay/envParams left edge
+  z-index: 10; // Same level as powerDisplay
+  opacity: 0; // Fade in with other elements
+  transition: opacity 0.8s ease;
+  pointer-events: auto; // Allow interaction if the card itself needs it (e.g., hover)
+
+  .leftPanel.animated & {
+    transition-delay: 2.1s; // Appear slightly after powerDisplay (2.0s)
+    opacity: 1; // Fully opaque or match powerDisplay opacity (0.8)? Let's try 1.
+  }
+
+  // Find the SimpleImageCard's root class (.cardContainer)
+  // Note: Need to ensure the selector is specific enough or use :global if necessary
+  // Since it's directly inside the wrapper, this should work:> div { // Assuming the root of SimpleImageCard is a div
+     // Apply any necessary overrides or adjustments here
+     // e.g., ensure width/height fit the space
+}
+
+/* Ensure SimpleImageCard styles apply correctly */
+/* If SimpleImageCard.module.scss uses CSS Modules correctly, */
+/* explicit targeting here might not be needed unless overriding. */
+
+// --- Adjust z-index or position of other elements if needed ---
+// e.g., ensure logoContainer, fateText, envParams are positioned correctly relative to the new card.
+// The current placement puts it below powerDisplay, and the existing logo/text elements are positioned from the bottom/center, so they shouldn't overlap initially.
+
+// --- LIFE Section Content Switching Animation ---
+
+// Container for the grid/tabs
+.lifeContentArea {
+  width: 100%;
+  position: relative; // Keep relative for children
+  // Base transition for smooth switch
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; 
+  transform: translateX(0);
+  opacity: 1;
+}
+
+// Container for the detail view
+.lifeDetailArea {
+  width: 100%;
+  position: absolute; // Position it over the content area when visible
+  top: 0; // Align with the top of lifeContentArea (adjust if tabs are kept visible)
+  left: 0;
+  padding-top: 60px; // Add padding matching the h2 margin + tabs height approx
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  transform: translateX(100%); // Start off-screen to the right
+  opacity: 0;
+  pointer-events: none; // Hidden by default
+}
+
+// Class applied when detail view should be visible
+.contentVisibleRight {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto; // Make it interactive
+}
+
+// Class applied when detail view should be hidden (or grid is hidden)
+.contentHiddenRight {
+  transform: translateX(-100%); // Slide out to the left
+  opacity: 0;
+  pointer-events: none;
+}
+
+// Adjust lifeDetailArea positioning when visible
+.lifeDetailArea.contentVisibleRight {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+// Adjust lifeDetailArea positioning when hidden
+.lifeDetailArea.contentHiddenRight {
+    transform: translateX(100%); // Slide out to the right
+    opacity: 0;
+    pointer-events: none;
+}
+
+// Modify ProjectCard clickable style (add to existing ProjectCard.module.scss if preferred)
+.clickable {
+  cursor: pointer;
+}
+
+/* Add NEW styles for the independent LIFE detail overlay */
+.lifeDetailOverlay {
+  position: fixed; // Use fixed to overlay everything
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--ark-dark-blue); // Match container background
+  z-index: 20; // High z-index to be on top
+  overflow-y: auto; // Allow scrolling within the detail view
+  padding: 80px 5% 5% calc(100% / 1.618 + 2vw); // Padding: top, right, bottom, left (align with content area start roughly)
+  box-sizing: border-box;
+  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.6s ease-out; // Animation
+  transform: translateX(100%); // Start off-screen right
+  opacity: 0;
+  pointer-events: none; // Initially not interactive
+
+  /* Hide scrollbar */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar { 
+    display: none; /* WebKit */
+  }
+}
+
+.lifeDetailVisible {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto; // Allow interaction
+}
+
+.lifeDetailHidden {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+// --- Adjust mainLayout and contentWrapper visibility/animation logic ---
+// The JS logic handles adding/removing .visible/.hidden based on activeSection AND isLifeDetailVisible
+
+// Ensure mainLayout hides when detail view is up
+.mainLayout.hidden {
+  // Existing animation: slideUpOutSkew or just opacity/transform
+  animation: slideUpOutSkew 0.5s ease-out forwards; // Or appropriate exit animation
+  pointer-events: none;
+}
+
+// Ensure contentWrapper hides when detail view is up
+.contentWrapper.hidden {
+  // Existing animation: slideOutToRight or just opacity/transform
+  animation: slideOutToRight 1.6s ease-out forwards; // Or appropriate exit animation
+  pointer-events: none;
+}
+
+// --- Inverted Styles for Overlay ---
+.inverted {
+  .lifeDetailOverlay {
+    background-color: var(--ark-dark-blue); // Use the inverted background color
+
+    // Make sure the LifeDetailView component's inverted styles work within this
+    // (They should if using :global(.inverted) correctly in LifeDetailView.module.scss)
+  }
+}
 
