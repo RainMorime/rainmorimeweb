@@ -1,0 +1,179 @@
+/* styles/WorkDetailView.module.scss */
+/* Based on LifeDetailView.module.scss */
+
+.detailContainer {
+  width: 100%;
+  padding: 20px 0; 
+  position: relative; 
+}
+
+/* Back button styles removed */
+
+.detailTitle {
+  font-family: 'Dosis', monospace; 
+  font-size: 2rem; 
+  font-weight: bold;
+  color: var(--ark-primary);
+  margin-bottom: 30px; 
+  margin-top: 0; // Adjusted since no back button
+  text-align: left;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ark-border); 
+}
+
+.detailContent {
+  display: flex;
+  flex-direction: column; 
+  gap: 30px;
+
+  @media (min-width: 768px) { 
+    flex-direction: row;
+  }
+}
+
+.detailImageContainer {
+   flex: 1 1 45%; // Adjust flex basis slightly if needed
+   max-width: 450px; 
+   margin: 0 auto; 
+
+   @media (min-width: 768px) {
+      margin: 0; 
+      max-width: none;
+   }
+}
+
+.detailImage {
+  width: 100%;
+  padding-top: 56.25%; // 16:9 aspect ratio for project images
+  background-color: rgba(var(--ark-primary-rgb), 0.1); 
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--ark-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.imageScanlineOverlay {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.15) 50%
+  );
+  background-size: 100% 4px;
+  opacity: 0.2;
+  pointer-events: none;
+  animation: scanMove 10s linear infinite; 
+  transition: opacity 0.3s ease;
+}
+
+.detailText {
+  flex: 1 1 55%; // Adjust flex basis
+}
+
+.detailDescription {
+  font-family: 'Dosis', sans-serif;
+  font-size: 1.1rem;
+  color: var(--ark-text-secondary);
+  line-height: 1.8;
+  margin-bottom: 25px;
+  opacity: 0.9;
+}
+
+.detailTechContainer {
+  display: flex;
+  align-items: baseline; 
+  gap: 10px;
+  margin-top: 15px;
+  margin-bottom: 25px; // Space before link
+}
+
+.techLabel {
+  font-family: 'Dosis', monospace;
+  font-size: 0.9rem;
+  color: var(--ark-text-secondary);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0; 
+}
+
+.detailTechTags {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 8px;
+}
+
+.detailTechTag {
+  background-color: rgba(var(--ark-primary-rgb), 0.15); 
+  border: 1px solid rgba(var(--ark-primary-rgb), 0.3);
+  color: var(--ark-primary);
+  font-family: 'Consolas', monospace; 
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.detailLink {
+  display: inline-block;
+  margin-top: 15px;
+  font-family: 'Dosis', monospace;
+  font-size: 0.9rem;
+  color: var(--ark-primary);
+  text-decoration: none;
+  border: 1px solid var(--ark-primary);
+  padding: 8px 15px;
+  transition: background-color 0.3s, color 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--ark-primary);
+    color: var(--ark-dark-blue);
+  }
+}
+
+// --- Inverted Mode Specific Styles ---
+:global(.inverted) {
+  .detailTitle {
+    color: var(--ark-primary);
+    border-bottom-color: var(--ark-border);
+  }
+
+  .detailImage {
+    background-color: rgba(var(--ark-primary-rgb), 0.1);
+    border-color: var(--ark-border);
+  }
+  
+  .detailDescription {
+     color: var(--ark-text-secondary);
+  }
+
+  .techLabel {
+     color: var(--ark-text-secondary);
+  }
+
+  .detailTechTag {
+      background-color: rgba(var(--ark-primary-rgb), 0.15);
+      border-color: rgba(var(--ark-primary-rgb), 0.3);
+      color: var(--ark-primary);
+  }
+  
+  .detailLink {
+     color: var(--ark-primary);
+     border-color: var(--ark-primary);
+      &:hover {
+        background-color: var(--ark-primary);
+        color: #ffffff; // Use white text on pink bg in inverted
+     }
+  }
+} 

@@ -1,0 +1,85 @@
+/* styles/ExperienceDetailView.module.scss */
+/* Adapted from WorkDetailView.module.scss */
+
+.detailContainer {
+  width: 100%;
+  padding: 20px 0; 
+  position: relative; 
+}
+
+.detailTitle {
+  font-family: 'Dosis', monospace; 
+  font-size: 2.2rem; // Slightly larger title for experiences
+  font-weight: bold;
+  color: var(--ark-primary);
+  margin-bottom: 20px; // Reduced space below title 
+  margin-top: 0; 
+  text-align: left;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--ark-border); 
+}
+
+.detailMeta {
+  display: flex;
+  flex-wrap: wrap; // Allow wrapping on smaller screens
+  gap: 25px; // Space between meta items
+  margin-bottom: 35px; // Space below meta section
+  font-family: 'Dosis', sans-serif;
+  font-size: 1rem;
+  color: var(--ark-text-secondary);
+  opacity: 0.9;
+}
+
+.metaLabel {
+  font-family: 'Dosis', monospace;
+  font-size: 0.85rem;
+  color: var(--ark-text-secondary);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 8px; // Space between label and value
+}
+
+.detailDuration, .detailLocation {
+  // Basic structure for meta items
+}
+
+.detailBody {
+  // Container for the main descriptive paragraphs
+}
+
+.detailParagraph {
+  font-family: 'Dosis', sans-serif;
+  font-size: 1.15rem; // Slightly larger paragraph text
+  color: var(--ark-text); // Use main text color
+  line-height: 1.9; // Slightly increased line height
+  margin-bottom: 18px; // Space between paragraphs
+  opacity: 0.9;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// --- Inverted Mode Specific Styles ---
+:global(.inverted) {
+  .detailTitle {
+    color: var(--ark-primary);
+    border-bottom-color: var(--ark-border);
+  }
+
+  .detailMeta {
+     color: var(--ark-text-secondary);
+  }
+
+  .metaLabel {
+     color: var(--ark-text-secondary);
+     opacity: 0.8;
+  }
+  
+  .detailParagraph {
+     color: var(--ark-text); // Ensure main text color is applied
+  }
+} 

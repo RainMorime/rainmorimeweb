@@ -4232,3 +4232,12 @@
     // Ensure LifeDetailView inverted styles still apply correctly inside
 }
 
+/* REMOVE these invalid lines */
+/*
+// Keep .gameGrid and .travelGrid styles as they are now used by both LIFE and WORKS
+.gameGrid { ... }
+.travelGrid { ... } 
+*/
+
+// Global styles below were removed as they belong in globals.scss
+

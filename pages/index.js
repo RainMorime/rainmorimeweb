@@ -17,6 +17,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import SimpleImageCard from '../components/SimpleImageCard';
 import LifeDetailView from '../components/LifeDetailView';
+import WorkDetailView from '../components/WorkDetailView';
+import ExperienceDetailView from '../components/ExperienceDetailView';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -163,6 +165,58 @@ const travelData = [
   },
 ];
 
+const experienceData = [
+  {
+    id: 'highschool',
+    type: 'education', // Differentiate between education and work/volunteer
+    duration: '2016 - 2022',
+    title: '初中 / 高中',
+    location: '吉林师范大学附属中学 / 四平市第一高级中学',
+    details: [ // Use an array for details
+      '吉林师范大学附属中学', 
+      '四平市第一高级中学'
+    ],
+    alignment: 'right' // Indicate alignment for timeline styling
+  },
+  {
+    id: 'university',
+    type: 'education',
+    duration: '2022 - 至今',
+    title: '大学',
+    location: '西安外国语大学',
+    details: [
+        '西安外国语大学',
+        '英语系'
+    ],
+    alignment: 'left'
+  },
+  {
+    id: 'internship',
+    type: 'work',
+    duration: '2024.07.15 - 08.16',
+    title: '实习',
+    location: '吉林泰斯特生物电子工程有限公司',
+    details: [
+      '吉林泰斯特生物电子工程有限公司',
+      '国内销售部',
+      '产品翻译、校对 | 市场调研'
+    ],
+    alignment: 'left'
+  },
+  {
+    id: 'volunteer',
+    type: 'volunteer',
+    duration: '2024.11.11 - 11.17',
+    title: '志愿者',
+    location: '2024 中国整合肿瘤学大会',
+    details: [
+       '2024 中国整合肿瘤学大会',
+       '试片区小组长'
+    ],
+    alignment: 'left'
+  },
+];
+
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -211,6 +265,8 @@ export default function Home() {
   const [selectedLifeItem, setSelectedLifeItem] = useState(null);
   const [contentScrollPosition, setContentScrollPosition] = useState(0);
   const [previousActiveLifeTab, setPreviousActiveLifeTab] = useState(null);
+  const [selectedWorkItem, setSelectedWorkItem] = useState(null);
+  const [selectedExperienceItem, setSelectedExperienceItem] = useState(null);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -677,6 +733,8 @@ export default function Home() {
     if (columnIndex < sectionIds.length) {
       const sectionId = sectionIds[columnIndex];
       setSelectedLifeItem(null);
+      setSelectedWorkItem(null);
+      setSelectedExperienceItem(null);
       setActiveSection('content');
 
       requestAnimationFrame(() => {
@@ -761,43 +819,81 @@ export default function Home() {
   const handleLifeItemClick = (item) => {
     console.log("Life item clicked, switching to detail view:", item);
     
-    // --- RECORD STATE BEFORE SWITCHING ---
+    // Record current scroll position before switching
     if (contentWrapperRef.current) {
-      setContentScrollPosition(contentWrapperRef.current.scrollTop); // Record scroll position
+      setContentScrollPosition(contentWrapperRef.current.scrollTop); 
     }
-    setPreviousActiveLifeTab(activeLifeTab); // Record current tab
-    // --- END RECORD ---
+    // No need to store the 'tab' for LIFE as it's a single section
 
-    setSelectedLifeItem(item);
-    setActiveSection('lifeDetail'); 
+    setSelectedLifeItem(item); // Set the selected life item
+    setActiveSection('lifeDetail'); // Set the active section state
+  };
+
+  const handleWorkItemClick = (item) => {
+    console.log("Work item clicked, switching to detail view:", item);
+    
+    // Record current scroll position before switching
+    if (contentWrapperRef.current) {
+      setContentScrollPosition(contentWrapperRef.current.scrollTop); 
+    }
+    // No need to store the 'tab' for WORKS as it's a single section
+
+    setSelectedWorkItem(item); // Set the selected work item
+    setActiveSection('workDetail'); // Set the active section state
+  };
+
+  const handleExperienceItemClick = (item) => {
+    console.log("Experience item clicked, switching to detail view:", item);
+    
+    // Record current scroll position before switching
+    if (contentWrapperRef.current) {
+      setContentScrollPosition(contentWrapperRef.current.scrollTop); 
+    }
+
+    setSelectedExperienceItem(item); // Set the selected experience item
+    setActiveSection('experienceDetail'); // Set the active section state
   };
 
   const handleGlobalBackClick = () => {
     if (activeSection === 'lifeDetail') {
-      // --- RESTORE STATE WHEN GOING BACK ---
-      setActiveSection('content'); // Switch view first
-
-      // Restore the previously active tab
+      setActiveSection('content'); 
       if (previousActiveLifeTab) {
-          setActiveLifeTab(previousActiveLifeTab);
+        setActiveLifeTab(previousActiveLifeTab);
       } else {
-          setActiveLifeTab('game'); // Fallback to default if none was stored
+        setActiveLifeTab('game');
       }
-      
-      // Restore scroll position AFTER state update allows content to render
       requestAnimationFrame(() => {
-          if (contentWrapperRef.current) {
-              contentWrapperRef.current.scrollTop = contentScrollPosition;
-          }
+        if (contentWrapperRef.current) {
+          contentWrapperRef.current.scrollTop = contentScrollPosition;
+        }
       });
-      
-      // Clear the selected item and stored states after a delay
       setTimeout(() => {
         setSelectedLifeItem(null);
         setPreviousActiveLifeTab(null); 
-        setContentScrollPosition(0); // Reset scroll position state
-      }, 500); // Match animation duration
-
+        setContentScrollPosition(0);
+      }, 500);
+    } else if (activeSection === 'workDetail') {
+      setActiveSection('content'); 
+      requestAnimationFrame(() => {
+        if (contentWrapperRef.current) {
+          contentWrapperRef.current.scrollTop = contentScrollPosition;
+        }
+      });
+      setTimeout(() => {
+        setSelectedWorkItem(null);
+        setContentScrollPosition(0); 
+      }, 500);
+    } else if (activeSection === 'experienceDetail') {
+      setActiveSection('content'); 
+      requestAnimationFrame(() => {
+        if (contentWrapperRef.current) {
+          contentWrapperRef.current.scrollTop = contentScrollPosition;
+        }
+      });
+      setTimeout(() => {
+        setSelectedExperienceItem(null);
+        setContentScrollPosition(0); 
+      }, 500);
     } else if (activeSection === 'content') {
       handleGoHome(); 
     }
@@ -863,7 +959,7 @@ export default function Home() {
               )}
             </div>
             <button
-              className={`${styles.globalBackButton} ${activeSection === 'content' || activeSection === 'lifeDetail' ? styles.visible : ''}`}
+              className={`${styles.globalBackButton} ${activeSection === 'content' || activeSection === 'lifeDetail' || activeSection === 'workDetail' || activeSection === 'experienceDetail' ? styles.visible : ''}`}
               onClick={handleGlobalBackClick}
             >
               {/* ← */}
@@ -1037,9 +1133,13 @@ export default function Home() {
           >
             <div id="works-section" className={`${styles.contentSection} ${styles.worksSection}`}> 
               <h2>WORKS</h2>
-              <div className={styles.projectGrid}>
+              <div className={styles.gameGrid}>
                 {sampleProjects.map(project => (
-                  <ProjectCard key={project.id} project={project} />
+                  <ProjectCard 
+                    key={project.id} 
+                    project={project} 
+                    onClick={() => handleWorkItemClick(project)}
+                  />
                 ))}
               </div>
             </div>
@@ -1047,45 +1147,37 @@ export default function Home() {
             <div id="experience-section" className={`${styles.contentSection} ${styles.experienceSection}`}> 
               <h2>EXPERIENCE</h2>
               <div className={styles.experienceTimeline}>
-                <div className={`${styles.timelineItem} ${styles.timelineItemRight} ${styles.educationItem}`}>
-                  <div className={styles.timelinePoint}></div>
-                  <div className={styles.timelineContent}>
-                    <div className={styles.timelineYear}><span className={styles.timelineNumber}>2016</span> - <span className={styles.timelineNumber}>2022</span></div>
-                    <h3>初中 / 高中</h3>
-                    <p>吉林师范大学附属中学</p>
-                    <p>四平市第一高级中学</p>
-                  </div>
-                </div>
-                <div className={`${styles.timelineItem} ${styles.timelineItemLeft} ${styles.educationItem}`}>
-                  <div className={styles.timelinePoint}></div>
-                  <div className={styles.timelineContent}>
-                    <div className={styles.timelineYear}><span className={styles.timelineNumber}>2022</span> - 至今</div>
-                    <h3>大学</h3>
-                    <p>西安外国语大学</p>
-                    <p>英语系</p>
-                  </div>
-                </div>
-                <div className={`${styles.timelineItem} ${styles.timelineItemLeft}`}>
-                  <div className={styles.timelinePoint}></div>
-                  <div className={styles.timelineContent}>
-                    <div className={styles.timelineYear}>
-                      <span className={styles.timelineNumber}>2024.07.15</span> - <span className={styles.timelineNumber}>08.16</span>
+                {experienceData.map(item => (
+                  <div 
+                    key={item.id} 
+                    className={`
+                      ${styles.timelineItem} 
+                      ${item.alignment === 'left' ? styles.timelineItemLeft : styles.timelineItemRight} 
+                      ${item.type === 'education' ? styles.educationItem : ''}
+                      ${styles.clickable}
+                    `}
+                    onClick={() => handleExperienceItemClick(item)}
+                  >
+                    <div className={styles.timelinePoint}></div>
+                    <div className={styles.timelineContent}>
+                      <div className={styles.timelineYear}>
+                        <span className={styles.timelineNumber}>{item.duration.split(' - ')[0]}</span> 
+                        {item.duration.includes(' - ') && ' - '} 
+                        <span className={styles.timelineNumber}>{item.duration.split(' - ')[1]}</span>
+                      </div>
+                      <h3>{item.title}</h3>
+                      {item.details.map((detailLine, index) => (
+                         <p key={index}>
+                           {detailLine.split(/(\d{4}(?:\.\d{2})?)/g).map((part, partIndex) => 
+                             /\d{4}(?:\.\d{2})?/.test(part) ? 
+                             <span key={partIndex} className={styles.timelineNumber}>{part}</span> : 
+                             part
+                           )}
+                         </p>
+                      ))}
                     </div>
-                    <h3>实习</h3>
-                    <p>吉林泰斯特生物电子工程有限公司</p>
-                    <p>国内销售部 | 产品翻译、校对；市场调研</p>
                   </div>
-                </div>
-                <div className={`${styles.timelineItem} ${styles.timelineItemLeft}`}>
-                  <div className={styles.timelinePoint}></div>
-                  <div className={styles.timelineContent}>
-                    <div className={styles.timelineYear}>
-                      <span className={styles.timelineNumber}>2024.11.11</span> - <span className={styles.timelineNumber}>11.17</span>
-                    </div>
-                    <h3>志愿者</h3>
-                    <p><span className={styles.timelineNumber}>2024</span> 中国整合肿瘤学大会 | 试片区小组长</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -1232,6 +1324,26 @@ export default function Home() {
         {selectedLifeItem && (
           <LifeDetailView 
             item={selectedLifeItem}
+          />
+        )}
+      </div>
+
+      <div 
+        className={`${styles.detailViewWrapper} ${activeSection === 'workDetail' ? styles.visible : styles.hidden}`}
+      >
+        {selectedWorkItem && (
+          <WorkDetailView 
+            item={selectedWorkItem}
+          />
+        )}
+      </div>
+
+      <div 
+        className={`${styles.detailViewWrapper} ${activeSection === 'experienceDetail' ? styles.visible : styles.hidden}`}
+      >
+        {selectedExperienceItem && (
+          <ExperienceDetailView 
+            item={selectedExperienceItem}
           />
         )}
       </div>
