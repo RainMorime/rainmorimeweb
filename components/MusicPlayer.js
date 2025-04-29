@@ -42,6 +42,11 @@ const playlist = [
     title: "ヨスガノソラ メインテーマ -記憶-",
     artist: "市川淳",
     src: "/music/市川淳 - ヨスガノソラ メインテーマ -記憶-.flac"
+  },
+  {
+    title: "The Dark Side of the Moon",
+    artist: "Pink Floyd",
+    src: "/music/Pink Floyd - The Dark Side of the Moon.flac"
   }
 ];
 

@@ -124,7 +124,7 @@ const travelData = [
   {
     id: 'jilin',
     title: '吉林',
-    description: '长白山脉与松花江畔的风景。', // Example description
+    description: '我出生的地方，我的故乡。', // Example description
     tech: ['自然', '冬季', '边境'], // Example tags
     link: '#', // Optional link
     imageUrl: '/travel_placeholders/jilin.png' // Placeholder image path
@@ -132,7 +132,7 @@ const travelData = [
   {
     id: 'shaanxi',
     title: '陕西',
-    description: '古都西安与秦岭风光。',
+    description: '我的大学生活。',
     tech: ['历史', '文化', '美食'],
     link: '#',
     imageUrl: '/travel_placeholders/shaanxi.png'
@@ -140,7 +140,7 @@ const travelData = [
   {
     id: 'guizhou',
     title: '贵州',
-    description: '喀斯特地貌与少数民族风情。',
+    description: '于雾雨中，我与贵州相遇。',
     tech: ['自然', '民族', '山水'],
     link: '#',
     imageUrl: '/images/travel/guizhou/GZ20.jpg'
@@ -148,7 +148,7 @@ const travelData = [
   {
     id: 'qinghai',
     title: '青海',
-    description: '高原湖泊与广袤草原。',
+    description: '两个人拍拍脑袋就出发的冒险。',
     tech: ['高原', '湖泊', '自然'],
     link: '#',
     imageUrl: '/travel_placeholders/qinghai.png'
@@ -156,7 +156,7 @@ const travelData = [
   {
     id: 'korea',
     title: '韩国',
-    description: '现代都市与传统文化的交融。',
+    description: '我父母所居住的地方。',
     tech: ['都市', '文化', '美食'],
     link: '#',
     imageUrl: '/images/travel/hanguo/HG2.jpg'
