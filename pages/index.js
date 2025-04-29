@@ -209,7 +209,8 @@ export default function Home() {
   const [isEmailCopied, setIsEmailCopied] = useState(false);
   const [activeLifeTab, setActiveLifeTab] = useState('game');
   const [selectedLifeItem, setSelectedLifeItem] = useState(null);
-  const [isLifeDetailVisible, setIsLifeDetailVisible] = useState(false);
+  const [contentScrollPosition, setContentScrollPosition] = useState(0);
+  const [previousActiveLifeTab, setPreviousActiveLifeTab] = useState(null);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -675,12 +676,16 @@ export default function Home() {
     
     if (columnIndex < sectionIds.length) {
       const sectionId = sectionIds[columnIndex];
+      setSelectedLifeItem(null);
       setActiveSection('content');
 
       requestAnimationFrame(() => {
         const targetElement = document.getElementById(sectionId);
         const containerElement = contentWrapperRef.current;
         if (targetElement && containerElement) {
+          if (sectionId === 'life-section') {
+             setActiveLifeTab('game');
+          }
           const offsetTop = targetElement.offsetTop;
           containerElement.scrollTo({
             top: offsetTop,
@@ -693,10 +698,7 @@ export default function Home() {
 
   const handleGoHome = () => {
     setActiveSection('home');
-    if (isLifeDetailVisible) {
-        setIsLifeDetailVisible(false);
-        setSelectedLifeItem(null);
-    }
+    setSelectedLifeItem(null);
   };
 
   useEffect(() => {
@@ -757,28 +759,49 @@ export default function Home() {
   };
 
   const handleLifeItemClick = (item) => {
-    console.log("Life item clicked:", item);
-    setSelectedLifeItem(item);
-    setIsLifeDetailVisible(true);
-  };
+    console.log("Life item clicked, switching to detail view:", item);
+    
+    // --- RECORD STATE BEFORE SWITCHING ---
+    if (contentWrapperRef.current) {
+      setContentScrollPosition(contentWrapperRef.current.scrollTop); // Record scroll position
+    }
+    setPreviousActiveLifeTab(activeLifeTab); // Record current tab
+    // --- END RECORD ---
 
-  const handleLifeDetailBack = () => {
-    console.log("Going back from life detail");
-    setIsLifeDetailVisible(false);
-    setTimeout(() => {
-      setSelectedLifeItem(null);
-    }, 500);
+    setSelectedLifeItem(item);
+    setActiveSection('lifeDetail'); 
   };
 
   const handleGlobalBackClick = () => {
-    if (isLifeDetailVisible) {
-      handleLifeDetailBack();
+    if (activeSection === 'lifeDetail') {
+      // --- RESTORE STATE WHEN GOING BACK ---
+      setActiveSection('content'); // Switch view first
+
+      // Restore the previously active tab
+      if (previousActiveLifeTab) {
+          setActiveLifeTab(previousActiveLifeTab);
+      } else {
+          setActiveLifeTab('game'); // Fallback to default if none was stored
+      }
+      
+      // Restore scroll position AFTER state update allows content to render
+      requestAnimationFrame(() => {
+          if (contentWrapperRef.current) {
+              contentWrapperRef.current.scrollTop = contentScrollPosition;
+          }
+      });
+      
+      // Clear the selected item and stored states after a delay
+      setTimeout(() => {
+        setSelectedLifeItem(null);
+        setPreviousActiveLifeTab(null); 
+        setContentScrollPosition(0); // Reset scroll position state
+      }, 500); // Match animation duration
+
     } else if (activeSection === 'content') {
-      handleGoHome();
+      handleGoHome(); 
     }
   };
-
-  const isGlobalBackVisible = activeSection === 'content' || isLifeDetailVisible;
 
   return (
     <div className={`${styles.container} ${isInverted ? styles.inverted : ''}`}>
@@ -840,7 +863,7 @@ export default function Home() {
               )}
             </div>
             <button
-              className={`${styles.globalBackButton} ${isGlobalBackVisible ? styles.visible : ''}`}
+              className={`${styles.globalBackButton} ${activeSection === 'content' || activeSection === 'lifeDetail' ? styles.visible : ''}`}
               onClick={handleGlobalBackClick}
             >
               {/* ← */}
@@ -884,9 +907,7 @@ export default function Home() {
             ></div>
           </div>
 
-          <main 
-            className={`${styles.mainLayout} ${activeSection === 'home' && !isLifeDetailVisible ? styles.visible : styles.hidden}`}
-          >
+          <main className={`${styles.mainLayout} ${activeSection === 'home' ? styles.visible : styles.hidden}`}>
             <div
               className={styles.rightPanel}
             >
@@ -1010,9 +1031,9 @@ export default function Home() {
             </div>
           </main>
 
-          <div
-            ref={contentWrapperRef}
-            className={`${styles.contentWrapper} ${activeSection === 'content' && !isLifeDetailVisible ? styles.visible : styles.hidden}`}
+          <div 
+            ref={contentWrapperRef} 
+            className={`${styles.contentWrapper} ${activeSection === 'content' ? styles.visible : styles.hidden}`}
           >
             <div id="works-section" className={`${styles.contentSection} ${styles.worksSection}`}> 
               <h2>WORKS</h2>
@@ -1070,7 +1091,7 @@ export default function Home() {
 
             <div id="life-section" className={`${styles.contentSection} ${styles.lifeSection}`}> 
               <h2>LIFE</h2>
-              {!isLifeDetailVisible && (
+              {activeSection === 'content' && (
                 <div className={styles.lifeTabButtons}>
                   <button
                     className={`${styles.lifeTabButton} ${activeLifeTab === 'game' ? styles.activeTab : ''}`}
@@ -1099,9 +1120,7 @@ export default function Home() {
                 </div>
               )}
 
-              <div 
-                className={`${styles.lifeContentArea} ${isLifeDetailVisible ? styles.contentHiddenRight : styles.contentVisibleRight}`}
-              >
+              <div className={styles.lifeContentArea}>
                 <div className={`${styles.lifeTabContent} ${activeLifeTab === 'game' ? styles.activeContent : ''}`}>
                   <div className={styles.gameGrid}>
                     {gameData.map(game => (
@@ -1131,17 +1150,6 @@ export default function Home() {
                   <p>这是其他部分的内容...</p>
                 </div>
               </div>
-
-              {selectedLifeItem && (
-                <div 
-                    className={`${styles.lifeDetailOverlay} ${isLifeDetailVisible ? styles.lifeDetailVisible : styles.lifeDetailHidden}`}
-                >
-                    <LifeDetailView 
-                        item={selectedLifeItem} 
-                        onBack={handleLifeDetailBack} 
-                    />
-                </div>
-              )}
             </div>
 
             <div id="contact-section" className={`${styles.contentSection} ${styles.contactSection}`}> 
@@ -1217,6 +1225,16 @@ export default function Home() {
           </div>
         </>
       )}
+
+      <div 
+        className={`${styles.detailViewWrapper} ${activeSection === 'lifeDetail' ? styles.visible : styles.hidden}`}
+      >
+        {selectedLifeItem && (
+          <LifeDetailView 
+            item={selectedLifeItem}
+          />
+        )}
+      </div>
     </div>
   );
 }

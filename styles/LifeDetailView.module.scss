@@ -12,7 +12,7 @@
   font-weight: bold;
   color: var(--ark-primary);
   margin-bottom: 30px; // Space below title
-  margin-top: 50px; // Space above title (below back button)
+  margin-top: 0; // Adjust margin since back button is removed
   text-align: left;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -120,29 +120,12 @@
   white-space: nowrap;
 }
 
-// --- Inverted Mode Specific Styles ---
+// Remove inverted styles for backButton as well
+/*
 :global(.inverted) {
-  .detailTitle {
-    color: var(--ark-primary);
-    border-bottom-color: var(--ark-border);
+  .backButton {
+    // ... removed styles ...
   }
-
-  .detailImage {
-    background-color: rgba(var(--ark-primary-rgb), 0.1);
-    border-color: var(--ark-border);
-  }
-  
-  .detailDescription {
-     color: var(--ark-text-secondary);
-  }
-
-  .techLabel {
-     color: var(--ark-text-secondary);
-  }
-
-  .detailTechTag {
-      background-color: rgba(var(--ark-primary-rgb), 0.15);
-      border-color: rgba(var(--ark-primary-rgb), 0.3);
-      color: var(--ark-primary);
-  }
-} 
+  // ... other inverted styles ...
+}
+*/ 

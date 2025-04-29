@@ -9,8 +9,7 @@ const LifeDetailView = ({ item, onBack }) => {
 
   return (
     <div className={styles.detailContainer}>
-      {/* Back Button Removed */}
-      {/* 
+      {/* REMOVE THE BACK BUTTON
       <button className={styles.backButton} onClick={onBack}>
         ← BACK
       </button>

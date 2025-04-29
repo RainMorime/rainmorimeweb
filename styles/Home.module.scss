@@ -76,10 +76,10 @@
     background-size: 100% 4px;
   }
   
-  // 左侧面板边框和角标颜色已通过变量覆盖.leftPanel 
+  // 左侧面板边框和角标颜色已通过变量覆盖
+  .leftPanel {
     // 如果需要，可以添加特定调整
-  
-  
+  }
   
   // Logo 滤镜保持不变，在浅色背景下应变为深灰色
   
@@ -123,8 +123,9 @@
            background-color: var(--ark-text-secondary); // 灰色填充
         }
      }
-    
-        // Optional: Adjust if needed  .powerText {
+     .powerText {
+        // Optional: Adjust if needed
+     }
   }
   
   // 右侧面板和列的悬停效果等颜色已通过变量覆盖
@@ -200,10 +201,10 @@
     }
   }
   
-  // 内容区域 .contentWrapper {
+  // 内容区域
+  .contentWrapper {
     // 继承 .container 的背景色和文字颜色
-  
- 
+  }
   
   .contentSection {
      color: var(--ark-text); // 应用深色文字
@@ -2785,9 +2786,10 @@
   }
 }
 
-
+.envParamsText {
   // ... (样式保持不变) ...
-  // 如果需要为打字机光标腾出空间，可以添加 padding-right .envParamsText {
+  // 如果需要为打字机光标腾出空间，可以添加 padding-right
+}
 
 // ... (envParamsText 样式结束) ...
 
@@ -2911,10 +2913,10 @@
   transition: opacity 0.3s ease;
 }
 
-// --- 新增: 项目内容区域 --- .projectContent {
+// --- 新增: 项目内容区域 --- 
+.projectContent {
   // 布局由父级 flex 控制
-
-
+}
 
 // --- 新增: 项目标题样式 --- 
 .projectTitle {
@@ -2976,7 +2978,10 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-    // Hover 效果已在 .projectCard:hover 中定义 &:hover
+
+  &:hover {
+    // Hover 效果已在 .projectCard:hover 中定义
+  }
 }
 
 // --- 新增: 警告脉冲动画 --- 
@@ -4091,9 +4096,11 @@
 
   // Find the SimpleImageCard's root class (.cardContainer)
   // Note: Need to ensure the selector is specific enough or use :global if necessary
-  // Since it's directly inside the wrapper, this should work:> div { // Assuming the root of SimpleImageCard is a div
+  // Since it's directly inside the wrapper, this should work:
+  > div { // Assuming the root of SimpleImageCard is a div
      // Apply any necessary overrides or adjustments here
      // e.g., ensure width/height fit the space
+  }
 }
 
 /* Ensure SimpleImageCard styles apply correctly */
@@ -4162,67 +4169,66 @@
   cursor: pointer;
 }
 
-/* Add NEW styles for the independent LIFE detail overlay */
-.lifeDetailOverlay {
-  position: fixed; // Use fixed to overlay everything
+// --- Detail View Wrapper ---
+.detailViewWrapper {
+  position: absolute; 
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--ark-dark-blue); // Match container background
-  z-index: 20; // High z-index to be on top
+  // Apply similar background/overflow as contentWrapper if needed
+  color: var(--ark-text);
   overflow-y: auto; // Allow scrolling within the detail view
-  padding: 80px 5% 5% calc(100% / 1.618 + 2vw); // Padding: top, right, bottom, left (align with content area start roughly)
-  box-sizing: border-box;
-  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.6s ease-out; // Animation
-  transform: translateX(100%); // Start off-screen right
-  opacity: 0;
-  pointer-events: none; // Initially not interactive
+  z-index: 4; // Higher than mainLayout, same level or higher than contentWrapper
+  opacity: 0; // Base state for animation
+  pointer-events: none; // Base state
 
   /* Hide scrollbar */
   scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar { 
-    display: none; /* WebKit */
+    display: none; /* WebKit browsers */
+  }
+  
+  // Use existing keyframes for animation
+  &.visible {
+      animation: slideInFromRight 1.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Reuse contentWrapper animation
+      pointer-events: auto;
+      // opacity: 1; // Animation handles opacity
+  }
+  &.hidden {
+      animation: slideOutToRight 1.6s ease-out forwards; // Reuse contentWrapper animation
+      pointer-events: none;
+     // opacity: 0; // Animation handles opacity
+  }
+  
+  // Add padding inside the wrapper if LifeDetailView doesn't handle it sufficiently
+  // Maybe reuse .contentSection padding?
+  // This requires LifeDetailView to NOT have 100% width potentially.
+  // Let's try adding padding here similar to contentSection's horizontal padding idea.
+  padding: 200px 40px 80px calc(100% / 1.618 - 2vw); // Try mimicking contentSection padding structure
+  box-sizing: border-box;
+
+   // Ensure LifeDetailView inside adapts
+  > div { // Assuming LifeDetailView root is a div
+      max-width: 100%; // Allow it to fill the padded area
+      padding: 0; // Reset its own padding if needed
   }
 }
 
-.lifeDetailVisible {
-  transform: translateX(0);
-  opacity: 1;
-  pointer-events: auto; // Allow interaction
-}
+// --- Adjust lifeContentArea / lifeDetailArea styles ---
+/* REMOVE these as they are no longer used for switching within LIFE */
+/*
+.lifeContentArea { ... }
+.lifeDetailArea { ... }
+.contentVisibleRight { ... }
+.contentHiddenRight { ... }
+*/
 
-.lifeDetailHidden {
-  transform: translateX(100%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-// --- Adjust mainLayout and contentWrapper visibility/animation logic ---
-// The JS logic handles adding/removing .visible/.hidden based on activeSection AND isLifeDetailVisible
-
-// Ensure mainLayout hides when detail view is up
-.mainLayout.hidden {
-  // Existing animation: slideUpOutSkew or just opacity/transform
-  animation: slideUpOutSkew 0.5s ease-out forwards; // Or appropriate exit animation
-  pointer-events: none;
-}
-
-// Ensure contentWrapper hides when detail view is up
-.contentWrapper.hidden {
-  // Existing animation: slideOutToRight or just opacity/transform
-  animation: slideOutToRight 1.6s ease-out forwards; // Or appropriate exit animation
-  pointer-events: none;
-}
-
-// --- Inverted Styles for Overlay ---
+// Adjust inverted styles if detailViewWrapper needs specific overrides
 .inverted {
-  .lifeDetailOverlay {
-    background-color: var(--ark-dark-blue); // Use the inverted background color
-
-    // Make sure the LifeDetailView component's inverted styles work within this
-    // (They should if using :global(.inverted) correctly in LifeDetailView.module.scss)
-  }
+    .detailViewWrapper {
+        color: var(--ark-text); // Keep inverted text color
+    }
+    // Ensure LifeDetailView inverted styles still apply correctly inside
 }
 
