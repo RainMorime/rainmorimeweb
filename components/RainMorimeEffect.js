@@ -94,6 +94,10 @@ const RainMorimeEffect = () => {
     // Animation loop
     const clock = new THREE.Clock();
     const animate = () => {
+      if (!renderer || !scene || !camera) {
+        console.warn('RainMorimeEffect: Renderer, Scene, or Camera not ready.');
+        return;
+      }
       requestAnimationFrame(animate);
       uniforms.time.value = clock.getElapsedTime();
       renderer.render(scene, camera);

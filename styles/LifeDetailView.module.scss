@@ -22,29 +22,20 @@
 
 .detailContent {
   display: flex;
-  flex-direction: column; // Stack image and text vertically on smaller screens
+  flex-direction: column;
   gap: 30px;
-
-  @media (min-width: 768px) { // Side-by-side on larger screens
-    flex-direction: row;
-  }
 }
 
 .detailImageContainer {
-   flex: 1 1 40%; // Takes up ~40% width on larger screens
-   max-width: 400px; // Max width for the image container
-   margin: 0 auto; // Center image container when stacked vertically
-
-   @media (min-width: 768px) {
-      margin: 0; // Reset margin for side-by-side
-      max-width: none;
-   }
+   max-width: 800px;
+   width: 100%;
+   margin: 0 auto 20px auto;
 }
 
 .detailImage {
   width: 100%;
-  padding-top: 75%; // Maintain aspect ratio (adjust as needed)
-  background-color: rgba(var(--ark-primary-rgb), 0.1); // Placeholder bg
+  padding-top: 56.25%;
+  background-color: rgba(var(--ark-primary-rgb), 0.1);
   background-size: cover;
   background-position: center;
   border: 1px solid var(--ark-border);
@@ -73,7 +64,7 @@
 }
 
 .detailText {
-  flex: 1 1 60%; // Takes up ~60% width on larger screens
+  width: 100%;
 }
 
 .detailDescription {
@@ -81,9 +72,70 @@
   font-size: 1.1rem;
   color: var(--ark-text-secondary);
   line-height: 1.8;
-  margin-bottom: 25px;
-  opacity: 0.9;
+  margin-bottom: 25px; // Keep space below original description
+  opacity: 0.8; // Slightly less prominent than article
+  
+  // --- ADD Blockquote Styles ---
+  padding-left: 20px; // Indent the text
+  margin-left: 10px; // Add some margin to the left
+  border-left: 3px solid var(--ark-border); // Add a left border
+  // Optional: Add a slightly different background or italic style
+  // background-color: rgba(var(--ark-border-rgb), 0.05); 
+  // font-style: italic;
 }
+
+// --- ADD styles for the article section ---
+.articleSection {
+  margin-bottom: 30px; // Space below the article before tags
+
+  p {
+    font-family: 'Dosis', sans-serif; // Consistent font
+    font-size: 1.1rem; // Same size as description or slightly larger? Let's keep it same for now.
+    color: var(--ark-text); // Use main text color for more prominence
+    line-height: 1.9; // Generous line height
+    opacity: 0.9;
+    white-space: pre-wrap; // Change from pre-line to pre-wrap
+  }
+}
+// --- END ADD ---
+
+// --- Styles for Inline Article Images --- 
+.articleImageFigure {
+  margin: 30px auto; // Center the figure with vertical spacing
+  padding: 0;
+  text-align: center; // Center the image and caption within the figure
+  max-width: 80%; // Limit width to prevent taking full width
+}
+
+.clickableFigure {
+  cursor: pointer; // Add pointer cursor to indicate clickability
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02); // Slight grow effect on hover
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); // Enhance shadow on hover
+  }
+}
+
+.articleImage {
+  display: block;
+  max-width: 100%; // Image takes full width of figure
+  height: auto; // Maintain aspect ratio
+  margin: 0 auto; // Center image horizontally within figure
+  border: 1px solid var(--ark-border);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.articleImageCaption {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--ark-text-secondary);
+  font-family: 'Dosis', sans-serif;
+  text-align: center;
+  opacity: 0.8;
+}
+// --- End Inline Image Styles ---
 
 .detailTechContainer {
   display: flex;
@@ -128,4 +180,106 @@
   }
   // ... other inverted styles ...
 }
-*/ 
+*/
+
+// --- ADD Styles for Related Images Section ---
+.relatedImagesSection {
+  margin-top: 40px; // Space above the related images section
+  padding-top: 20px; // Space above the title
+  border-top: 1px solid var(--ark-border); // Separator line
+}
+
+.relatedImagesTitle {
+  font-family: 'Dosis', monospace;
+  font-size: 1.3rem;
+  color: var(--ark-text-secondary);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.thumbnailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); // Increase min size from 100px to 140px
+  gap: 15px; // Gap between thumbnails
+}
+
+.thumbnailButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid transparent; // Placeholder for hover effect
+  transition: border-color 0.2s ease;
+  overflow: hidden; // Keep hiding overflow
+  // Add a background color for empty space when using object-fit: contain
+  background-color: rgba(var(--ark-primary-rgb), 0.05); 
+
+  &:hover {
+    border-color: var(--ark-primary);
+  }
+}
+
+.thumbnailImage {
+  display: block;
+  width: 100%;
+  height: 100%; // Let height be controlled by the container/image ratio
+  object-fit: contain; // Change from cover to contain to show the whole image
+  transition: transform 0.3s ease;
+
+  .thumbnailButton:hover & {
+    transform: scale(1.05); // Slight zoom on hover
+  }
+}
+// --- END ADD ---
+
+.detailTechContainer {
+  display: flex;
+  align-items: baseline; // Align label and tags nicely
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.techLabel {
+  font-family: 'Dosis', monospace;
+  font-size: 0.9rem;
+  color: var(--ark-text-secondary);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0; // Prevent label from shrinking
+}
+
+.detailTechTags {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 8px;
+}
+
+// Reuse tech tag style from ProjectCard
+.detailTechTag {
+  background-color: rgba(var(--ark-primary-rgb), 0.15); 
+  border: 1px solid rgba(var(--ark-primary-rgb), 0.3);
+  color: var(--ark-primary);
+  font-family: 'Consolas', monospace; 
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+// Responsive adjustments for smaller screens
+@media (max-width: 768px) {
+  .articleImageFigure {
+    max-width: 95%; // Allow slightly wider figures on smaller screens
+    margin: 20px auto; // Reduce vertical spacing for the figure
+  }
+  /* Keep image at 100% width of figure */
+  /* Adjust caption font size if needed */
+  .articleImageCaption {
+     font-size: 0.85rem;
+  }
+  .articleImage {
+    /* Styles moved or adjusted */
+  }
+} 

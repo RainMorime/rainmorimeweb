@@ -63,8 +63,9 @@ const gameData = [
     title: 'Minecraft',
     description: '我的启蒙，也愿成为我的始终。',
     tech: ['沙盒', '生存', '建造'],
-    link: '#', // Optional: Add links if relevant
-    imageUrl: '/pictures/Minecraft/MC2025.png' // Updated image path
+    link: '#',
+    imageUrl: '/pictures/Minecraft/MC2025.png',
+    articleContent: '  Minecraft来来去去有了十年，从最早的 1.5.4 版本开始，就贯穿了我的游戏生涯，也启蒙了我创作的想法。\n  还记得小时候在 XP 电脑上，为了能正常启动它费尽了功夫，甚至需要调整硬件加速。\n  后来沉迷于庞大的"贪婪整合包"，启动就要一个小时，每天得早早开机先加载，然后才去洗漱。\n\n  一路走来，在这个世界里我总是无忧无虑，也结识了许多朋友：2016 年加入了 NiceMc 服务器，认识了很多伙伴；2023 年又加入了营火服务器，这些都是我 MC 旅程中重要的节点。\n  期间也尝试过地图和模组的开发。\n\n  愿我们初心不改，童心依旧。'
   },
   {
     id: 'mh',
@@ -72,7 +73,23 @@ const gameData = [
     description: '我动作游戏的引路人。',
     tech: ['动作', '狩猎', '多人'],
     link: '#',
-    imageUrl: '/pictures/Minecraft/MC2025.png'
+    imageUrl: '/pictures/Monster_Hunter/MH1.jpg',
+    galleryImages: [
+      { src: '/pictures/Monster_Hunter/MH1.jpg' },
+      { src: '/pictures/Monster_Hunter/MH2.jpg' },
+      { src: '/pictures/Monster_Hunter/MH3.jpg' },
+      { src: '/pictures/Monster_Hunter/MH4.jpg' },
+      { src: '/pictures/Monster_Hunter/MH5.jpg' },
+      { src: '/pictures/Monster_Hunter/MH6.jpg' },
+      { src: '/pictures/Monster_Hunter/MH7.jpg' },
+      { src: '/pictures/Monster_Hunter/MH8.jpg' },
+      { src: '/pictures/Monster_Hunter/MH9.jpg' },
+      { src: '/pictures/Monster_Hunter/MH10.jpg' },
+      { src: '/pictures/Monster_Hunter/MH11.jpg' },
+      { src: '/pictures/Monster_Hunter/MH12.jpg' },
+      { src: '/pictures/Monster_Hunter/MH13.jpg' },
+      { src: '/pictures/Monster_Hunter/MH14.jpg' }
+    ]
   },
   {
     id: 'stray',
@@ -80,15 +97,45 @@ const gameData = [
     description: '在赛博朋克城市中扮演一只猫。',
     tech: ['冒险', '解谜', '猫'],
     link: '#',
-    imageUrl: '/pictures/Stray/stray15.jpg'
+    imageUrl: '/pictures/Stray/stray15.jpg',
+    galleryImages: [
+      { src: '/pictures/Stray/stray1.jpg' },
+      { src: '/pictures/Stray/stray2.jpg' },
+      { src: '/pictures/Stray/stray3.jpg' },
+      { src: '/pictures/Stray/stray4.jpg' },
+      { src: '/pictures/Stray/stray5.jpg' },
+      { src: '/pictures/Stray/stray6.jpg' },
+      { src: '/pictures/Stray/stray7.jpg' },
+      { src: '/pictures/Stray/stray8.jpg' },
+      { src: '/pictures/Stray/stray9.jpg' },
+      { src: '/pictures/Stray/stray10.jpg' },
+      { src: '/pictures/Stray/stray11.jpg' },
+      { src: '/pictures/Stray/stray12.jpg' },
+      { src: '/pictures/Stray/stray13.jpg' },
+      { src: '/pictures/Stray/stray14.jpg' },
+      { src: '/pictures/Stray/stray15.jpg' },
+    ]
   },
    {
     id: 'titanfall',
     title: 'Titanfall',
     description: '第一次酣畅淋漓的体验。',
-    tech: ['FPS', '机甲', '多人'],
+    tech: ['FPS', '机甲'],
     link: '#',
-    imageUrl: '/pictures/Titalfall/titan13.jpg' // Updated image path
+    imageUrl: '/pictures/Titalfall/titan13.jpg',
+    galleryImages: [
+      { src: '/pictures/Titalfall/titan1.jpg' },
+      { src: '/pictures/Titalfall/titan2.jpg' },
+      { src: '/pictures/Titalfall/titan4.jpg' },
+      { src: '/pictures/Titalfall/titan5.jpg' },
+      { src: '/pictures/Titalfall/titan7.jpg' },
+      { src: '/pictures/Titalfall/titan8.jpg' },
+      { src: '/pictures/Titalfall/titan9.jpg' },
+      { src: '/pictures/Titalfall/titan10.jpg' },
+      { src: '/pictures/Titalfall/titan11.jpg' },
+      { src: '/pictures/Titalfall/titan12.jpg' },
+      { src: '/pictures/Titalfall/titan13.jpg' },
+    ]
   },
   {
     id: 'wa',
@@ -96,7 +143,30 @@ const gameData = [
     description: '广场协议后的泡沫与追忆，让我写了第一份长评',
     tech: ['视觉小说', '恋爱', '音乐'],
     link: '#',
-    imageUrl: '/pictures/WHITE_ALBUM/w10.jpg'
+    imageUrl: '/pictures/WHITE_ALBUM/w10.jpg',
+    galleryImages: [
+      { src: '/pictures/WHITE_ALBUM/w1.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w2.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w3.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w4.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w5.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w6.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w7.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w8.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w9.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w10.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w11.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w12.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w13.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w14.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w15.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w16.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w17.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w18.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w19.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w20.jpg' },
+      { src: '/pictures/WHITE_ALBUM/w21.jpg' },
+    ]
   },
   {
     id: 'thif',
@@ -104,7 +174,17 @@ const gameData = [
     description: '东方的同人总是令人惊叹。',
     tech: ['东方Project', '动作', '粉丝创作'],
     link: '#',
-    imageUrl: '/pictures/Touhou/TH3.png'
+    imageUrl: '/pictures/Touhou/TH3.png',
+    galleryImages: [
+      { src: '/pictures/Touhou/CG2.png' },
+      { src: '/pictures/Touhou/CG3.png' },
+      { src: '/pictures/Touhou/TH1.jpg' },
+      { src: '/pictures/Touhou/TH2.jpg' },
+      { src: '/pictures/Touhou/TH3.png' },
+      { src: '/pictures/Touhou/TH4.jpg' },
+      { src: '/pictures/Touhou/TH5.jpg' },
+      { src: '/pictures/Touhou/TH6.jpg' },
+    ]
   },
   {
     id: 'bmwk',
@@ -112,30 +192,47 @@ const gameData = [
     description: '备受期待的国产3A。',
     tech: ['ARPG', '神话', '动作'],
     link: '#',
-    imageUrl: '/pictures/Minecraft/MC2025.png'
+    imageUrl: '/pictures/BLACKMYTH/WK3.jpg',
+    galleryImages: [
+      { src: '/pictures/BLACKMYTH/WK0.jpg' },
+      { src: '/pictures/BLACKMYTH/WK1.jpg' },
+      { src: '/pictures/BLACKMYTH/WK2.jpg' },
+      { src: '/pictures/BLACKMYTH/WK3.jpg' },
+      { src: '/pictures/BLACKMYTH/WK4.jpg' },
+      { src: '/pictures/BLACKMYTH/WK5.jpg' },
+      { src: '/pictures/BLACKMYTH/WK6.jpg' },
+      { src: '/pictures/BLACKMYTH/WK7.jpg' },
+      { src: '/pictures/BLACKMYTH/WK8.jpg' },
+      { src: '/pictures/BLACKMYTH/WK9.jpg' },
+      { src: '/pictures/BLACKMYTH/WK10.jpg' },
+    ]
   },
 ];
-
-const leftPanelCardData = {
-  id: 'left-showcase',
-  title: 'Showcase',
-  imageUrl: '/pictures/showcase_placeholder.png'
-};
 
 const travelData = [
   {
     id: 'jilin',
     title: '吉林',
     description: '我出生的地方，我的故乡。', // Example description
-    tech: ['自然', '冬季', '边境'], // Example tags
+    tech: ['故乡'], // Example tags
     link: '#', // Optional link
-    imageUrl: '/travel_placeholders/jilin.png' // Placeholder image path
+    imageUrl: '/images/travel/jilin/JL1.jpg', // Placeholder image path
+    // Add gallery images for Jilin
+    galleryImages: [
+      { src: '/images/travel/jilin/JL1.jpg' },
+      { src: '/images/travel/jilin/JL2.jpg' },
+      { src: '/images/travel/jilin/JL3.jpg' },
+      { src: '/images/travel/jilin/JL4.jpg' },
+      { src: '/images/travel/jilin/JL5.jpg' },
+      { src: '/images/travel/jilin/JL6.jpg' },
+      { src: '/images/travel/jilin/JL7.jpg' },
+    ]
   },
   {
     id: 'shaanxi',
     title: '陕西',
     description: '我的大学生活。',
-    tech: ['历史', '文化', '美食'],
+    tech: ['大学'],
     link: '#',
     imageUrl: '/travel_placeholders/shaanxi.png'
   },
@@ -143,23 +240,61 @@ const travelData = [
     id: 'guizhou',
     title: '贵州',
     description: '于雾雨中，我与贵州相遇。',
-    tech: ['自然', '民族', '山水'],
+    tech: ['自然'],
     link: '#',
-    imageUrl: '/images/travel/guizhou/GZ20.jpg'
+    imageUrl: '/images/travel/guizhou/GZ20.jpg',
+    galleryImages: [
+      { src: '/images/travel/guizhou/GZ1.jpg' }, { src: '/images/travel/guizhou/GZ2.jpg' },
+      { src: '/images/travel/guizhou/GZ3.jpg' }, { src: '/images/travel/guizhou/GZ4.jpg' },
+      { src: '/images/travel/guizhou/GZ5.jpg' }, { src: '/images/travel/guizhou/GZ6.jpg' },
+      { src: '/images/travel/guizhou/GZ7.jpg' }, { src: '/images/travel/guizhou/GZ8.jpg' },
+      { src: '/images/travel/guizhou/GZ9.jpg' }, { src: '/images/travel/guizhou/GZ10.jpg' },
+      { src: '/images/travel/guizhou/GZ11.jpg' }, { src: '/images/travel/guizhou/GZ12.jpg' },
+      { src: '/images/travel/guizhou/GZ13.jpg' }, { src: '/images/travel/guizhou/GZ14.jpg' },
+      { src: '/images/travel/guizhou/GZ15.jpg' }, { src: '/images/travel/guizhou/GZ16.jpg' },
+      { src: '/images/travel/guizhou/GZ17.jpg' }, { src: '/images/travel/guizhou/GZ18.jpg' },
+      { src: '/images/travel/guizhou/GZ19.jpg' }, { src: '/images/travel/guizhou/GZ20.jpg' },
+      { src: '/images/travel/guizhou/GZ21.jpg' }, { src: '/images/travel/guizhou/GZ22.jpg' },
+      { src: '/images/travel/guizhou/GZ23.jpg' }, { src: '/images/travel/guizhou/GZ24.jpg' },
+    ]
   },
   {
     id: 'qinghai',
     title: '青海',
     description: '两个人拍拍脑袋就出发的冒险。',
-    tech: ['高原', '湖泊', '自然'],
+    tech: ['自然'],
     link: '#',
-    imageUrl: '/travel_placeholders/qinghai.png'
+    imageUrl: '/images/travel/qinghai/QH32.jpg',
+    // Add gallery images for Qinghai
+    galleryImages: [
+      { src: '/images/travel/qinghai/QH0.jpg' }, { src: '/images/travel/qinghai/QH1.jpg' },
+      { src: '/images/travel/qinghai/QH2.jpg' }, { src: '/images/travel/qinghai/QH3.jpg' },
+      { src: '/images/travel/qinghai/QH4.jpg' }, { src: '/images/travel/qinghai/QH5.jpg' },
+      { src: '/images/travel/qinghai/QH6.jpg' }, { src: '/images/travel/qinghai/QH7.jpg' },
+      { src: '/images/travel/qinghai/QH8.jpg' }, { src: '/images/travel/qinghai/QH9.jpg' },
+      { src: '/images/travel/qinghai/QH10.jpg' }, { src: '/images/travel/qinghai/QH11.jpg' },
+      { src: '/images/travel/qinghai/QH12.jpg' }, { src: '/images/travel/qinghai/QH13.jpg' },
+      { src: '/images/travel/qinghai/QH14.jpg' }, { src: '/images/travel/qinghai/QH15.jpg' },
+      { src: '/images/travel/qinghai/QH16.jpg' }, { src: '/images/travel/qinghai/QH17.jpg' },
+      { src: '/images/travel/qinghai/QH18.jpg' }, { src: '/images/travel/qinghai/QH19.jpg' },
+      { src: '/images/travel/qinghai/QH20.jpg' }, { src: '/images/travel/qinghai/QH21.jpg' },
+      { src: '/images/travel/qinghai/QH22.jpg' }, { src: '/images/travel/qinghai/QH23.jpg' },
+      { src: '/images/travel/qinghai/QH24.jpg' }, { src: '/images/travel/qinghai/QH25.jpg' },
+      { src: '/images/travel/qinghai/QH26.jpg' }, { src: '/images/travel/qinghai/QH27.jpg' },
+      { src: '/images/travel/qinghai/QH28.jpg' }, { src: '/images/travel/qinghai/QH29.jpg' },
+      { src: '/images/travel/qinghai/QH30.jpg' }, { src: '/images/travel/qinghai/QH31.jpg' },
+      { src: '/images/travel/qinghai/QH32.jpg' }, { src: '/images/travel/qinghai/QH33.jpg' },
+      { src: '/images/travel/qinghai/QH34.jpg' }, { src: '/images/travel/qinghai/QH35.jpg' },
+      { src: '/images/travel/qinghai/QH36.jpg' }, { src: '/images/travel/qinghai/QH37.jpg' },
+      { src: '/images/travel/qinghai/QH38.jpg' }, { src: '/images/travel/qinghai/QH39.jpg' },
+      { src: '/images/travel/qinghai/QH40.jpg' }, { src: '/images/travel/qinghai/QH41.jpg' },
+    ]
   },
   {
     id: 'korea',
     title: '韩国',
     description: '我父母所居住的地方。',
-    tech: ['都市', '文化', '美食'],
+    tech: ['家'],
     link: '#',
     imageUrl: '/images/travel/hanguo/HG2.jpg'
   },
@@ -979,12 +1114,6 @@ export default function Home() {
               </div>
               <span className={styles.powerText}>{powerLevel}%</span>
             </div>
-            <div className={styles.leftPanelCardWrapper}>
-              <SimpleImageCard
-                title={leftPanelCardData.title}
-                imageUrl={leftPanelCardData.imageUrl}
-              />
-            </div>
             <div className={styles.logoContainer}>
             </div>
             <div className={`${styles.fateTextContainer} ${isFateTypingActive ? styles.typingActive : ''}`}>
@@ -1158,13 +1287,13 @@ export default function Home() {
                     `}
                     onClick={() => handleExperienceItemClick(item)}
                   >
-                    <div className={styles.timelinePoint}></div>
-                    <div className={styles.timelineContent}>
+                  <div className={styles.timelinePoint}></div>
+                  <div className={styles.timelineContent}>
                       <div className={styles.timelineYear}>
                         <span className={styles.timelineNumber}>{item.duration.split(' - ')[0]}</span> 
                         {item.duration.includes(' - ') && ' - '} 
                         <span className={styles.timelineNumber}>{item.duration.split(' - ')[1]}</span>
-                      </div>
+                  </div>
                       <h3>{item.title}</h3>
                       {item.details.map((detailLine, index) => (
                          <p key={index}>
@@ -1175,11 +1304,11 @@ export default function Home() {
                            )}
                          </p>
                       ))}
-                    </div>
+                </div>
                   </div>
                 ))}
-              </div>
-            </div>
+                </div>
+                    </div>
 
             <div id="life-section" className={`${styles.contentSection} ${styles.lifeSection}`}> 
               <h2>LIFE</h2>
@@ -1209,7 +1338,7 @@ export default function Home() {
                   >
                     Other
                   </button>
-                </div>
+                  </div>
               )}
 
               <div className={styles.lifeContentArea}>
@@ -1222,8 +1351,8 @@ export default function Home() {
                         onClick={() => handleLifeItemClick(game)}
                       />
                     ))}
-                  </div>
                 </div>
+                    </div>
                 <div className={`${styles.lifeTabContent} ${activeLifeTab === 'travel' ? styles.activeContent : ''}`}>
                   <div className={styles.travelGrid}>
                     {travelData.map(place => (
@@ -1237,10 +1366,10 @@ export default function Home() {
                 </div>
                 <div className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
                   <p>这是艺术部分的内容...</p>
-                </div>
+              </div>
                 <div className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''}`}>
                   <p>这是其他部分的内容...</p>
-                </div>
+            </div>
               </div>
             </div>
 
