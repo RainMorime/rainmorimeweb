@@ -9,41 +9,42 @@ alwaysApply: false
 
 *   **左侧面板 (`.leftPanel`):** 固定在屏幕左侧，包含：
     *   网站 Logo (`.logoContainer`)。
-    *   状态显示：电源 (`.powerDisplay` 包含电池图标 `.batteryIcon`)、打字机文本 (`.fateTextContainer`, `.envParamsContainer`)。
-    *   交互元素：激活拉杆 (`.leverGroup` 包含 `ActivationLever` 组件)、全局返回按钮 (`.globalBackButton`)。
-    *   装饰性边框和角标。
-    *   新增装饰：位于 `.fateTextContainer` 下方的盲文文本 (`.brailleText`) 和一条具有多段灰色块及末端高亮色（绿色或粉色）的水平渐变线 (`.gradientLine`)。渐变线在满电状态 (`.inverted`) 下颜色会变化（粉色开头，浅灰色块）。这些元素在 `[pages/index.js](mdc:pages/index.js)` 中定义，样式在 `[styles/Home.module.scss](mdc:styles/Home.module.scss)` 中定义。
-    *   左侧展示卡片 (`.leftPanelCardWrapper` -> `SimpleImageCard`)
-*   **右侧面板 (`.rightPanel`):** 位于左侧面板右侧，呈倾斜状，包含导航列。
-*   **导航列 (`.column`):** 右侧面板内的垂直区域，每个代表一个内容分区 (WORKS, EXPERIENCE, LIFE, CONTACT, ABOUT)。
-    *   包含垂直文本 (`.verticalText` 使用 `VerticalShinyText`)。
-    *   悬停时显示复杂的 HUD 特效 (`.hudOverlay`, `.cornerHudTopLeft`, `.imageHud` 等)，具体效果因列而异（如任务列表、分支、ECG、雷达波纹、焦点框）。
-    *   点击后导航至对应的内容区域。
-*   **内容包裹器 (`.contentWrapper`):** 绝对定位的容器，用于显示详细内容，可垂直滚动。
-*   **内容区域 (`.contentSection`):** 在 `contentWrapper` 内，每个对应一个导航列（如 `.worksSection`, `.experienceSection`）。包含标题、段落、特定组件（如 `ProjectCard`, `experienceTimeline`）。通过 `activeSection` 状态控制 `mainLayout` (导航视图) 和 `contentWrapper` (内容视图) 的显隐切换。
-*   **全局 HUD (`.hudElement`):** 固定在屏幕四角的文本信息显示。
-*   **氛围组件:** `CustomCursor`, `RainMorimeEffect`, `Noise` 等增强视觉和氛围。
-*   **Tesseract 体验 (`TesseractExperience`):** 一个可能覆盖全屏的独立视觉/交互体验。
+    *   状态显示：电源 (`.powerDisplay`)、打字机文本 (`.fateTextContainer`, `.envParamsContainer`)。
+    *   交互元素：激活拉杆 (`.leverGroup`)、全局返回按钮 (`.globalBackButton`)、左侧导航链接 (`.leftNavLinks`)。
+    *   装饰性元素 (`.brailleText`, `.gradientLine`, `.topRightDecoration`)。
+    *   左侧展示卡片 (旧？`.leftPanelCardWrapper` -> `SimpleImageCard`)
+*   **右侧面板 (`.rightPanel`):** 主导航区域，包含导航列。
+*   **导航列 (`.column`):** 右侧面板内的垂直区域 (WORKS, EXPERIENCE, LIFE, CONTACT, ABOUT)。点击后切换到内容视图 (`.contentWrapper`) 并滚动到对应板块。
+*   **内容包裹器 (`.contentWrapper`):** 显示详细内容的滚动区域，包含以下内容板块：
+    *   **Works (`.worksSection`, `#works-section`):** 显示项目卡片 (`ProjectCard`)，包含 Learn 和 Work 标签页 (`.workTabButtons`)。
+    *   **Experience (`.experienceSection`, `#experience-section`):** 时间线布局 (`.experienceTimeline`) 展示教育和工作经历。
+    *   **Life (`.lifeSection`, `#life-section`):** 显示生活相关卡片 (`ProjectCard`)，包含 Game, Travel, Art, Other 标签页 (`.lifeTabButtons`)。Game 标签页下方还有额外的小游戏卡片列表 (`.smallGameGrid`)。
+    *   **Blog (`.blogSection`, `#blog-section`):** 显示博客文章卡片 (`BlogPostCard` 使用 `[styles/BlogPostCard.module.scss](mdc:styles/BlogPostCard.module.scss)`)。
+    *   **Contact (`.contactSection`, `#contact-section`):** 包含雷达显示和联系方式图标。
+    *   **About (`.aboutSection`, `#about-section`):** 包含网站信息和备案号。
+*   **全局 HUD (`.hudElement`):** 固定在屏幕四角的文本信息。
+*   **氛围组件:** `CustomCursor`, `RainMorimeEffect`, `Noise` 等。
+*   **Tesseract 体验 (`TesseractExperience`)**: 覆盖全屏的独立体验。
 *   **详情视图包裹器 (`.detailViewWrapper`)**:
-    *   用于显示 LIFE, WORKS, EXPERIENCE 板块中单个项目/经历的详细信息。
-    *   当 `activeSection` 分别为 `'lifeDetail'`, `'workDetail'`, `'experienceDetail'` 时可见。
-    *   包含对应的详情组件 (`LifeDetailView`, `WorkDetailView`, `ExperienceDetailView`)。
-    *   覆盖在 `.contentWrapper` 之上，具有独立的滚动条。
+    *   用于显示 Works, Life, Experience, Blog 板块中单个条目的详细信息。
+    *   当 `activeSection` 分别为 `'workDetail'`, `'lifeDetail'`, `'experienceDetail'`, `'blogDetail'` 时可见。
+    *   包含对应的详情组件 (`WorkDetailView`, `LifeDetailView`, `ExperienceDetailView`, `BlogDetailView`)。
+    *   从右侧滑入，覆盖 `.contentWrapper`，具有独立的滚动条。
 *   **加载屏幕 (`HomeLoadingScreen`)**: 初始加载动画。
+*   **音乐播放器 (`MusicPlayer`)**: 位于左上角。
 
-## 核心导航与状态
+## 核心导航与状态 (`activeSection`)
 
-*   **主导航列 (`.column0` 到 `.column4`)**: 位于 `.rightPanel` 中，点击后（通过 `handleColumnClick`）将 `activeSection` 设置为 `'content'`，并将 `.contentWrapper` 滚动到对应的内容板块 (`#works-section`, `#experience-section` 等)。
-*   **内容板块卡片点击**:
-    *   WORKS (`ProjectCard` in `.worksSection` -> `handleWorkItemClick`): 设置 `activeSection` 为 `'workDetail'`，显示对应的 `WorkDetailView`。
-    *   LIFE (`ProjectCard` in `.lifeSection` -> `handleLifeItemClick`): 设置 `activeSection` 为 `'lifeDetail'`，显示对应的 `LifeDetailView`。
-    *   EXPERIENCE (`.timelineItem` in `.experienceSection` -> `handleExperienceItemClick`): 设置 `activeSection` 为 `'experienceDetail'`，显示对应的 `ExperienceDetailView`。
+*   **`'home'`**: 初始状态，显示主导航视图 (`.rightPanel`)。
+*   **`'content'`**: 显示内容包裹器 (`.contentWrapper`)。
+    *   通过点击主导航列 (`.column` -> `handleColumnClick`) 或左侧导航链接 (`.leftNavLink` -> `handleLeftNavLinkClick`) 进入。
+    *   左侧导航链接点击后，滚动到 `.contentWrapper` 内对应的板块 (`#works-section`, `#experience-section`, `#life-section`, `#blog-section`, `#contact-section`, `#about-section`)。
+*   **`'workDetail'`, `'lifeDetail'`, `'experienceDetail'`, `'blogDetail'`**: 显示对应的详情视图 (`.detailViewWrapper`)。
+    *   通过点击 `.contentWrapper` 内的卡片/条目 (`ProjectCard`, `.timelineItem`, `BlogPostCard`) 进入。
 *   **全局返回按钮 (`.globalBackButton`)**:
-    *   在 `.contentWrapper` 可见时 (`activeSection === 'content'`)，点击后（通过 `handleGoHome`）将 `activeSection` 设置为 `'home'`，返回主导航视图。
-    *   在详情视图包裹器可见时 (`activeSection` 为 `'lifeDetail'`, `'workDetail'`, 或 `'experienceDetail'`)，点击后（通过 `handleGlobalBackClick`）将 `activeSection` 设置回 `'content'`，并恢复之前的滚动位置，返回内容列表视图。
-*   **LIFE板块内部导航**:
-    *   标签按钮 (`.lifeTabButtons`) 用于在 LIFE 板块内部切换 Game, Travel, Art, Other 内容 (`activeLifeTab` state)。
-*   **滚动位置恢复**: 从详情视图返回 `.contentWrapper` 时，会使用 `contentScrollPosition` 状态恢复之前的滚动位置。
+    *   在 `'content'` 状态下，点击后返回 `'home'` 状态。
+    *   在详情视图状态 (`'workDetail'` 等) 下，点击后返回 `'content'` 状态，并滚动到之前所在的板块顶部。
+*   **内部导航**: Works 和 Life 板块有标签页切换内部内容。
 
 
 

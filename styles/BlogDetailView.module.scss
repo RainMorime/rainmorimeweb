@@ -1,0 +1,78 @@
+/* styles/BlogDetailView.module.scss */
+
+/* Copy basic layout styles from LifeDetailView.module.scss */
+.detailContainer {
+  width: 100%;
+  padding: 20px 0; 
+  position: relative; 
+}
+
+.detailTitle {
+  font-family: 'Dosis', monospace;
+  font-size: 2rem; 
+  font-weight: bold;
+  color: var(--ark-primary);
+  margin-bottom: 30px;
+  margin-top: 0; 
+  text-align: left;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ark-border);
+}
+
+.detailContent {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.detailText {
+  width: 100%;
+}
+
+/* Style for the excerpt */
+.detailDescription {
+  font-family: 'Dosis', sans-serif;
+  font-size: 1.1rem;
+  color: var(--ark-text-secondary);
+  line-height: 1.8;
+  margin-bottom: 25px;
+  opacity: 0.8; 
+  padding-left: 20px; 
+  margin-left: 10px; 
+  border-left: 3px solid var(--ark-border);
+}
+
+/* Style for the main article content */
+.articleSection {
+  margin-bottom: 30px;
+
+  p {
+    font-family: 'Dosis', sans-serif;
+    font-size: 1.1rem;
+    color: var(--ark-text);
+    line-height: 1.9;
+    opacity: 0.9;
+    white-space: pre-wrap; // Respect newlines in the content
+    margin-bottom: 1em; // Add space between paragraphs
+  }
+}
+
+/* Add inverted styles if needed */
+:global(.inverted) {
+    .detailContainer {
+        /* Add inverted styles */
+    }
+    .detailTitle {
+        color: var(--ark-primary); 
+        border-bottom-color: var(--ark-border);
+    }
+    .detailDescription {
+       color: var(--ark-text-secondary);
+       border-left-color: var(--ark-border);
+    }
+    .articleSection p {
+       color: var(--ark-text);
+    }
+} 

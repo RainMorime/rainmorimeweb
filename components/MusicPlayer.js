@@ -53,7 +53,7 @@ const playlist = [
 const DRAG_THRESHOLD = 50; // 拖动多少像素触发切换
 
 const MusicPlayer = ({ powerLevel }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -78,6 +78,13 @@ const MusicPlayer = ({ powerLevel }) => {
   const dragCurrentXRef = useRef(0); // 新增 Ref 存储实时 X 坐标
   const handleRef = useRef(null); // 新增 Ref 引用 handle 元素
   const animationTimeouts = useRef([]); // 新增 Ref 存储 setTimeout ID
+
+  // --- 设置默认音量 ---
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.7; // 设置默认音量为 70%
+    }
+  }, []); // 空依赖数组确保只在挂载时运行一次
 
   const currentTrack = playlist[currentTrackIndex]; // 获取当前歌曲信息
   // --- 新增: 获取下一个和上一个歌曲的信息 (用于拖动显示) ---

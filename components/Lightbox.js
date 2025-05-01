@@ -39,27 +39,55 @@ const Lightbox = ({ image, onClose, onPrev, onNext }) => {
       }
     };
 
-    // Global event to prevent all wheel events anywhere
+    // --- ADDED: Handle mouse wheel scroll for navigation ---
+    const handleWheel = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      // Directly trigger navigation based on scroll direction
+      if (event.deltaY > 0 && onNext) { // Scroll down
+        onNext();
+      } else if (event.deltaY < 0 && onPrev) { // Scroll up
+        onPrev();
+      }
+    };
+    // --- END ADDED ---
+
+    // Global event to prevent all wheel events anywhere (keep this for background scroll prevention)
     const preventWheel = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+      // Only prevent default if the event target is NOT inside the lightbox image/controls
+      // This allows potential future scrollable content *within* the lightbox if needed.
+      // For now, we are letting handleWheel manage the default prevention for the overlay.
+      // e.preventDefault();
+      // e.stopPropagation();
       return false;
     };
 
     // Apply all scroll prevention methods
     disableScroll();
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('wheel', preventWheel, { passive: false });
-    window.addEventListener('touchmove', preventWheel, { passive: false });
+    // Add the wheel listener specifically for navigation within the lightbox
+    const lightboxElement = document.querySelector(`.${styles.lightboxOverlay}`);
+    if (lightboxElement) {
+        lightboxElement.addEventListener('wheel', handleWheel, { passive: false });
+    }
+    // We might still need the global listener for touch/other edge cases, but let's test without it first
+    // window.addEventListener('wheel', preventWheel, { passive: false });
+    // window.addEventListener('touchmove', preventWheel, { passive: false });
     
     // Cleanup listeners and restore scrolling on component unmount
     return () => {
       enableScroll();
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('wheel', preventWheel);
-      window.removeEventListener('touchmove', preventWheel);
+      if (lightboxElement) {
+          lightboxElement.removeEventListener('wheel', handleWheel);
+      }
+      // No timeout to clear anymore
+      // window.removeEventListener('wheel', preventWheel);
+      // window.removeEventListener('touchmove', preventWheel);
     };
-  }, [onClose, onPrev, onNext]);
+    // Ensure styles.lightboxOverlay is available in the DOM for the querySelector
+  }, [onClose, onPrev, onNext, styles.lightboxOverlay]);
 
   // Render the lightbox directly in the document body using a portal
   // This ensures it's outside any stacking contexts that might affect z-index

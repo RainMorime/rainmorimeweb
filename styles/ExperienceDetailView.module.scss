@@ -9,59 +9,105 @@
 
 .detailTitle {
   font-family: 'Dosis', monospace; 
-  font-size: 2.2rem; // Slightly larger title for experiences
+  font-size: 2rem; 
   font-weight: bold;
   color: var(--ark-primary);
-  margin-bottom: 20px; // Reduced space below title 
+  margin-bottom: 20px; 
   margin-top: 0; 
   text-align: left;
   letter-spacing: 1px;
   text-transform: uppercase;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--ark-border); 
 }
 
 .detailMeta {
   display: flex;
   flex-wrap: wrap; // Allow wrapping on smaller screens
-  gap: 25px; // Space between meta items
-  margin-bottom: 35px; // Space below meta section
-  font-family: 'Dosis', sans-serif;
-  font-size: 1rem;
+  gap: 20px; // Space between meta items
+  margin-bottom: 25px;
+  font-family: 'Consolas', monospace;
+  font-size: 0.9rem;
   color: var(--ark-text-secondary);
-  opacity: 0.9;
+  opacity: 0.8;
 }
 
 .metaLabel {
-  font-family: 'Dosis', monospace;
-  font-size: 0.85rem;
-  color: var(--ark-text-secondary);
   opacity: 0.7;
+  margin-right: 8px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-right: 8px; // Space between label and value
 }
 
-.detailDuration, .detailLocation {
-  // Basic structure for meta items
+// Style for numbers within duration/details
+.timelineNumber {
+  font-family: 'Consolas', monospace;
+  // Add other styles if needed, e.g.:
+  // color: var(--ark-primary);
 }
 
 .detailBody {
-  // Container for the main descriptive paragraphs
+  margin-bottom: 30px; // Space before related images
 }
 
 .detailParagraph {
-  font-family: 'Dosis', sans-serif;
-  font-size: 1.15rem; // Slightly larger paragraph text
-  color: var(--ark-text); // Use main text color
-  line-height: 1.9; // Slightly increased line height
-  margin-bottom: 18px; // Space between paragraphs
+  font-family: 'Dosis', sans-serif; 
+  font-size: 1.1rem; 
+  color: var(--ark-text); 
+  line-height: 1.9; 
   opacity: 0.9;
+  margin-bottom: 1em; // Space between paragraphs
+}
 
-  &:last-child {
-    margin-bottom: 0;
+
+// --- Styles for Related Images Section (Copied from LifeDetailView) ---
+.relatedImagesSection {
+  margin-top: 40px; 
+  padding-top: 20px; 
+  border-top: 1px solid var(--ark-border); 
+}
+
+.relatedImagesTitle {
+  font-family: 'Dosis', monospace;
+  font-size: 1.3rem;
+  color: var(--ark-text-secondary);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.thumbnailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+  gap: 15px; 
+}
+
+.thumbnailButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid transparent; 
+  transition: border-color 0.2s ease;
+  overflow: hidden; 
+  background-color: rgba(var(--ark-primary-rgb), 0.05); 
+
+  &:hover {
+    border-color: var(--ark-primary);
   }
 }
+
+.thumbnailImage {
+  display: block;
+  width: 100%;
+  height: 100%; 
+  object-fit: contain; 
+  transition: transform 0.3s ease;
+
+  .thumbnailButton:hover & {
+    transform: scale(1.05); 
+  }
+}
+// --- END Related Images Styles ---
 
 // --- Inverted Mode Specific Styles ---
 :global(.inverted) {

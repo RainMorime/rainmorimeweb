@@ -19,43 +19,74 @@ import SimpleImageCard from '../components/SimpleImageCard';
 import LifeDetailView from '../components/LifeDetailView';
 import WorkDetailView from '../components/WorkDetailView';
 import ExperienceDetailView from '../components/ExperienceDetailView';
+import BlogView from '../components/BlogView';
+import BlogDetailView from '../components/BlogDetailView';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const sampleProjects = [
+// --- Split Projects Data ---
+const learnProjects = [
   {
     id: 1,
-    title: 'Project Cyberscape',
-    description: 'A procedural city generator visualizing network data streams.',
-    tech: ['React', 'Three.js', 'Node.js', 'WebSockets'],
+    title: '小狐狸/Robby复刻',
+    description: 'Unity3D C# 平台跳跃',
+    tech: ['Unity3D', 'C#', '平台跳跃'],
     link: '#',
-    imageUrl: '/placeholders/cyberscape.png'
+    imageUrl: '/placeholders/work1.png' 
   },
   {
     id: 2,
-    title: 'Aether Analytics',
-    description: 'Real-time data analysis platform with a retro terminal interface.',
-    tech: ['Next.js', 'Chart.js', 'Python (Flask)', 'PostgreSQL'],
+    title: 'FreeCodeCamp前端作品集',
+    description: 'HTML/CSS',
+    tech: ['HTML', 'CSS', '前端'],
     link: '#',
-    imageUrl: '/placeholders/aether.png' 
+    imageUrl: '/placeholders/work2.png'
   },
   {
     id: 3,
-    title: 'Chrono Courier',
-    description: 'Secure messaging system simulation with quantum encryption concepts.',
-    tech: ['Vue.js', 'Web Crypto API', 'Firebase'],
+    title: '赌徒2025Unity3D开发大赛',
+    description: 'Unity3D 卡牌',
+    tech: ['Unity3D', '卡牌', '游戏开发'],
     link: '#',
-    imageUrl: '/placeholders/chrono.png'
+    imageUrl: '/placeholders/work3.png'
   },
-    {
+  {
     id: 4,
-    title: 'Bio-Synth Composer',
-    description: 'Generative music tool based on simulated biological growth patterns.',
-    tech: ['Tone.js', 'P5.js', 'JavaScript'],
+    title: '塔罗寻途 清深AI agent 开发比赛',
+    description: 'Unity3D AI',
+    tech: ['Unity3D', 'AI', '游戏开发'],
     link: '#',
-    imageUrl: '/placeholders/biosynth.png'
+    imageUrl: '/placeholders/work4.png'
   },
 ];
+
+const workProjects = [
+  {
+    id: 5,
+    title: '营火MC服务器',
+    description: '策划',
+    tech: ['Minecraft', '服务器', '策划'],
+    link: '#',
+    imageUrl: '/placeholders/work5.png'
+  },
+  {
+    id: 6,
+    title: 'Koishi机器人插件',
+    description: 'TypeScript/JavaScript',
+    tech: ['TypeScript', 'JavaScript', 'Koishi', '插件开发'],
+    link: '#',
+    imageUrl: '/placeholders/work6.png'
+  },
+  {
+    id: 7,
+    title: '个人网站',
+    description: 'Next.js, React, SCSS, Vercel',
+    tech: ['Next.js', 'React', 'SCSS', 'Vercel'],
+    link: '#',
+    imageUrl: '/pictures/www.rainmorime.com.png' 
+  }
+];
+// --- END Split ---
 
 const gameData = [
   {
@@ -65,77 +96,7 @@ const gameData = [
     tech: ['沙盒', '生存', '建造'],
     link: '#',
     imageUrl: '/pictures/Minecraft/MC2025.png',
-    articleContent: '  Minecraft来来去去有了十年，从最早的 1.5.4 版本开始，就贯穿了我的游戏生涯，也启蒙了我创作的想法。\n  还记得小时候在 XP 电脑上，为了能正常启动它费尽了功夫，甚至需要调整硬件加速。\n  后来沉迷于庞大的"贪婪整合包"，启动就要一个小时，每天得早早开机先加载，然后才去洗漱。\n\n  一路走来，在这个世界里我总是无忧无虑，也结识了许多朋友：2016 年加入了 NiceMc 服务器，认识了很多伙伴；2023 年又加入了营火服务器，这些都是我 MC 旅程中重要的节点。\n  期间也尝试过地图和模组的开发。\n\n  愿我们初心不改，童心依旧。'
-  },
-  {
-    id: 'mh',
-    title: 'Monster Hunter',
-    description: '我动作游戏的引路人。',
-    tech: ['动作', '狩猎', '多人'],
-    link: '#',
-    imageUrl: '/pictures/Monster_Hunter/MH1.jpg',
-    galleryImages: [
-      { src: '/pictures/Monster_Hunter/MH1.jpg' },
-      { src: '/pictures/Monster_Hunter/MH2.jpg' },
-      { src: '/pictures/Monster_Hunter/MH3.jpg' },
-      { src: '/pictures/Monster_Hunter/MH4.jpg' },
-      { src: '/pictures/Monster_Hunter/MH5.jpg' },
-      { src: '/pictures/Monster_Hunter/MH6.jpg' },
-      { src: '/pictures/Monster_Hunter/MH7.jpg' },
-      { src: '/pictures/Monster_Hunter/MH8.jpg' },
-      { src: '/pictures/Monster_Hunter/MH9.jpg' },
-      { src: '/pictures/Monster_Hunter/MH10.jpg' },
-      { src: '/pictures/Monster_Hunter/MH11.jpg' },
-      { src: '/pictures/Monster_Hunter/MH12.jpg' },
-      { src: '/pictures/Monster_Hunter/MH13.jpg' },
-      { src: '/pictures/Monster_Hunter/MH14.jpg' }
-    ]
-  },
-  {
-    id: 'stray',
-    title: 'Stray',
-    description: '在赛博朋克城市中扮演一只猫。',
-    tech: ['冒险', '解谜', '猫'],
-    link: '#',
-    imageUrl: '/pictures/Stray/stray15.jpg',
-    galleryImages: [
-      { src: '/pictures/Stray/stray1.jpg' },
-      { src: '/pictures/Stray/stray2.jpg' },
-      { src: '/pictures/Stray/stray3.jpg' },
-      { src: '/pictures/Stray/stray4.jpg' },
-      { src: '/pictures/Stray/stray5.jpg' },
-      { src: '/pictures/Stray/stray6.jpg' },
-      { src: '/pictures/Stray/stray7.jpg' },
-      { src: '/pictures/Stray/stray8.jpg' },
-      { src: '/pictures/Stray/stray9.jpg' },
-      { src: '/pictures/Stray/stray10.jpg' },
-      { src: '/pictures/Stray/stray11.jpg' },
-      { src: '/pictures/Stray/stray12.jpg' },
-      { src: '/pictures/Stray/stray13.jpg' },
-      { src: '/pictures/Stray/stray14.jpg' },
-      { src: '/pictures/Stray/stray15.jpg' },
-    ]
-  },
-   {
-    id: 'titanfall',
-    title: 'Titanfall',
-    description: '第一次酣畅淋漓的体验。',
-    tech: ['FPS', '机甲'],
-    link: '#',
-    imageUrl: '/pictures/Titalfall/titan13.jpg',
-    galleryImages: [
-      { src: '/pictures/Titalfall/titan1.jpg' },
-      { src: '/pictures/Titalfall/titan2.jpg' },
-      { src: '/pictures/Titalfall/titan4.jpg' },
-      { src: '/pictures/Titalfall/titan5.jpg' },
-      { src: '/pictures/Titalfall/titan7.jpg' },
-      { src: '/pictures/Titalfall/titan8.jpg' },
-      { src: '/pictures/Titalfall/titan9.jpg' },
-      { src: '/pictures/Titalfall/titan10.jpg' },
-      { src: '/pictures/Titalfall/titan11.jpg' },
-      { src: '/pictures/Titalfall/titan12.jpg' },
-      { src: '/pictures/Titalfall/titan13.jpg' },
-    ]
+    articleContent: '  Minecraft来来去去有了十年，从最早的 1.5.4 版本开始，就贯穿了我的游戏生涯，如今也有十多个年头了。\n \n  还记得小时候（大概是小学二三年级吧）在 XP 电脑上，为了能正常启动它费尽了功夫，还记得需要调整硬件加速之类的东西。当时花了了好几周的时间，查资料又是反复下载的，那段时间简直把互联网基础知识都学全了。\n\n  印象深刻的是一个叫"贪婪整合包"，是在我初三开始玩的，每次启动就要一个小时，每天得早早开机先加载，然后才去洗漱。为了一个mod的知识艰难查找资料（当时的mod教程很难，资源也非常少，全靠自己摸索），玩到了高考结束才把他通关，也是在那时得到了很多信息检索的经验还有提问的智慧。\n\n  一路走来，在这个世界里我总是无忧无虑，也结识了许多朋友：2016 年加入了 NiceMc 服务器，认识了很多伙伴；2023 年又加入了营火服务器，这些都是我 MC 旅程中重要的节点。\n  期间也尝试过地图和模组的开发，高二那段时间，每天晚上都捧着那本Java从入门到入土生啃，绊绊磕磕的做出了自己的一个小mod，后来高三学业繁重就停止了更新，虽然找不到原先的代码了，不过想做出新游戏开发新内容的愿景倒是深植入我心中。\n\n  愿我们初心不改，童心依旧。'
   },
   {
     id: 'wa',
@@ -144,6 +105,8 @@ const gameData = [
     tech: ['视觉小说', '恋爱', '音乐'],
     link: '#',
     imageUrl: '/pictures/WHITE_ALBUM/w10.jpg',
+    // Add article content for WHITE ALBUM
+    articleContent: '  转眼又到了白色相簿的季节了。\n\n\n  少见地把这部作品的游戏、动漫、漫画都完整体验了一遍。总体来说，个人感受的质量排序是：动漫 > 游戏 > 漫画。漫画虽也不错，但篇幅所限，许多情节未能充分展开便匆匆结束。\n\n\n  故事背景设定在日本签订广场协议后的时代，讲述了一名普通青年藤井冬弥，在成为偶像的女友森川由绮身边所经历的奔赴与追忆。故事中弥漫着白雪般的清寒与苦涩，情感如泡沫般易碎，似幻影般迷离。冬弥与由绮在高中结为恋人，但当由绮踏上偶像之路后，两人的人生轨迹便注定渐行渐远，难以相交。与其他多数恋爱游戏不同，《WHITE ALBUM》开篇时，"恋人"就已是由绮，因此玩家选择任何其他角色的线路，都似乎伴随着一种"背离"感（甚至在由绮本线中，出轨的主体有时反而是由绮自己）。\n\n\n  在这个清冷又略带压抑的环境里，似乎每个人心中都缺失了一角，而冬弥恰好能填补这份空缺——无论是多年求而不得的学姐观月麻奈，青梅竹马且痛失亲兄的河岛遥，缺少父母关爱的泽仓美咲，还是活在哥哥阴影下的绪方理奈，甚至是倾慕由绮、带着禁断之恋寻求慰藉的制作人筱冢弥生。游戏中，无论选择哪条线路，是软弱还是释怀，由绮似乎总会原谅冬弥。即便她自己可能随时会因失去冬弥而崩溃，却仍会虔诚地祈愿冬弥的幸福。与由绮形成鲜明对比的是理奈，她愿意牺牲自己的偶像事业，只为换取与冬弥的比翼双飞。\n\n\n  或许由绮并非不重视冬弥，只是在那个连座机电话都算奢侈品的时代，距离产生的漫长疑虑和日渐稀疏的沟通，为二人的"白色相簿"蒙上了厚厚的尘埃。心意在模糊中摇摆，那份果断也变得软弱。圣诞节、情人节仅有的几句交谈，让所有想说的话都成了未竟之弦。在这道不清、辩不明的白雪映衬下，两人似乎注定渐行渐远。（恰如"音书断绝，春闺梦里，相思难解"）\n\n\n  重制版新增的小夜子线，感觉反而更契合冬弥的处境。经历了偶像事业与高考双重失利的小夜子，与同样迷失在情感迷宫中的冬弥相互依偎取暖。可惜结局稍显仓促，未能深入描绘后续发展，留下了些许遗憾（结尾甚至没有明确的表示，更像是和大家都维持了友人关系）。\n\n\n  更令人感到压抑的是，游戏中许多局面近乎无解，除非玩家扮演圣人。选择往往导向某种形式的"社会性死亡"（如与基友七濑彰决裂，或选择已分手的学姐麻奈），或是走向充满不确定性的未来（如经纪人弥生线、遥线）。错误与误会在剧情中交替上演，任何一点逃避都会催化弥漫其中的不甘与苦涩，最终伴随着经济大衰退的最后一片雪花，凝结成难以抹去的伤痕。（不过，单就结局而言，多数线路也算得上是某种形式的 Happy Ending）。\n\n\n  而动漫则将多条线路融合，使得主角藤井冬弥的行为更具争议性（甚至被戏称为"四大人渣"之一），从某种意义上说，是对一人的背离"升级"为了对多人的摇摆。动画在细节刻画和艺术表现上更为出色，无论是冬弥自圆其说的"女神论"，还是绪方英二所追求的"真物"，都探讨了更深层次的内涵，压抑的情绪也渲染得更为强烈。\n\n\n  游戏和动漫中，基友七濑彰的形象反差极大。原作中他更像个清秀的伙伴，而在动漫里，出于对学姐麻奈的爱慕（原作亦有此设定），他屡次与冬弥产生冲突。动画中甚至加入了学姐设计与冬弥（当时女友是由绮）表白接吻、冬弥事后又试图撮合学姐与基友、学姐却仍心系冬弥最终拒绝基友等更为纠结的剧情。动画增补了许多设定，例如由绮和冬弥的童年相识（尽管那段用特殊方式驱赶坏人的回忆过于羞耻以致冬弥遗忘），更深刻地描绘了一个年轻人在社会洪流中逐渐迷失本心，在形形色色的情感中沉沦的过程。\n\n\n  由于动画只有一个结局，其编排也最为精妙和富于戏剧性。冬弥思考了漫长的篇幅去确认由绮是否还爱他、是否会等他，而由绮甚至无需回答——因为别说几个月，由绮已经等待了他十年。彼时，在舞台上与冬弥相视的那一瞬，跨越时光的追忆交汇，将"白色相簿"的故事推向了真正的高潮。\n\n\n  而这份复杂的情感体验，也自然地引向了续作——《WHITE ALBUM 2》。',
     galleryImages: [
       { src: '/pictures/WHITE_ALBUM/w1.jpg' },
       { src: '/pictures/WHITE_ALBUM/w2.jpg' },
@@ -169,13 +132,43 @@ const gameData = [
     ]
   },
   {
+    id: 'stray',
+    title: 'Stray',
+    description: '在赛博朋克城市中扮演一只猫。',
+    tech: ['冒险', '解谜', '猫'],
+    link: '#',
+    imageUrl: '/pictures/Stray/stray15.jpg',
+    articleContent: '  腐败，死城，时代，地下城\n  同伴，穹顶，梦想，机器人\n  阶级的腐败弥留的饕餮怪物，若隐若现的霓虹灯光\n  亲情的重逢，自由的渴望\n\n  空无一人，却到处闪耀着人性的光辉。\n  不过咱都不在乎\n\n  "咱家是猫。名字？还没有。出生在哪儿？更搞不清楚。"\n  ——《我是猫》，夏目漱石',
+    galleryImages: [
+      { src: '/pictures/Stray/stray1.jpg' },
+      { src: '/pictures/Stray/stray2.jpg' },
+      { src: '/pictures/Stray/stray3.jpg' },
+      { src: '/pictures/Stray/stray4.jpg' },
+      { src: '/pictures/Stray/stray5.jpg' },
+      { src: '/pictures/Stray/stray6.jpg' },
+      { src: '/pictures/Stray/stray7.jpg' },
+      { src: '/pictures/Stray/stray8.jpg' },
+      { src: '/pictures/Stray/stray9.jpg' },
+      { src: '/pictures/Stray/stray10.jpg' },
+      { src: '/pictures/Stray/stray11.jpg' },
+      { src: '/pictures/Stray/stray12.jpg' },
+      { src: '/pictures/Stray/stray13.jpg' },
+      { src: '/pictures/Stray/stray14.jpg' },
+      { src: '/pictures/Stray/stray15.jpg' },
+    ]
+  },
+  {
     id: 'thif',
     title: 'Touhou',
     description: '东方的同人总是令人惊叹。',
     tech: ['东方Project', '动作', '粉丝创作'],
     link: '#',
     imageUrl: '/pictures/Touhou/TH3.png',
+    // --- ADD Touhou Article --- 
+    articleContent: '  对于东方来说，我了解并不是很多，但优质的同人还有游戏深深吸引了我。\n\n\n  我玩过《东方冰之勇者记》《东方夜雀食堂》《东方大战争》《东方幻灵录》\n\n\n  《东方冰之勇者记》也是我第一个真正意义上的全成就，耐心无伤打完了每一个boss',
+    // --- END ADD ---
     galleryImages: [
+      { src: '/pictures/Touhou/CG1.png' }, // <-- Add CG1 if not present
       { src: '/pictures/Touhou/CG2.png' },
       { src: '/pictures/Touhou/CG3.png' },
       { src: '/pictures/Touhou/TH1.jpg' },
@@ -186,6 +179,30 @@ const gameData = [
       { src: '/pictures/Touhou/TH6.jpg' },
     ]
   },
+   {
+    id: 'titanfall',
+    title: 'Titanfall',
+    description: '第一次酣畅淋漓的体验。',
+    tech: ['FPS', '机甲'],
+    link: '#',
+    imageUrl: '/pictures/Titalfall/titan13.jpg',
+    // --- ADD Titanfall Article --- 
+    articleContent: '协议三，投掷铁驭！\n\n相信我！',
+    // --- END ADD ---
+    galleryImages: [
+      { src: '/pictures/Titalfall/titan1.jpg' },
+      { src: '/pictures/Titalfall/titan2.jpg' },
+      { src: '/pictures/Titalfall/titan4.jpg' },
+      { src: '/pictures/Titalfall/titan5.jpg' },
+      { src: '/pictures/Titalfall/titan7.jpg' },
+      { src: '/pictures/Titalfall/titan8.jpg' },
+      { src: '/pictures/Titalfall/titan9.jpg' },
+      { src: '/pictures/Titalfall/titan10.jpg' },
+      { src: '/pictures/Titalfall/titan11.jpg' },
+      { src: '/pictures/Titalfall/titan12.jpg' },
+      { src: '/pictures/Titalfall/titan13.jpg' },
+    ]
+  },
   {
     id: 'bmwk',
     title: 'BLACK MYTH: WU KONG',
@@ -193,6 +210,9 @@ const gameData = [
     tech: ['ARPG', '神话', '动作'],
     link: '#',
     imageUrl: '/pictures/BLACKMYTH/WK3.jpg',
+    // --- ADD Wukong Article --- 
+    articleContent: '  《黑神话：悟空》是我期盼许久的作品。能够第一时间体验到这部备受瞩目的国产3A大作，心情无疑是激动万分的。虽然我相对较少涉足纯粹的动作游戏领域，但那种通过磨练技巧、攻克难关最终获得的酣畅淋漓的成就感，对我有着难以抗拒的吸引力。\n\n\n  为了第一时间玩上游戏，我早上七八点就兴冲冲地赶到了网吧，却没想到还要等好长时间——网吧的机械硬盘解压游戏竟然耗费了足足一个小时。直到将近十一点，我才终于进入了游戏。\n\n\n  然而，真正的挑战才刚开始。面对第一个Boss黄风大圣，我打了快一下午。鏖战许久后我才发现，自己从头到尾根本没拿法宝纯硬扛。\n\n\n  这场艰难的战斗一直持续到凌晨三点多。本想上传录制的视频，结果网吧缓慢的上传速度又将时间拖到了四点。出门发现外面下起了大雨，没带伞的我只能一路跑回家，淋了个透湿。而且手机也早就没电关机。\n\n\n  站在家门口，面对电子锁，我发现自己还忘记了密码...在门口苦思冥想了半个多小时无果，累的不行的我直接就在门口蹲着睡了一会儿。等醒的时候，我又冒着雨四处寻找能充电的地方，最终幸运地找到一位出租车司机帮我充了会儿电。手机亮起的瞬间，密码也奇迹般地回到了脑海，这场折腾的夜晚才终于画上了句号。\n\n\n  虽然过程充满波折，但这无疑是一次极其深刻而难忘的游戏初体验。\n\n\n',
+    // --- END ADD ---
     galleryImages: [
       { src: '/pictures/BLACKMYTH/WK0.jpg' },
       { src: '/pictures/BLACKMYTH/WK1.jpg' },
@@ -207,6 +227,31 @@ const gameData = [
       { src: '/pictures/BLACKMYTH/WK10.jpg' },
     ]
   },
+  {
+    id: 'mh',
+    title: 'Monster Hunter',
+    description: '我动作游戏的引路人。',
+    tech: ['动作', '狩猎', '多人'],
+    link: '#',
+    imageUrl: '/pictures/Monster_Hunter/MH1.jpg',
+    articleContent: '  我算是一个新猎人，基本只用弓箭，只玩过《Monster Hunter: Wild》《Monster Hunter: RISE》《Monster Hunter: World》这三部作品，让我影响深刻的还是世界这一步，也算是我接触到的第一个动作类作品。\n\n\n  虽说是一个共斗游戏，但绝大多数时间我都在一个人拿着我的小弓箭滑滑戳戳。非常喜欢的就是挑战大只怪的节奏，三次猫车的机会让我没有魂游那样给我极大的挫败感，还有在拉锯战中一点一点削弱和追击巨龙的快感，庞大的世界观也让我有更多丰富的想象（一想到全团都指着我苍蓝星开荒，就抬起了我骄傲的头颅）。\n\n\n  让我印象深刻的传奇冰牙龙，为了一只怪刷了整整三天的装备，做梦都是冰牙龙一个甩尾加肘击给我干翻二里地。还有冰呪龙，优雅强大的艺术品，感觉要被开发出奇怪的属性了（）。',
+    galleryImages: [
+      { src: '/pictures/Monster_Hunter/MH1.jpg' },
+      { src: '/pictures/Monster_Hunter/MH2.jpg' },
+      { src: '/pictures/Monster_Hunter/MH3.jpg' },
+      { src: '/pictures/Monster_Hunter/MH4.jpg' },
+      { src: '/pictures/Monster_Hunter/MH5.jpg' },
+      { src: '/pictures/Monster_Hunter/MH6.jpg' },
+      { src: '/pictures/Monster_Hunter/MH7.jpg' },
+      { src: '/pictures/Monster_Hunter/MH8.jpg' },
+      { src: '/pictures/Monster_Hunter/MH9.jpg' },
+      { src: '/pictures/Monster_Hunter/MH10.jpg' },
+      { src: '/pictures/Monster_Hunter/MH11.jpg' },
+      { src: '/pictures/Monster_Hunter/MH12.jpg' },
+      { src: '/pictures/Monster_Hunter/MH13.jpg' },
+      { src: '/pictures/Monster_Hunter/MH14.jpg' }
+    ]
+  },
 ];
 
 const travelData = [
@@ -217,10 +262,13 @@ const travelData = [
     tech: ['故乡'], // Example tags
     link: '#', // Optional link
     imageUrl: '/images/travel/jilin/JL1.jpg', // Placeholder image path
+    // --- ADD Jilin Article Content --- 
+    articleContent: '  吉林省公主岭市，小时候是归四平市的，长大了划归给长春。我出生在这里，但在四平长大，我很小的时候，爸妈就去韩国务工，是我的姑姑照顾我长大，对我来说，她就是我的第二个母亲。\n\n\n  还有我的爷爷（准确来说，是我表姐的爷爷，我的爷爷奶奶姥姥姥爷都在我出生前或是很小的时候离世了。），苍发花眉，爱抽烟。当时我小学的时候还玩上烟卡（把烟盒的头叠成一个小卡片），爷爷就主动抽各种不同的烟让我做烟卡玩。我当时还劝爷爷少抽点烟，对身体不好，结果一语成谶，在初中时爷爷患上肺癌，仅仅几个月就夺走了他的生命。\n\n\n  回想起来，当时家人还瞒着我爷爷患病这件事，在我的追问下才说出来实情。面对注射吗啡才能缓解痛苦的爷爷，我泣不成声，第一次对死亡有了概念。\n\n\n  后来高考那年，我的姑姑因乳腺癌离世，我也遗憾落榜离开故乡，选择了遥远的西安。\n\n\n  故地新时，你随时可以回去，但已经没有人在等你了。',
+    // --- END ADD ---
     // Add gallery images for Jilin
     galleryImages: [
       { src: '/images/travel/jilin/JL1.jpg' },
-      { src: '/images/travel/jilin/JL2.jpg' },
+      { src: '/images.travel/jilin/JL2.jpg' },
       { src: '/images/travel/jilin/JL3.jpg' },
       { src: '/images/travel/jilin/JL4.jpg' },
       { src: '/images/travel/jilin/JL5.jpg' },
@@ -234,7 +282,21 @@ const travelData = [
     description: '我的大学生活。',
     tech: ['大学'],
     link: '#',
-    imageUrl: '/travel_placeholders/shaanxi.png'
+    imageUrl: '/images/travel/shaanxi/SX5.jpg',
+    // --- ADD Shaanxi Article --- 
+    articleContent: '  陕西，我大学所在的地方。说实话，我不喜欢这个地方，春秋很短，天气总是阴着的，空气也很差，吃饭也不便宜。我也很少在陕西周边旅行过，对我来说，这只是我的一个落脚处。\n\n\n  说来也好笑，当初选择西安，是因为我觉得它是一个"一线城市"，现在来看我还是了解少了，游戏行业在这里并不是很发达，活动也很少见，很难找到同好。\n\n\n  虽然如此，他依然也将会是陪伴我四年的城市，这里有独特的烟火气，碳水和古迹随处可即（西安考古博物馆甚至就在我家楼下）。还在西安里结识了许多有趣的人，在大学中与这座长安城达成了和解。',
+    // --- END ADD ---
+    // --- ADD Shaanxi Gallery --- 
+    galleryImages: [
+      { src: '/images/travel/shaanxi/SX1.jpg' }, { src: '/images/travel/shaanxi/SX2.jpg' },
+      { src: '/images/travel/shaanxi/SX3.jpg' }, { src: '/images/travel/shaanxi/SX4.jpg' },
+      { src: '/images/travel/shaanxi/SX5.jpg' }, { src: '/images/travel/shaanxi/SX6.jpg' },
+      { src: '/images/travel/shaanxi/SX7.jpg' }, { src: '/images/travel/shaanxi/SX8.jpg' },
+      { src: '/images/travel/shaanxi/SX9.jpg' }, { src: '/images/travel/shaanxi/SX10.jpg' },
+      { src: '/images/travel/shaanxi/SX11.jpg' }, { src: '/images/travel/shaanxi/SX12.jpg' },
+      { src: '/images/travel/shaanxi/SX13.jpg' }, { src: '/images/travel/shaanxi/SX14.jpg' },
+    ]
+    // --- END ADD ---
   },
   {
     id: 'guizhou',
@@ -265,6 +327,9 @@ const travelData = [
     tech: ['自然'],
     link: '#',
     imageUrl: '/images/travel/qinghai/QH32.jpg',
+    // --- ADD Qinghai Article --- 
+    articleContent: '  青海，绝对是个难忘的旅程。23年国庆和同学一起去的，两个人拍拍脑袋也没什么计划就扎进了这片无垠高原（全靠打车），体验到春夏秋冬四个季节的感受，神奇的体验。\n\n\n  首先就是我这辈子都忘不了的坎布拉森林公园，一开始定位就定错了，我们十点多从西入口进入，信誓旦旦要靠徒步穿过去！两人三根杖就开始了漫长的徒步，这一走，就是从早上十点走到了将近半夜两点。快零点的时候，开始下雨，我们披着一次性雨衣，两个人交错打着手电筒，一步一步沿着公路漫长的徒步，山岗沉寂无声，只能听见自己的心跳，结果一点多看到我们才走到了一半的路程才能看到正式的景区。\n\n\n  雨水逐渐夹带着雪花，又转为小冰雹，我先一步撑不住，我怕真的要失温死在这里，当时真是绝望，还好我同学够冷静，在强往上走之后找到了景区求助电话，当地村民开车带我们去远处的民宿。后来的两天基本就昏在民宿里。据村民说当地还有狼出没，没遇上真是不幸中的万幸。\n\n\n  之后我们打车回到城市，老老实实地招了个司机师父带我们走。\n\n\n  又见过海天一线的青海湖，落日下的茶卡盐湖，还有暴风雪下的岗什卡雪峰（当初还行作死再爬一次山峰，可惜风雪太大不了了之了）。',
+    // --- END ADD ---
     // Add gallery images for Qinghai
     galleryImages: [
       { src: '/images/travel/qinghai/QH0.jpg' }, { src: '/images/travel/qinghai/QH1.jpg' },
@@ -288,6 +353,9 @@ const travelData = [
       { src: '/images/travel/qinghai/QH36.jpg' }, { src: '/images/travel/qinghai/QH37.jpg' },
       { src: '/images/travel/qinghai/QH38.jpg' }, { src: '/images/travel/qinghai/QH39.jpg' },
       { src: '/images/travel/qinghai/QH40.jpg' }, { src: '/images/travel/qinghai/QH41.jpg' },
+      // --- ADD QH42, QH43 ---
+      { src: '/images/travel/qinghai/QH42.jpg' }, { src: '/images/travel/qinghai/QH43.jpg' }
+      // --- END ADD ---
     ]
   },
   {
@@ -296,7 +364,16 @@ const travelData = [
     description: '我父母所居住的地方。',
     tech: ['家'],
     link: '#',
-    imageUrl: '/images/travel/hanguo/HG2.jpg'
+    imageUrl: '/images/travel/hanguo/HG2.jpg',
+    // --- ADD Korea Article and Gallery --- 
+    articleContent: '  韩国是我父母务工居住的地方，和我也有一些联系。现在偶尔看望父母就会回到这里，这里清冷疏离，陌生的面孔陌生的人，没有支付手段，在这里我像还是那尚未涉世的孩子，只能依偎着父母。\n\n\n  不过有了父母，这里就是我的家。',
+    galleryImages: [
+      { src: '/images/travel/hanguo/HG1.jpg' },
+      { src: '/images/travel/hanguo/HG2.jpg' },
+      { src: '/images/travel/hanguo/HG3.jpg' },
+      { src: '/images/travel/hanguo/HG4.jpg' },
+    ]
+    // --- END ADD ---
   },
 ];
 
@@ -323,7 +400,10 @@ const experienceData = [
         '西安外国语大学',
         '英语系'
     ],
-    alignment: 'left'
+    alignment: 'left',
+    galleryImages: [ // <-- ADD University Gallery
+      { src: '/images/exp/XS1.jpg', caption: '油头垢面的我' } 
+    ]
   },
   {
     id: 'internship',
@@ -336,7 +416,15 @@ const experienceData = [
       '国内销售部',
       '产品翻译、校对 | 市场调研'
     ],
-    alignment: 'left'
+    alignment: 'left',
+    galleryImages: [ // <-- ADD Internship Gallery
+      { src: '/images/exp/shixi/SX1.jpg' },
+      { src: '/images/exp/shixi/SX2.jpg', caption: '猛干五千管' },
+      { src: '/images/exp/shixi/SX3.jpg', caption: '然姐请我吃肯德基' },
+      { src: '/images/exp/shixi/SX4.jpg' },
+      { src: '/images/exp/shixi/SX5.jpg', caption: '公司周年庆' },
+      { src: '/images/exp/shixi/SX6.jpg' },
+    ]
   },
   {
     id: 'volunteer',
@@ -348,8 +436,72 @@ const experienceData = [
        '2024 中国整合肿瘤学大会',
        '试片区小组长'
     ],
-    alignment: 'left'
+    alignment: 'left',
+    galleryImages: [
+      { src: '/images/exp/zhiyuan/zhiyuan1.jpg' }, { src: '/images/exp/zhiyuan/zhiyuan2.jpg' },
+      { src: '/images/exp/zhiyuan/zhiyuan3.jpg' }, { src: '/images/exp/zhiyuan/zhiyuan4.jpg' },
+      { src: '/images/exp/zhiyuan/zhiyuan5.jpg' }, { src: '/images/exp/zhiyuan/zhiyuan6.jpg' },
+      { src: '/images/exp/zhiyuan/zhiyuan7.jpg' },
+    ]
   },
+];
+
+// --- ADD otherData --- 
+const otherData = [
+  {
+    id: 'physical-games',
+    title: '实体游戏收藏',
+    description: '收集一些喜欢的游戏实体版。',
+    imageUrl: '/pictures/collection/SC8.jpg', // <-- Updated cover
+    tech: ['游戏'],
+    galleryImages: [
+      { src: '/pictures/collection/SC1.jpg' },
+      { src: '/pictures/collection/SC2.jpg' },
+      { src: '/pictures/collection/SC3.jpg' },
+      { src: '/pictures/collection/SC4.jpg' },
+      { src: '/pictures/collection/SC5.jpg' },
+      { src: '/pictures/collection/SC6.jpg' },
+      { src: '/pictures/collection/SC7.jpg' },
+      { src: '/pictures/collection/SC8.jpg' },
+      { src: '/pictures/collection/SC9.jpg' },
+      { src: '/pictures/collection/SC10.jpg' },
+      { src: '/pictures/collection/SC11.jpg' },
+      { src: '/pictures/collection/SC12.jpg' },
+      { src: '/pictures/collection/SC13.jpg' },
+      { src: '/pictures/collection/SC14.jpg' },
+      { src: '/pictures/collection/SC15.jpg' },
+      { src: '/pictures/collection/SC16.jpg' },
+      { src: '/pictures/collection/SC17.jpg' },
+      { src: '/pictures/collection/SC18.jpg' },
+      { src: '/pictures/collection/SC19.jpg' },
+      { src: '/pictures/collection/SC20.jpg' }
+    ]
+  },
+  {
+    id: 'tarot-cards',
+    title: '塔罗牌',
+    description: '偶尔用来探索潜意识或作为思考工具。',
+    imageUrl: '/pictures/TR/TR2.jpg', // <-- Updated cover
+    tech: [],
+    galleryImages: [
+      { src: '/pictures/TR/TR1.jpg' },
+      { src: '/pictures/TR/TR2.jpg' },
+      { src: '/pictures/TR/TR3.jpg' }
+    ]
+  }
+];
+// --- END ADD --- 
+
+const placeholderPosts = [
+  {
+    id: 'post-1',
+    title: '第一篇博客文章',
+    excerpt: '这里是第一篇博客文章的摘要内容...',
+    // --- ADD articleContent --- 
+    articleContent: '这是第一篇博客文章的完整内容。\n\n这里可以写更多段落。\n\n支持换行。'
+    // --- END ADD ---
+  },
+  // Removed other placeholders
 ];
 
 export default function Home() {
@@ -402,6 +554,26 @@ export default function Home() {
   const [previousActiveLifeTab, setPreviousActiveLifeTab] = useState(null);
   const [selectedWorkItem, setSelectedWorkItem] = useState(null);
   const [selectedExperienceItem, setSelectedExperienceItem] = useState(null);
+  const [selectedBlogPost, setSelectedBlogPost] = useState(null);
+  const lifeSectionRef = useRef(null); 
+  const worksSectionRef = useRef(null); 
+  const experienceSectionRef = useRef(null);
+  const contactSectionRef = useRef(null);
+  const blogSectionRef = useRef(null);
+  const [activeWorkTab, setActiveWorkTab] = useState('learn'); 
+  const blogViewWrapperRef = useRef(null); // <-- ADD Ref for BlogViewWrapper
+  const [blogScrollPosition, setBlogScrollPosition] = useState(0); // <-- ADD State for Blog scroll position
+
+  // --- ADD Navigation Links Data --- 
+  const navLinks = [
+    { label: 'Blog', target: 'blog-section', ref: blogSectionRef },       // Change 'blog' target to 'blog-section' and add ref
+    { label: 'Works', target: 'works-section', ref: worksSectionRef },
+    { label: 'Experience', target: 'experience-section', ref: experienceSectionRef },
+    { label: 'Life', target: 'life-section', ref: lifeSectionRef }, // Added Life link
+    { label: 'Contact', target: 'contact-section', ref: contactSectionRef },
+    { label: 'About', target: 'about-section', ref: aboutSectionRef }, 
+  ];
+  // --- END ADD ---
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -751,7 +923,8 @@ export default function Home() {
     "EXPERIENCE",
     "LIFE",
     "CONTACT",
-    "ABOUT"
+    "ABOUT",
+    "BLOG" // 添加BLOG栏目
   ];
 
   const updateRandomHudTexts = () => {
@@ -857,6 +1030,13 @@ export default function Home() {
 
   const handleColumnClick = (columnIndex) => {
     console.log(`Column ${columnIndex + 1} clicked`);
+    
+    // 添加BLOG列的点击处理
+    if (columnIndex === 5) { // BLOG列
+      setActiveSection('blog'); // 设置当前区域为blog
+      return;
+    }
+    
     const sectionIds = [
       'works-section',
       'experience-section',
@@ -954,11 +1134,11 @@ export default function Home() {
   const handleLifeItemClick = (item) => {
     console.log("Life item clicked, switching to detail view:", item);
     
-    // Record current scroll position before switching
+    // Record current scroll position AND current active tab before switching
     if (contentWrapperRef.current) {
-      setContentScrollPosition(contentWrapperRef.current.scrollTop); 
+      setContentScrollPosition(contentWrapperRef.current.scrollTop);
     }
-    // No need to store the 'tab' for LIFE as it's a single section
+    setPreviousActiveLifeTab(activeLifeTab); // Store the current tab
 
     setSelectedLifeItem(item); // Set the selected life item
     setActiveSection('lifeDetail'); // Set the active section state
@@ -989,57 +1169,150 @@ export default function Home() {
     setActiveSection('experienceDetail'); // Set the active section state
   };
 
+  // --- ADD Handler for Blog Post Click --- 
+  const handleBlogPostClick = (post) => {
+    console.log("Blog post clicked, switching to detail view:", post);
+    // Save scroll position of the blog view wrapper
+    if (blogViewWrapperRef.current) {
+      setBlogScrollPosition(blogViewWrapperRef.current.scrollTop);
+    }
+    setSelectedBlogPost(post);
+    setActiveSection('blogDetail'); // Switch to the blog detail view
+  };
+  // --- END ADD ---
+
+  // --- MODIFY Global Back Button Logic ---
   const handleGlobalBackClick = () => {
-    if (activeSection === 'lifeDetail') {
-      setActiveSection('content'); 
-      if (previousActiveLifeTab) {
-        setActiveLifeTab(previousActiveLifeTab);
-      } else {
-        setActiveLifeTab('game');
-      }
+    const animationDuration = 1700; // Set delay slightly longer than slideOutToRight (1.6s)
+
+    if (activeSection === 'blogDetail') {
+      setActiveSection('blog'); 
       requestAnimationFrame(() => {
-        if (contentWrapperRef.current) {
-          contentWrapperRef.current.scrollTop = contentScrollPosition;
+        if (blogViewWrapperRef.current) {
+          blogViewWrapperRef.current.scrollTop = blogScrollPosition;
         }
       });
+      setTimeout(() => {
+        setSelectedBlogPost(null);
+        // setBlogScrollPosition(0); // Optionally reset
+      }, animationDuration); // Use defined duration
+    } else if (activeSection === 'blog') {
+      setActiveSection('home');
+    } else if (activeSection === 'lifeDetail' || activeSection === 'workDetail' || activeSection === 'experienceDetail') {
+      const targetSection = 
+        activeSection === 'lifeDetail' ? 'life-section' :
+        activeSection === 'workDetail' ? 'works-section' :
+        activeSection === 'experienceDetail' ? 'experience-section' :
+        null;
+      
+      const targetActiveSection = 'content'; 
+      setActiveSection(targetActiveSection); 
+
+      if (activeSection === 'lifeDetail') {
+         setActiveLifeTab(previousActiveLifeTab || 'game');
+      } 
+        
+      // --- REMOVE this block to prevent scrolling back to section top ---
+      /*
+      requestAnimationFrame(() => {
+        if (contentWrapperRef.current) { 
+          let targetRef = null;
+          if (targetSection === 'life-section') targetRef = lifeSectionRef;
+          else if (targetSection === 'works-section') targetRef = worksSectionRef;
+          else if (targetSection === 'experience-section') targetRef = experienceSectionRef;
+
+          if (targetRef?.current) {
+             contentWrapperRef.current.scrollTo({
+                 top: targetRef.current.offsetTop,
+                 behavior: 'auto' 
+             });
+          } else {
+             contentWrapperRef.current.scrollTop = contentScrollPosition;
+          }
+        } 
+      });
+      */
+      // --- END REMOVE ---
+      
+      // Use defined duration for all detail views
       setTimeout(() => {
         setSelectedLifeItem(null);
         setPreviousActiveLifeTab(null); 
-        setContentScrollPosition(0);
-      }, 500);
-    } else if (activeSection === 'workDetail') {
-      setActiveSection('content'); 
-      requestAnimationFrame(() => {
-        if (contentWrapperRef.current) {
-          contentWrapperRef.current.scrollTop = contentScrollPosition;
-        }
-      });
-      setTimeout(() => {
         setSelectedWorkItem(null);
-        setContentScrollPosition(0); 
-      }, 500);
-    } else if (activeSection === 'experienceDetail') {
-      setActiveSection('content'); 
-      requestAnimationFrame(() => {
-        if (contentWrapperRef.current) {
-          contentWrapperRef.current.scrollTop = contentScrollPosition;
-        }
-      });
-      setTimeout(() => {
         setSelectedExperienceItem(null);
-        setContentScrollPosition(0); 
-      }, 500);
+        setContentScrollPosition(0); // Keep resetting content scroll state here
+      }, animationDuration); 
     } else if (activeSection === 'content') {
       handleGoHome(); 
     }
   };
+  // --- END MODIFY ---
+
+  // --- ADD Handler for Life Tab Clicks --- 
+  const handleLifeTabClick = (tabName) => {
+    // Scroll to Life section top when a tab is clicked
+    if (contentWrapperRef.current && lifeSectionRef.current) {
+      const lifeSectionTop = lifeSectionRef.current.offsetTop;
+      contentWrapperRef.current.scrollTo({
+        top: lifeSectionTop,
+        behavior: 'smooth' // Or 'auto'
+      });
+    }
+    setActiveLifeTab(tabName);
+  };
+  // --- END ADD ---
+
+  // --- ADD Handler for Work Tab Clicks --- 
+  const handleWorkTabClick = (tabName) => {
+    if (contentWrapperRef.current && worksSectionRef.current) {
+      const worksSectionTop = worksSectionRef.current.offsetTop;
+      contentWrapperRef.current.scrollTo({
+        top: worksSectionTop,
+        behavior: 'smooth' 
+      });
+    }
+    setActiveWorkTab(tabName);
+  };
+  // --- END ADD ---
+
+  // --- ADD Handler for Left Nav Link Clicks ---
+  const handleLeftNavLinkClick = (link) => {
+    // 处理Blog链接点击
+    if (link.label === 'Blog') {
+      setActiveSection('blog');
+      return;
+    }
+    
+    // All links now navigate within the 'content' view
+    if (activeSection !== 'content') {
+      setActiveSection('content');
+      // Delay scrolling until content view is active
+      setTimeout(() => {
+        if (link.ref?.current && contentWrapperRef.current) {
+          contentWrapperRef.current.scrollTo({
+            top: link.ref.current.offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      }, 100); 
+    } else {
+      // Already in content view, just scroll
+      if (link.ref?.current && contentWrapperRef.current) {
+        contentWrapperRef.current.scrollTo({
+          top: link.ref.current.offsetTop,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+  // --- END ADD ---
 
   return (
     <div className={`${styles.container} ${isInverted ? styles.inverted : ''}`}>
       <Head>
         <title>森雨 - RainMorime</title>
         <meta name="description" content="森雨(RainMorime)的个人网站" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/pictures/RM.jpg" /> {/* Update favicon path */}
       </Head>
       <div className={styles.leftDotMatrix}></div>
       <MusicPlayer powerLevel={powerLevel} />
@@ -1094,11 +1367,41 @@ export default function Home() {
               )}
             </div>
             <button
-              className={`${styles.globalBackButton} ${activeSection === 'content' || activeSection === 'lifeDetail' || activeSection === 'workDetail' || activeSection === 'experienceDetail' ? styles.visible : ''}`}
+              className={`${styles.globalBackButton} ${ 
+                activeSection === 'content' || 
+                activeSection === 'lifeDetail' || 
+                activeSection === 'workDetail' || 
+                activeSection === 'experienceDetail' ||
+                activeSection === 'blog' || // 添加blog视图
+                activeSection === 'blogDetail' 
+                ? styles.visible : ''}`}
               onClick={handleGlobalBackClick}
             >
-              {/* ← */}
+              <div className={styles.backArrow}>
+                <div className={styles.arrowStem}></div>
+                <div className={styles.arrowHead}></div>
+              </div>
             </button>
+            {/* --- ADD Left Nav Links --- */}
+            <div className={`${styles.leftNavLinks} ${ 
+                activeSection === 'content' || // Show nav links in content view
+                activeSection === 'lifeDetail' || 
+                activeSection === 'workDetail' || 
+                activeSection === 'experienceDetail' ||
+                activeSection === 'blog' || // <-- ADD back 'blog'
+                activeSection === 'blogDetail' // <-- Keep 'blogDetail'
+                ? styles.visible : ''}`}>
+                {navLinks.map((link) => (
+                    <button 
+                        key={link.target} 
+                        className={styles.leftNavLink} 
+                        onClick={() => handleLeftNavLinkClick(link)}
+                    >
+                        {link.label}
+                    </button>
+                ))}
+            </div>
+            {/* --- END ADD --- */}
             <div className={styles.powerDisplay}>
               <div className={styles.batteryIcon}>
                 {[...Array(5)].map((_, i) => {
@@ -1136,7 +1439,7 @@ export default function Home() {
             <div
               className={styles.rightPanel}
             >
-              {[...Array(6)].map((_, index) => { 
+              {[...Array(7)].map((_, index) => { // <-- 修改这里，从6改为7
                 const lineLeftPercentage = index * 16;
                 const isPulsingNormal = pulsingNormalIndices?.includes(index);
                 const isPulsingReverse = pulsingReverseIndices?.includes(index);
@@ -1226,6 +1529,8 @@ export default function Home() {
                       {index === 3 && (
                           <>
                             <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
+                            <div className={`${styles.radarRipple} ${styles.ripple2}`}></div>
+                            <div className={`${styles.radarRipple} ${styles.ripple3}`}></div>
                           </>
                       )}
                     </div>
@@ -1260,20 +1565,56 @@ export default function Home() {
             ref={contentWrapperRef} 
             className={`${styles.contentWrapper} ${activeSection === 'content' ? styles.visible : styles.hidden}`}
           >
-            <div id="works-section" className={`${styles.contentSection} ${styles.worksSection}`}> 
+            <div id="works-section" ref={worksSectionRef} className={`${styles.contentSection} ${styles.worksSection}`}> {/* <-- ADD Ref */} 
               <h2>WORKS</h2>
-              <div className={styles.gameGrid}>
-                {sampleProjects.map(project => (
-                  <ProjectCard 
-                    key={project.id} 
-                    project={project} 
-                    onClick={() => handleWorkItemClick(project)}
-                  />
-                ))}
+              {/* --- ADD Work Tab Buttons --- */}
+              <div className={styles.workTabButtons}> {/* Use a specific class */} 
+                  <button
+                    className={`${styles.workTabButton} ${activeWorkTab === 'learn' ? styles.activeTab : ''}`}
+                    onClick={() => handleWorkTabClick('learn')}
+                  >
+                    Learn
+                  </button>
+                  <button
+                    className={`${styles.workTabButton} ${activeWorkTab === 'work' ? styles.activeTab : ''}`}
+                    onClick={() => handleWorkTabClick('work')}
+                  >
+                    Work
+                  </button>
               </div>
+              {/* --- END ADD --- */}
+
+              {/* --- ADD Work Content Area --- */}
+              <div className={styles.workContentArea}>
+                {/* Learn Tab Content */}
+                <div className={`${styles.workTabContent} ${activeWorkTab === 'learn' ? styles.activeWorkContent : ''}`}> 
+                    <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
+                        {learnProjects.map(project => (
+                          <ProjectCard 
+                            key={project.id} 
+                            project={project} 
+                            onClick={() => handleWorkItemClick(project)}
+                          />
+                        ))}
+                    </div>
+                </div>
+                {/* Work Tab Content */}
+                <div className={`${styles.workTabContent} ${activeWorkTab === 'work' ? styles.activeWorkContent : ''}`}> 
+                    <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
+                        {workProjects.map(project => (
+                          <ProjectCard 
+                            key={project.id} 
+                            project={project} 
+                            onClick={() => handleWorkItemClick(project)}
+                          />
+                        ))}
+                    </div>
+                </div>
+              </div>
+              {/* --- END ADD --- */}
             </div>
 
-            <div id="experience-section" className={`${styles.contentSection} ${styles.experienceSection}`}> 
+            <div id="experience-section" ref={experienceSectionRef} className={`${styles.contentSection} ${styles.experienceSection}`}> {/* <-- ADD Ref */} 
               <h2>EXPERIENCE</h2>
               <div className={styles.experienceTimeline}>
                 {experienceData.map(item => (
@@ -1310,35 +1651,35 @@ export default function Home() {
                 </div>
                     </div>
 
-            <div id="life-section" className={`${styles.contentSection} ${styles.lifeSection}`}> 
+            <div id="life-section" ref={lifeSectionRef} className={`${styles.contentSection} ${styles.lifeSection}`}> 
               <h2>LIFE</h2>
               {activeSection === 'content' && (
                 <div className={styles.lifeTabButtons}>
                   <button
                     className={`${styles.lifeTabButton} ${activeLifeTab === 'game' ? styles.activeTab : ''}`}
-                    onClick={() => setActiveLifeTab('game')}
+                    onClick={() => handleLifeTabClick('game')} // Keep using the (now simpler) handler
                   >
                     Game
                   </button>
                   <button
                     className={`${styles.lifeTabButton} ${activeLifeTab === 'travel' ? styles.activeTab : ''}`}
-                    onClick={() => setActiveLifeTab('travel')}
+                    onClick={() => handleLifeTabClick('travel')}
                   >
                     Travel
                   </button>
                   <button
                     className={`${styles.lifeTabButton} ${activeLifeTab === 'art' ? styles.activeTab : ''}`}
-                    onClick={() => setActiveLifeTab('art')}
+                    onClick={() => handleLifeTabClick('art')}
                   >
                     Art
                   </button>
                   <button
                     className={`${styles.lifeTabButton} ${activeLifeTab === 'other' ? styles.activeTab : ''}`}
-                    onClick={() => setActiveLifeTab('other')}
+                    onClick={() => handleLifeTabClick('other')}
                   >
                     Other
                   </button>
-                  </div>
+                </div>
               )}
 
               <div className={styles.lifeContentArea}>
@@ -1351,8 +1692,29 @@ export default function Home() {
                         onClick={() => handleLifeItemClick(game)}
                       />
                     ))}
+                  </div>
+                  {/* --- ADD Small Game Cards --- */}
+                  <h4 className={styles.subSectionTitle}>还有这些也玩 / Also Play These</h4>
+                  <div className={styles.smallGameGrid}>
+                    {
+                      [
+                        'The Binding of Isaac: Rebirth',
+                        'Terraria',
+                        'Stardew Valley',
+                        'Warframe',
+                        'Deep Rock Galactic',
+                        'Slay the Spire',
+                        'Stellaris',
+                        'RimWorld'
+                      ].map((gameName) => (
+                        <div key={gameName} className={styles.smallGameCard}>
+                          {gameName}
+                        </div>
+                      ))
+                    }
+                  </div>
+                  {/* --- END ADD --- */}
                 </div>
-                    </div>
                 <div className={`${styles.lifeTabContent} ${activeLifeTab === 'travel' ? styles.activeContent : ''}`}>
                   <div className={styles.travelGrid}>
                     {travelData.map(place => (
@@ -1365,15 +1727,25 @@ export default function Home() {
                   </div>
                 </div>
                 <div className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
-                  <p>这是艺术部分的内容...</p>
+                  <p>艺术是个好东西，音乐、绘画、设计还是电影我都喜欢，可回想起来能做的能说的却很少，或许我可以晚点再写...</p>
               </div>
                 <div className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''}`}>
-                  <p>这是其他部分的内容...</p>
+                  {/* --- ADD rendering for otherData --- */}
+                  <div className={styles.gameGrid}> {/* Reuse gameGrid style */}
+                    {otherData.map(item => (
+                      <ProjectCard 
+                        key={item.id} 
+                        project={item} 
+                        onClick={() => handleLifeItemClick(item)}
+                      />
+                    ))}
+                  </div>
+                  {/* --- END ADD --- */}
             </div>
               </div>
             </div>
 
-            <div id="contact-section" className={`${styles.contentSection} ${styles.contactSection}`}> 
+            <div id="contact-section" ref={contactSectionRef} className={`${styles.contentSection} ${styles.contactSection}`}> {/* <-- ADD Ref */} 
               <h2>CONTACT</h2>
               <div className={styles.radarDisplay}>
                 <div className={styles.scanner}></div>
@@ -1420,6 +1792,20 @@ export default function Home() {
                     <div className={styles.contactIconRipple}></div>
                   </a>
               </div>
+              {/* --- ADD STEAM ICON --- */}
+              <div className={`${styles.logItem} ${styles.radarContact4}`}>
+                  <a href="https://steamcommunity.com/id/RainMorime/" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
+                    <div className={styles.logIconContainer}>
+                         {/* --- Use new inline Steam SVG with currentColor --- */}
+                         <svg className={styles.logIcon} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                           <path fill="currentColor" d="M15.974 0c-8.401 0-15.292 6.479-15.943 14.714l8.573 3.547c0.729-0.495 1.604-0.786 2.552-0.786 0.083 0 0.167 0.005 0.25 0.005l3.813-5.521v-0.078c0-3.328 2.703-6.031 6.031-6.031s6.036 2.708 6.036 6.036c0 3.328-2.708 6.031-6.036 6.031h-0.135l-5.438 3.88c0 0.073 0.005 0.141 0.005 0.214 0 2.5-2.021 4.526-4.521 4.526-2.177 0-4.021-1.563-4.443-3.635l-6.135-2.542c1.901 6.719 8.063 11.641 15.391 11.641 8.833 0 15.995-7.161 15.995-16s-7.161-16-15.995-16zM10.052 24.281l-1.964-0.813c0.349 0.724 0.953 1.328 1.755 1.667 1.729 0.719 3.724-0.104 4.443-1.833 0.349-0.844 0.349-1.76 0.005-2.599-0.344-0.844-1-1.495-1.839-1.844-0.828-0.349-1.719-0.333-2.5-0.042l2.026 0.839c1.276 0.536 1.88 2 1.349 3.276s-2 1.88-3.276 1.349zM25.271 11.875c0-2.214-1.802-4.021-4.016-4.021-2.224 0-4.021 1.807-4.021 4.021 0 2.219 1.797 4.021 4.021 4.021 2.214 0 4.016-1.802 4.016-4.021zM18.245 11.87c0-1.672 1.349-3.021 3.016-3.021s3.026 1.349 3.026 3.021c0 1.667-1.359 3.021-3.026 3.021s-3.016-1.354-3.016-3.021z"/>
+                         </svg>
+                         {/* --- End new Steam SVG --- */}
+                      </div>
+                      <div className={styles.contactIconRipple}></div>
+                    </a>
+                </div>
+              {/* --- END STEAM ICON --- */}
             </div>
 
             <div id="about-section" ref={aboutSectionRef} className={`${styles.contentSection} ${styles.aboutSection}`}> 
@@ -1447,6 +1833,7 @@ export default function Home() {
         </>
       )}
 
+      {/* Detail View Wrappers remain outside contentWrapper */}
       <div 
         className={`${styles.detailViewWrapper} ${activeSection === 'lifeDetail' ? styles.visible : styles.hidden}`}
       >
@@ -1475,6 +1862,27 @@ export default function Home() {
             item={selectedExperienceItem}
           />
         )}
+      </div>
+
+      {/* Blog详情视图 */}
+      <div 
+        className={`${styles.detailViewWrapper} ${activeSection === 'blogDetail' ? styles.visible : styles.hidden}`}
+      >
+        {selectedBlogPost && (
+          <BlogDetailView 
+            item={selectedBlogPost}
+          />
+        )}
+      </div>
+
+      {/* 添加独立的Blog视图容器 */}
+      <div 
+        ref={blogViewWrapperRef} // <-- Assign the ref here
+        className={`${styles.blogViewWrapper} ${activeSection === 'blog' ? styles.visible : styles.hidden}`}
+      >
+        <BlogView 
+          onPostClick={handleBlogPostClick} 
+        />
       </div>
     </div>
   );

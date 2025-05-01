@@ -1,0 +1,79 @@
+/* styles/BlogView.module.scss */
+
+.blogContainer {
+    /* 半屏布局样式 */
+    position: absolute; 
+    top: 10%;
+    right: 0;
+    width: 50%; 
+    height: 90%;
+    overflow-y: auto; 
+    padding: 40px 60px; 
+    box-sizing: border-box; 
+    background-color: transparent;
+    color: var(--ark-text);
+
+    /* 反色模式样式 */
+    :global(.inverted) & {
+      color: var(--ark-text);
+    }
+}
+  
+.blogTitle {
+    font-family: 'Dosis', monospace; 
+    font-size: 2rem; 
+    font-weight: bold;
+    color: var(--ark-primary);
+    margin-bottom: 30px; 
+    margin-top: 0; 
+    text-align: left;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ark-border); 
+
+    :global(.inverted) & {
+      color: var(--ark-primary);
+      border-bottom-color: var(--ark-border);
+    }
+}
+
+/* 博客文章列表样式 */
+.blogPostGrid {
+  display: flex;
+  flex-direction: column; /* 改为纵向排列 */
+  gap: 15px; /* 减小间距 */
+  margin-top: 20px;
+  width: 100%;
+  
+  :global(.inverted) & {
+    /* 保持原样 */
+  }
+}
+
+// Remove placeholder text style if no longer used
+/* .placeholderText { ... } */
+
+/* --- Modify Styles for Blog Post Grid (like .gameGrid) --- */
+/* 
+:global(.inverted) & {
+  // Example: change gap or background?
+}
+*/
+/* --- END Modify --- */
+
+// Add styles for actual blog posts later
+
+/* REMOVE Top-level :global block */
+/* 
+:global(.inverted) {
+    .blogContainer {
+        color: var(--ark-text);
+    }
+    .blogTitle {
+        color: var(--ark-primary);
+        border-bottom-color: var(--ark-border);
+    }
+     // .placeholderText { ... } 
+} 
+*/ 
