@@ -101,10 +101,8 @@
 
 // --- Styles for Inline Article Images --- 
 .articleImageFigure {
-  margin: 30px auto; // Center the figure with vertical spacing
-  padding: 0;
-  text-align: center; // Center the image and caption within the figure
-  max-width: 80%; // Limit width to prevent taking full width
+  margin: 25px 0; // Add vertical spacing around figures
+  text-align: center; // Center figure content
 }
 
 .clickableFigure {
@@ -118,62 +116,52 @@
 }
 
 .articleImage {
-  display: block;
-  max-width: 100%; // Image takes full width of figure
+  max-width: 100%; // Ensure image doesn't overflow
   height: auto; // Maintain aspect ratio
-  margin: 0 auto; // Center image horizontally within figure
-  border: 1px solid var(--ark-border);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: block; // Remove extra space below image
+  margin: 0 auto 10px auto; // Center image and add space below
+  border: 1px solid var(--ark-border); // Add subtle border
 }
 
 .articleImageCaption {
-  display: block;
-  margin-top: 10px;
+  font-family: 'Dosis', sans-serif;
   font-size: 0.9rem;
   color: var(--ark-text-secondary);
-  font-family: 'Dosis', sans-serif;
-  text-align: center;
   opacity: 0.8;
+  margin-top: 8px; // Space between image and caption
 }
 // --- End Inline Image Styles ---
 
 // --- ADD Styles for Inline Image Row ---
 .inlineImageRow {
   display: flex;
-  justify-content: space-around; // Distribute space around items
-  align-items: flex-start; // Align items to the top
-  gap: 15px; // Gap between figures in the row
-  margin: 30px auto; // Same vertical margin as single figures
+  gap: 15px; // Space between images in a row
+  margin: 25px 0; 
 }
 
-// Adjustments for figures within a row
 .rowFigure {
-  flex: 1 1 0; // Allow figures to grow and shrink, basis of 0
-  max-width: calc(50% - 7.5px); // Max width for two items with gap
-  margin: 0; // Remove individual figure margin
+  flex: 1; // Each figure takes equal space
+  margin: 0; // Reset individual figure margins
 }
-// --- END Row Styles ---
 
 // --- ADD Styles for Blockquote ---
 .articleBlockquote {
-  margin: 25px 10px 25px 30px; // Top/bottom, right, left margins
-  padding-left: 25px;
-  border-left: 4px solid var(--ark-border);
-  color: var(--ark-text-secondary); // Slightly different color for quotes
-  font-family: 'Dosis', sans-serif; // Consistent font
-  font-size: 1.05rem; // Slightly smaller or different size?
-  font-style: italic; // Italicize quotes
-  line-height: 1.8;
-  opacity: 0.9;
-  white-space: pre-wrap; // Ensure internal newlines are respected
+  font-family: 'Dosis', sans-serif;
+  font-size: 1rem; 
+  font-style: italic;
+  color: var(--ark-text-secondary);
+  opacity: 0.8;
+  margin: 25px 40px; // Indent the blockquote
+  padding-left: 20px;
+  border-left: 3px solid var(--ark-border); 
+  line-height: 1.6;
 
-  span:last-child { // Style the source line differently
-    display: block;
-    margin-top: 10px;
-    font-style: normal;
-    text-align: right;
-    font-size: 0.9rem;
-    opacity: 0.8;
+  span {
+     display: block; // Ensure each line from split('\n') is on its own line
+     margin-bottom: 0.5em; // Space between lines in the quote
+     &:last-child {
+       margin-bottom: 0;
+     }
   }
 }
 // --- END Blockquote Styles ---
@@ -317,76 +305,144 @@
 
 // --- ADD Style for Inline Icon Link --- 
 .inlineIconLink {
-  display: inline-flex; // Use flex to align icon properly
-  vertical-align: middle; // Align with the middle of the text line
-  margin-left: 8px; // Space between text and icon
-  color: var(--ark-primary); // Use primary color for the icon
-  transition: color 0.2s ease, transform 0.2s ease;
-  transform: translateY(-1px); // Slight adjustment for better visual alignment
-
-  svg {
-    width: 1.1em; // Make icon size relative to surrounding text font size
-    height: 1.1em;
-    fill: currentColor; // Ensure SVG inherits the link color
-  }
-
-  &:hover {
-    color: var(--ark-highlight-green); // Highlight color on hover
-    transform: translateY(-1px) scale(1.1); // Slight grow effect
-  }
-}
-// --- END ADD ---
-
-// --- Styles for Related Images Section (Copied from LifeDetailView) ---
-.relatedImagesSection {
-  margin-top: 40px; // Space above the related images section
-  padding-top: 20px; // Space above the title
-  border-top: 1px solid var(--ark-border); // Separator line
-}
-
-.relatedImagesTitle {
-  font-family: 'Dosis', monospace;
-  font-size: 1.3rem;
-  color: var(--ark-text-secondary);
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.thumbnailGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); // Increase min size from 100px to 140px
-  gap: 15px; // Gap between thumbnails
-}
-
-.thumbnailButton {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  border: 1px solid transparent; // Placeholder for hover effect
-  transition: border-color 0.2s ease;
-  overflow: hidden; // Keep hiding overflow
-  // Add a background color for empty space when using object-fit: contain
-  background-color: rgba(var(--ark-primary-rgb), 0.05); 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 0.3em; 
+  color: var(--ark-primary); 
+  text-decoration: none;
+  position: relative; // Needed for ripple positioning
+  vertical-align: middle; 
+  // --- ADD: Styles for hover background --- 
+  padding: 0.1em 0.3em; // Add padding to the link itself
+  border-radius: 2px;
+  transition: background-color 0.2s ease, color 0.2s ease; // Transition link background and color
+  background-color: transparent; // Default transparent background
 
   &:hover {
-    border-color: var(--ark-primary);
+    text-decoration: none; // Remove underline on hover when background appears
+    // color: var(--ark-highlight-green); // REMOVE individual color change
+    background-color: var(--ark-primary); // Apply solid primary background
+    color: var(--ark-dark-blue); // Set text color to dark blue for contrast
+
+    .inlineIcon {
+      // color: var(--ark-highlight-green); // REMOVE individual icon color change
+      color: var(--ark-dark-blue); // Ensure icon color also becomes dark blue
+    }
+    // Remove hover effect from inlineIconText and inlineIconSvgContainer
+    .inlineIconText {
+       background-color: transparent; // Ensure no separate background on text
+       color: inherit; // Inherit dark blue from parent <a>
+    }
+    .inlineIconSvgContainer {
+       background-color: transparent; // Ensure no separate background on icon container
+    }
   }
 }
 
-.thumbnailImage {
-  display: block;
-  width: 100%;
-  height: 100%; // Let height be controlled by the container/image ratio
-  object-fit: contain; // Change from cover to contain to show the whole image
-  transition: transform 0.3s ease;
+.inlineIcon {
+  width: 1.4em; // --- MODIFY: Increase size --- 
+  height: 1.4em; // --- MODIFY: Increase size --- 
+  fill: currentColor; // Inherit color from parent link
+  vertical-align: middle; // Helps alignment
+  transition: color 0.2s ease; // Smooth color transition
+}
 
-  .thumbnailButton:hover & {
-    transform: scale(1.05); // Slight zoom on hover
+// --- REMOVE Hover Style from Text --- 
+.inlineIconText {
+   // Keep text style consistent with surrounding paragraph
+   transition: color 0.2s ease; // Only transition color now
+   padding: 0.1em 0.3em; 
+   margin: -0.1em -0.3em; 
+   border-radius: 2px; 
+   background-color: transparent; 
+   color: inherit; // Inherit color from link
+
+   // REMOVE hover rule for text background
+   /*
+   .iconLinkContainer:hover & { 
+     background-color: rgba(var(--ark-text-secondary-rgb, 200, 200, 200), 0.2); 
+     color: var(--ark-highlight-green); 
+   }
+   */
+}
+
+// --- REMOVE Hover Style from Icon Container --- 
+.inlineIconSvgContainer {
+  display: inline-flex; 
+  align-items: center;
+  justify-content: center;
+  padding: 0.2em; 
+  border-radius: 2px; 
+  background-color: transparent; 
+  transition: background-color 0.2s ease;
+  vertical-align: middle; 
+  margin-right: -0.2em; 
+
+  // REMOVE hover rule for icon container background
+  /*
+  .iconLinkContainer:hover & { 
+    background-color: rgba(var(--ark-text-secondary-rgb, 200, 200, 200), 0.2); 
+  }
+  */
+}
+
+// Styles for Icon Ripple Effect
+.iconLinkContainer {
+  display: inline-block; 
+  position: relative;
+  vertical-align: middle; 
+}
+
+.iconRipple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.1);
+  width: 16px; 
+  height: 16px; 
+  border-radius: 50%;
+  border: 2px solid rgba(178, 242, 187, 0);
+  box-shadow: 0 0 0 0px rgba(178, 242, 187, 0); 
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease-out;
+
+  .iconLinkContainer:hover & {
+    animation: contactRippleExpandShadowInline 1.5s ease-out forwards; 
+    opacity: 1; 
   }
 }
-// --- END ADD --- 
+
+// Keyframes for the inline ripple animation
+@keyframes contactRippleExpandShadowInline {
+  0% {
+    border: 2px solid rgba(178, 242, 187, 1); 
+    box-shadow: 0 0 6px 2px rgba(178, 242, 187, 0.9); 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+  100% {
+    border: 1px solid rgba(178, 242, 187, 0); 
+    box-shadow: 0 0 0 15px rgba(178, 242, 187, 0); 
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.5); 
+  }
+}
+
+// General inline link style
+.inlineLink {
+  color: var(--ark-primary);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ark-primary);
+  transition: color 0.2s, border-color 0.2s;
+
+  &:hover {
+    color: var(--ark-highlight-green);
+    border-bottom-color: var(--ark-highlight-green);
+    border-bottom-style: solid;
+  }
+}
 
 // --- ADD Styles for Article Link List --- 
 .articleLinkList {
@@ -411,3 +467,20 @@
   opacity: 0.9;
 }
 // --- END ADD --- 
+
+// --- ADD: Container for the SVG icon --- 
+.inlineIconSvgContainer {
+  display: inline-flex; // Allows padding and background
+  align-items: center;
+  justify-content: center;
+  padding: 0.2em; // Small padding around the icon
+  border-radius: 2px; // Slight rounding for background
+  background-color: transparent; // Default transparent background
+  transition: background-color 0.2s ease;
+  vertical-align: middle; // Align container with text
+  margin-right: -0.2em; // Offset padding slightly if needed for gap
+
+  .iconLinkContainer:hover & { // Apply background on hover of the main container
+    background-color: rgba(var(--ark-text-secondary-rgb, 200, 200, 200), 0.2); // Grey background
+  }
+} 

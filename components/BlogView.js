@@ -24,7 +24,7 @@ const BlogView = ({ onPostClick }) => {
           <BlogPostCard 
             key={post.id} 
             post={post} 
-            onClick={() => onPostClick(post)}
+            onClick={(e) => onPostClick(post, e)}
           />
         ))}
       </div>

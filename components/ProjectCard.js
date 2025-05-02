@@ -6,9 +6,9 @@ const ProjectCard = ({ project, onClick }) => {
 
   const imageStyle = imageUrl ? { backgroundImage: `url(${imageUrl})` } : {};
 
-  const handleCardClick = () => {
+  const handleCardClick = (e) => {
     if (onClick) {
-      onClick(project);
+      onClick(project, e);
     } else if (link && link !== '#') {
       window.open(link, '_blank', 'noopener noreferrer');
     }
@@ -22,7 +22,11 @@ const ProjectCard = ({ project, onClick }) => {
       onClick={isClickable ? handleCardClick : undefined}
       role={isClickable ? "button" : undefined}
       tabIndex={isClickable ? 0 : undefined}
-      onKeyDown={isClickable ? (e) => (e.key === 'Enter' || e.key === ' ') && handleCardClick() : undefined}
+      onKeyDown={isClickable ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleCardClick(e);
+        }
+      } : undefined}
     >
       <div className={styles.cardBorderTopLeft}></div>
       <div className={styles.cardBorderBottomRight}></div>

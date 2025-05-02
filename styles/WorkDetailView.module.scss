@@ -34,7 +34,7 @@
 }
 
 .detailImageContainer {
-   flex: 1 1 45%; // Adjust flex basis slightly if needed
+   flex: 1 1 35%; // --- MODIFY: Reduce flex-basis --- 
    max-width: 450px; 
    margin: 0 auto; 
 
@@ -75,7 +75,7 @@
 }
 
 .detailText {
-  flex: 1 1 55%; // Adjust flex basis
+  flex: 1 1 65%; // --- MODIFY: Increase flex-basis --- 
 }
 
 .detailDescription {
@@ -177,3 +177,292 @@
      }
   }
 } 
+
+// --- ADD Styles for Related Images Section ---
+.relatedImagesSection {
+  margin-top: 40px; // Space above the related images section
+  padding-top: 20px; // Space above the title
+  border-top: 1px solid var(--ark-border); // Separator line
+}
+
+.relatedImagesTitle {
+  font-family: 'Dosis', monospace;
+  font-size: 1.3rem;
+  color: var(--ark-text-secondary);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.thumbnailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); // Grid for thumbnails
+  gap: 15px; // Gap between thumbnails
+}
+
+.thumbnailButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid transparent; // Placeholder for hover effect
+  transition: border-color 0.2s ease;
+  overflow: hidden;
+  background-color: rgba(var(--ark-primary-rgb), 0.05); 
+  aspect-ratio: 16 / 9; // Maintain aspect ratio for thumbnails
+
+  &:hover {
+    border-color: var(--ark-primary);
+  }
+}
+
+.thumbnailImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; // Contain the image within the button area
+  transition: transform 0.3s ease;
+
+  .thumbnailButton:hover & {
+    transform: scale(1.05); // Slight zoom on hover
+  }
+}
+// --- END ADD --- 
+
+// --- ADD Article Image Styles (Copied from LifeDetailView) --- 
+.articleImageFigure {
+  margin: 25px 0; // Add vertical spacing around figures
+  text-align: center; // Center figure content
+}
+
+.clickableFigure {
+  cursor: pointer; // Add pointer cursor to indicate clickability
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02); // Slight grow effect on hover
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); // Enhance shadow on hover
+  }
+}
+
+.articleImage {
+  max-width: 100%; // Ensure image doesn't overflow
+  height: auto; // Maintain aspect ratio
+  display: block; // Remove extra space below image
+  margin: 0 auto 10px auto; // Center image and add space below
+  border: 1px solid var(--ark-border); // Add subtle border
+}
+
+.articleImageCaption {
+  font-family: 'Dosis', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ark-text-secondary);
+  opacity: 0.8;
+  margin-top: 8px; // Space between image and caption
+}
+// --- END ADD Copied Styles --- 
+
+// --- ADD Article Section Styles ---
+.articleSection {
+  margin-top: 30px; // Space between image and article
+  padding-top: 30px; // Space above first paragraph
+  border-top: 1px solid var(--ark-border); // Separator line
+
+  p {
+    font-family: 'Dosis', sans-serif;
+    font-size: 1.05rem; // Slightly smaller than description
+    line-height: 1.8;
+    color: var(--ark-text-secondary);
+    margin-bottom: 1.5rem; // Space between paragraphs
+    opacity: 0.9;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+// --- END ADD ---
+
+// --- ADD Styles for inline Bilibili icon link --- 
+.inlineIconLink {
+  display: inline-flex; 
+  align-items: center; 
+  gap: 0.3em; 
+  color: var(--ark-primary); 
+  text-decoration: none;
+  position: relative; // Needed for ripple positioning
+  vertical-align: middle; 
+  padding: 0.1em 0.3em; // Add padding to the link itself
+  border-radius: 2px;
+  transition: background-color 0.2s ease, color 0.2s ease; // Transition link background and color
+  background-color: transparent; // Default transparent background
+
+  &:hover {
+    text-decoration: none; // Remove underline on hover when background appears
+    background-color: var(--ark-primary); // Apply solid primary background
+    color: var(--ark-dark-blue); // Set text color to dark blue for contrast
+
+    .inlineIcon {
+      color: var(--ark-dark-blue); // Ensure icon color also becomes dark blue
+    }
+    // Remove hover effect from inlineIconText and inlineIconSvgContainer
+    .inlineIconText {
+       background-color: transparent; // Ensure no separate background on text
+       color: inherit; // Inherit dark blue from parent <a>
+    }
+    .inlineIconSvgContainer {
+       background-color: transparent; // Ensure no separate background on icon container
+    }
+  }
+}
+
+.inlineIcon {
+  width: 1.4em; // --- MODIFY: Increase size --- 
+  height: 1.4em; // --- MODIFY: Increase size --- 
+  fill: currentColor; // Inherit color from parent link
+  vertical-align: middle; // Helps alignment
+  transition: color 0.2s ease; // Smooth color transition
+}
+
+// --- ADD: Container for the SVG icon --- 
+.inlineIconSvgContainer {
+  display: inline-flex; // Allows padding and background
+  align-items: center;
+  justify-content: center;
+  padding: 0.2em; // Small padding around the icon
+  border-radius: 2px; // Slight rounding for background
+  background-color: transparent; // Default transparent background
+  transition: background-color 0.2s ease;
+  vertical-align: middle; // Align container with text
+  margin-right: -0.2em; // Offset padding slightly if needed for gap
+}
+
+.inlineIconText {
+   // Keep text style consistent with surrounding paragraph
+   transition: color 0.2s ease; // Only transition color
+   padding: 0.1em 0.3em; 
+   margin: -0.1em -0.3em; 
+   border-radius: 2px; 
+   background-color: transparent; 
+   color: inherit; // Inherit color from link
+}
+
+// --- ADD Styles for Icon Ripple Effect --- 
+.iconLinkContainer {
+  display: inline-block; // Allows relative positioning for ripple
+  position: relative;
+  vertical-align: middle; // Align container with text
+}
+
+.iconRipple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.1);
+  width: 16px; // Smaller ripple for inline icon
+  height: 16px; // Smaller ripple for inline icon
+  border-radius: 50%;
+  border: 2px solid rgba(178, 242, 187, 0);
+  box-shadow: 0 0 0 0px rgba(178, 242, 187, 0); 
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease-out;
+
+  // Trigger animation on hover of the link container
+  .iconLinkContainer:hover & {
+    animation: contactRippleExpandShadowInline 1.5s ease-out forwards; // Use a new animation name
+    opacity: 1; // Start visible for animation
+  }
+}
+
+// --- ADD Keyframes for the inline ripple animation --- 
+@keyframes contactRippleExpandShadowInline {
+  0% {
+    border: 2px solid rgba(178, 242, 187, 1); 
+    box-shadow: 0 0 6px 2px rgba(178, 242, 187, 0.9); 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+  100% {
+    border: 1px solid rgba(178, 242, 187, 0); 
+    box-shadow: 0 0 0 15px rgba(178, 242, 187, 0); // Smaller final shadow spread
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.5); // Smaller final scale
+  }
+}
+
+// --- ADD Hover style for standard inline links ---
+.inlineLink {
+  color: var(--ark-primary); // Default color
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--ark-primary-rgb), 0.5);
+  transition: background-color 0.2s ease, color 0.2s ease, text-decoration-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--ark-primary);
+    color: var(--ark-dark-blue);
+    text-decoration: none; // Remove underline on hover
+    padding: 2px 4px; // Add padding to create background block
+    margin: -2px -4px; // Adjust margin to compensate for padding
+  }
+}
+// --- END ADD --- 
+
+// --- ADD Styles for Copyable Text --- 
+.copyableTextContainer {
+  display: inline-block; // Allows relative positioning for feedback
+  position: relative;
+}
+
+.copyableTextButton {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit; // Inherit font from surrounding paragraph
+  color: var(--ark-primary); // Make it look like a link
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s; // Remove border-color from transition
+  vertical-align: baseline; // Align with text baseline
+  padding: 0.1em 0.3em; // Add padding for background block
+  margin: -0.1em -0.3em; // Offset padding
+  border-radius: 2px; // Add rounding like the link
+  font-weight: bold; // --- ADD bold font weight ---
+
+  &:hover {
+    background-color: var(--ark-primary); // Apply solid primary background
+    color: var(--ark-dark-blue); // Set text color to dark blue
+  }
+}
+
+.copyFeedback {
+  position: absolute;
+  bottom: 105%; // Position above the button
+  left: 50%;
+  color: var(--ark-highlight-green); 
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-family: 'Dosis', sans-serif;
+  white-space: nowrap;
+  opacity: 0; // Start hidden, animation handles fade-in/out
+  z-index: 5; 
+  pointer-events: none;
+  animation: floatUpFadeOut 1.5s ease-out forwards;
+}
+
+@keyframes floatUpFadeOut {
+  0% {
+    transform: translate(-50%, 5px); 
+    opacity: 0.8;
+  }
+  80% { 
+    transform: translate(-50%, -15px); 
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -20px); 
+    opacity: 0; 
+  }
+}
+// --- END ADD --- 

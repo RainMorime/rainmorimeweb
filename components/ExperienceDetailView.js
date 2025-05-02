@@ -3,9 +3,15 @@ import styles from '../styles/ExperienceDetailView.module.scss';
 import Lightbox from './Lightbox';
 
 const ExperienceDetailView = ({ item }) => {
-  if (!item) return null;
+  console.log("[ExperienceDetailView] Received item:", item);
+
+  if (!item) {
+    console.log("[ExperienceDetailView] Item is null or undefined, returning null.");
+    return null;
+  }
 
   const { title, duration, location, details, type, galleryImages } = item;
+  console.log(`[ExperienceDetailView] Destructured values: title=${title}, duration=${duration}, location=${location}, details=${details ? 'exists' : 'missing'}`);
 
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentLightboxImageIndex, setCurrentLightboxImageIndex] = useState(0);
@@ -35,17 +41,23 @@ const ExperienceDetailView = ({ item }) => {
 
   return (
     <div className={styles.detailContainer}>
+      {console.log("[ExperienceDetailView] Rendering title:", title)}
       <h3 className={styles.detailTitle}>{title}</h3>
       
       <div className={styles.detailMeta}>
         <span className={styles.detailDuration}>
           <span className={styles.metaLabel}>Duration:</span> 
-          {duration.split(' - ').map((part, index, arr) => 
-             <span key={index} className={styles.timelineNumber}>
-               {part}{index < arr.length - 1 ? ' - ' : ''}
-             </span>
+          {typeof duration === 'string' && duration ? (
+            duration.split(' - ').map((part, index, arr) => 
+               <span key={index} className={styles.timelineNumber}>
+                 {part}{index < arr.length - 1 ? ' - ' : ''}
+               </span>
+            )
+          ) : (
+            <span className={styles.timelineNumber}>N/A</span>
           )}
         </span>
+        {console.log("[ExperienceDetailView] Rendering location:", location)}
         {location && (
            <span className={styles.detailLocation}>
               <span className={styles.metaLabel}>Location:</span>
@@ -55,6 +67,7 @@ const ExperienceDetailView = ({ item }) => {
       </div>
 
       <div className={styles.detailBody}>
+         {console.log("[ExperienceDetailView] Rendering details:", details)}
          {details && details.map((line, index) => (
             <p key={index} className={styles.detailParagraph}>
               {line.split(/(\d{4}(?:\.\d{2})?)/g).map((part, partIndex) => 

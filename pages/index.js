@@ -32,7 +32,23 @@ const learnProjects = [
     description: 'Unity3D C# 平台跳跃',
     tech: ['Unity3D', 'C#', '平台跳跃'],
     link: '#',
-    imageUrl: '/placeholders/work1.png' 
+    imageUrl: '/images/projects/robby/RB0.png', // <-- Update cover image
+    galleryImages: [ 
+      { src: '/images/projects/robby/RB0.png' }, // <-- Add new cover to gallery start
+      { src: '/images/projects/fox/fox1.png' },
+      { src: '/images/projects/fox/fox2.png' },
+      { src: '/images/projects/fox/fox3.png' },
+      { src: '/images/projects/fox/fox4.png' },
+      { src: '/images/projects/robby/RB1.png' },
+      { src: '/images/projects/robby/RB2.png' }
+    ],
+    // --- FIX and ADD articleContent using template literal ---
+    articleContent: `
+这两个小Demo是我大一学习 M_Studio老师的课程制作的 [M_Studio老师的空间](https://space.bilibili.com/370283072)
+
+还有两份笔记（写的零碎见谅）
+    `
+    // --- END FIX and ADD ---
   },
   {
     id: 2,
@@ -40,15 +56,39 @@ const learnProjects = [
     description: 'HTML/CSS',
     tech: ['HTML', 'CSS', '前端'],
     link: '#',
-    imageUrl: '/placeholders/work2.png'
+    imageUrl: '/images/projects/freecode/freecode.png', // <-- UPDATE imageUrl
+    // --- ADD articleContent --- 
+    articleContent: '[你可以在这里看到我的练习作品集](https://www.freecodecamp.org/certification/RainMorime/responsive-web-design)\n\n我从这里学到了一些前端知识。',
+    // --- END ADD --- 
+    galleryImages: [ // <-- ADD galleryImages
+       { src: '/images/projects/freecode/freecode.png' }
+    ]
   },
   {
     id: 3,
-    title: '赌徒2025Unity3D开发大赛',
+    title: '2024Unity3D开发大赛',
     description: 'Unity3D 卡牌',
     tech: ['Unity3D', '卡牌', '游戏开发'],
     link: '#',
-    imageUrl: '/placeholders/work3.png'
+    imageUrl: '/images/projects/2024unity/gm2.png', // <-- UPDATE imageUrl
+    // --- ADD galleryImages --- 
+    galleryImages: [
+      { src: '/images/projects/2024unity/gm1.png' },
+      { src: '/images/projects/2024unity/gm2.png' },
+      { src: '/images/projects/2024unity/gm3.png' }
+    ],
+    // --- END ADD ---
+    // --- ADD articleContent --- 
+    articleContent: `
+GameJam主题: It Never Ends
+
+一名复赌的赌徒，这一次为了满足自己的无穷无尽的贪欲，抛弃了过往，家庭，梦想，肉体以及灵魂，踏入了没有终局的赌局
+
+这是我第一次参加gamejam独立制作的一款游戏，玩法很简单，对于我来说也是一种尝试吧，中途有很多不成熟的地方，其实一开始是想做俯视2D类幸存者的，不过总感觉难切题，快结束的时候推翻重来了。
+
+如果你感兴趣，可也看我的视频 [赌徒](https://www.bilibili.com/video/BV1NJCHYQEW6)
+    `
+    // --- END ADD ---
   },
   {
     id: 4,
@@ -56,7 +96,27 @@ const learnProjects = [
     description: 'Unity3D AI',
     tech: ['Unity3D', 'AI', '游戏开发'],
     link: '#',
-    imageUrl: '/placeholders/work4.png'
+    imageUrl: '/images/projects/aiagent/AG1.jpg',
+    // --- ADD galleryImages --- 
+    galleryImages: [
+      { src: '/images/projects/aiagent/AG1.jpg' },
+      { src: '/images/projects/aiagent/AG2.png' },
+      { src: '/images/projects/aiagent/AG3.png' }
+    ],
+    // --- END ADD ---
+    // --- ADD articleContent --- 
+    articleContent: `
+"迷路的旅人徘徊在未知的岔路口，恍惚间，一位神秘的占卜师现身，为旅人抽取命运的塔罗牌。通过占卜师的指引和谜题的解密，旅人逐步拼凑出回家的方向。在塔罗牌的指示中，旅人用智慧与直觉寻找正确的路径，直至命运的终点，终于找到了回家的路。"
+
+玩家需要通过上下左右四个方向按钮破解随机生成的密码。
+
+每局游戏都会生成一组由四个方向组成的答案，例如"上 上 左 右"。
+
+玩家需要按照顺序点击按钮输入答案，并点击提交按钮验证。如果答案正确，便可成回到家中。
+
+一个利用AI制作游戏的开发比赛，在这里我学习了如何将Agent融入游戏的方法，你可以用AI设定游戏规则，也可以作为一个NPC，还可以从模型中藏入通关的线索。对我未来的游戏注入更多的可能。
+    `
+    // --- END ADD ---
   },
 ];
 
@@ -67,7 +127,25 @@ const workProjects = [
     description: '策划',
     tech: ['Minecraft', '服务器', '策划'],
     link: '#',
-    imageUrl: '/placeholders/work5.png'
+    imageUrl: '/images/projects/campfire/yh0.jpg', // <-- UPDATE imageUrl
+    // --- ADD articleContent --- 
+    articleContent: `
+我在这个服务器中参与了武器和怪物的策划。
+
+也在这里结识了很多有趣又厉害的人，是Minecraft十多年的生涯中的重大的节点。
+
+也欢迎你来到服务器，版本1.20.1，地址：play.foacraft.com，原版也可以进入，当然你也可以加入QQ群：481423636，使用我们的整合包，这里有很多友好的朋友，他们会带你上手服务器。
+
+玩法有点像剑与魔法的搜打撤，在群岛之间和玩家组队挑战BOSS，有自由的锻造装备，自定义属性成长曲线，可以打包票的说玩法是非常创意有新颖的，希望你玩得愉快。
+    `,
+    // --- END ADD ---
+    // --- ADD galleryImages --- 
+    galleryImages: [
+      { src: '/images/projects/campfire/yh0.jpg' }, // <-- ADD yh0
+      { src: '/images/projects/campfire/yh.jpg' },  // <-- ADD yh.jpg
+      { src: '/images/projects/campfire/yh1.jpg' }
+    ]
+    // --- END ADD ---
   },
   {
     id: 6,
@@ -75,18 +153,53 @@ const workProjects = [
     description: 'TypeScript/JavaScript',
     tech: ['TypeScript', 'JavaScript', 'Koishi', '插件开发'],
     link: '#',
-    imageUrl: '/placeholders/work6.png'
+    imageUrl: '/images/koishi/koishi.png', // <-- UPDATE imageUrl
+    // --- ADD articleContent and galleryImages ---
+    articleContent: `
+我通过koishi框架使用TypeScript制作了两个插件
+\n我还搭建了自己的腾讯官方Bot
+
+一个是[高度自定义抽奖插件](https://github.com/RainMorime/customdraws)（带有哈希算法，加权，自定义时段，人物，物品）\n\n一个是[营火服务器插件](https://github.com/RainMorime/campfire)（包括图鉴，自由组合装备，烹饪，抽卡，模拟上岛小游戏，文字小游戏等等等等）
+    `,
+    galleryImages: [
+      { src: '/images/koishi/koishi.png' }
+    ]
+    // --- END ADD ---
   },
   {
     id: 7,
     title: '个人网站',
-    description: 'Next.js, React, SCSS, Vercel',
-    tech: ['Next.js', 'React', 'SCSS', 'Vercel'],
+    description: 'Next.js, React, SCSS',
+    tech: ['Next.js', 'React', 'SCSS'], // <-- REMOVE 'Vercel'
     link: '#',
-    imageUrl: '/pictures/www.rainmorime.com.png' 
+    imageUrl: '/images/projects/web/wb1.png', 
+    // --- ADD galleryImages --- 
+    galleryImages: [
+      { src: '/images/projects/web/wb0.jpg' }, // <-- ADD wb0.jpg to the beginning
+      { src: '/images/projects/web/wb1.png' },
+      { src: '/images/projects/web/wb2.png' },
+      { src: '/images/projects/web/wb3.png' },
+      { src: '/images/projects/web/wb4.png' },
+      { src: '/images/projects/web/wb5.png' },
+      { src: '/images/projects/web/wb6.png' }
+    ],
+    // --- END ADD ---
+    // --- ADD articleContent --- 
+    articleContent: `
+对于我来说，个人网站就像自己的秘密基地吧，所以也是花费了一个多月的时间把他搭建了起来，在这里无论怎么诉说自己的辛酸还是喜悦都不会感到羞耻，就如我的签名一样，你来到了这里，我们的命运就与此刻相会纠缠。
+
+我曾经也用WordPress搭建过自己的网站，不过时间还有技术上的原因没有沿用下来。后来系统学习了前端知识，也是下定决心做一个自己的网站。
+
+这个网站项目使用了 HTML/SCSS 还有GSAP动画库、Three.js3D引擎
+
+我还为网站设计了一个世界观，一个小彩蛋，或许晚点可以把它做成游戏，不过是后话了。
+
+一些网站旧设
+    `
+    // --- END ADD ---
   }
 ];
-// --- END Split ---
+
 
 const gameData = [
   {
@@ -155,6 +268,7 @@ const gameData = [
       { src: '/pictures/Stray/stray13.jpg' },
       { src: '/pictures/Stray/stray14.jpg' },
       { src: '/pictures/Stray/stray15.jpg' },
+      { src: '/pictures/Stray/stray16.jpg' } // <-- ADD stray16
     ]
   },
   {
@@ -268,12 +382,14 @@ const travelData = [
     // Add gallery images for Jilin
     galleryImages: [
       { src: '/images/travel/jilin/JL1.jpg' },
-      { src: '/images.travel/jilin/JL2.jpg' },
+      { src: '/images/travel/jilin/JL2.jpg' },
       { src: '/images/travel/jilin/JL3.jpg' },
       { src: '/images/travel/jilin/JL4.jpg' },
       { src: '/images/travel/jilin/JL5.jpg' },
       { src: '/images/travel/jilin/JL6.jpg' },
-      { src: '/images/travel/jilin/JL7.jpg' },
+      { src: '/images/travel/jilin/JL7.jpg', caption: '长春' }, 
+      { src: '/images/travel/jilin/JL8.jpg' }, 
+      { src: '/images/travel/jilin/JL9.jpg', caption: '四平东站' }  // <-- ADD caption
     ]
   },
   {
@@ -299,6 +415,40 @@ const travelData = [
     // --- END ADD ---
   },
   {
+    id: 'chongqing',
+    title: '重庆',
+    description: '魔幻3D城市。', // Placeholder description
+    tech: ['城市'], // Placeholder tags
+    link: '#',
+    imageUrl: '/images/travel/chongqing/CQ1.jpg', // <-- UPDATE imageUrl
+    galleryImages: [ // <-- UPDATE galleryImages
+      { src: '/images/travel/chongqing/CQ1.jpg' },
+      { src: '/images/travel/chongqing/CQ2.jpg' },
+      { src: '/images/travel/chongqing/CQ3.jpg' },
+      { src: '/images/travel/chongqing/CQ4.jpg' },
+      { src: '/images/travel/chongqing/CQ5.jpg' },
+      { src: '/images/travel/chongqing/CQ6.jpg' },
+    ]
+  },
+  {
+    id: 'qinghai',
+    title: '青海',
+    description: '两个人拍拍脑袋就出发的冒险。',
+    tech: ['高原'],
+    link: '#',
+    imageUrl: '/images/travel/qinghai/QH36.jpg',
+    articleContent: '  青海，绝对是个难忘的旅程。23年国庆和同学一起去的，两个人拍拍脑袋也没什么计划就扎进了这片无垠高原（全靠打车），体验到春夏秋冬四个季节的感受，神奇的体验。\n\n\n  首先就是我这辈子都忘不了的坎布拉森林公园，一开始定位就定错了，我们十点多从西入口进入，信誓旦旦要靠徒步穿过去！两人三根杖就开始了漫长的徒步，这一走，就是从早上十点走到了将近半夜两点。快零点的时候，开始下雨，我们披着一次性雨衣，两个人交错打着手电筒，一步一步沿着公路漫长的徒步，山岗沉寂无声，只能听见自己的心跳，结果一点多看到我们才走到了一半的路程才能看到正式的景区。\n\n\n  雨水逐渐夹带着雪花，又转为小冰雹，我先一步撑不住，我怕真的要失温死在这里，当时真是绝望，还好我同学够冷静，在强往上走之后找到了景区求助电话，当地村民开车带我们去远处的民宿。后来的两天基本就昏在民宿里。据村民说当地还有狼出没，没遇上真是不幸中的万幸。\n\n\n  之后我们打车回到城市，老老实实地招了个司机师父带我们走。\n\n\n  又见过海天一线的青海湖，落日下的茶卡盐湖，还有暴风雪下的岗什卡雪峰（当初还行作死再爬一次山峰，可惜风雪太大不了了之了）',
+    galleryImages: [
+      { src: '/pictures/hard/YJ1.jpg', caption: '入手的铁三角唱片机' }, // <-- ADD caption
+      { src: '/pictures/hard/YJ2.jpg' },
+      { src: '/pictures/hard/YJ3.jpg' },
+      { src: '/pictures/hard/YJ4.jpg', caption: '搭的一台itx服务器' }, // <-- ADD caption
+      { src: '/pictures/hard/YJ5.jpg' },
+      { src: '/pictures/hard/YJ6.jpg' },
+      { src: '/pictures/hard/YJ11.jpg', caption: '给笔记本清灰' } // <-- ADD YJ11 with caption
+    ]
+  },
+  {
     id: 'guizhou',
     title: '贵州',
     description: '于雾雨中，我与贵州相遇。',
@@ -321,44 +471,6 @@ const travelData = [
     ]
   },
   {
-    id: 'qinghai',
-    title: '青海',
-    description: '两个人拍拍脑袋就出发的冒险。',
-    tech: ['自然'],
-    link: '#',
-    imageUrl: '/images/travel/qinghai/QH32.jpg',
-    // --- ADD Qinghai Article --- 
-    articleContent: '  青海，绝对是个难忘的旅程。23年国庆和同学一起去的，两个人拍拍脑袋也没什么计划就扎进了这片无垠高原（全靠打车），体验到春夏秋冬四个季节的感受，神奇的体验。\n\n\n  首先就是我这辈子都忘不了的坎布拉森林公园，一开始定位就定错了，我们十点多从西入口进入，信誓旦旦要靠徒步穿过去！两人三根杖就开始了漫长的徒步，这一走，就是从早上十点走到了将近半夜两点。快零点的时候，开始下雨，我们披着一次性雨衣，两个人交错打着手电筒，一步一步沿着公路漫长的徒步，山岗沉寂无声，只能听见自己的心跳，结果一点多看到我们才走到了一半的路程才能看到正式的景区。\n\n\n  雨水逐渐夹带着雪花，又转为小冰雹，我先一步撑不住，我怕真的要失温死在这里，当时真是绝望，还好我同学够冷静，在强往上走之后找到了景区求助电话，当地村民开车带我们去远处的民宿。后来的两天基本就昏在民宿里。据村民说当地还有狼出没，没遇上真是不幸中的万幸。\n\n\n  之后我们打车回到城市，老老实实地招了个司机师父带我们走。\n\n\n  又见过海天一线的青海湖，落日下的茶卡盐湖，还有暴风雪下的岗什卡雪峰（当初还行作死再爬一次山峰，可惜风雪太大不了了之了）。',
-    // --- END ADD ---
-    // Add gallery images for Qinghai
-    galleryImages: [
-      { src: '/images/travel/qinghai/QH0.jpg' }, { src: '/images/travel/qinghai/QH1.jpg' },
-      { src: '/images/travel/qinghai/QH2.jpg' }, { src: '/images/travel/qinghai/QH3.jpg' },
-      { src: '/images/travel/qinghai/QH4.jpg' }, { src: '/images/travel/qinghai/QH5.jpg' },
-      { src: '/images/travel/qinghai/QH6.jpg' }, { src: '/images/travel/qinghai/QH7.jpg' },
-      { src: '/images/travel/qinghai/QH8.jpg' }, { src: '/images/travel/qinghai/QH9.jpg' },
-      { src: '/images/travel/qinghai/QH10.jpg' }, { src: '/images/travel/qinghai/QH11.jpg' },
-      { src: '/images/travel/qinghai/QH12.jpg' }, { src: '/images/travel/qinghai/QH13.jpg' },
-      { src: '/images/travel/qinghai/QH14.jpg' }, { src: '/images/travel/qinghai/QH15.jpg' },
-      { src: '/images/travel/qinghai/QH16.jpg' }, { src: '/images/travel/qinghai/QH17.jpg' },
-      { src: '/images/travel/qinghai/QH18.jpg' }, { src: '/images/travel/qinghai/QH19.jpg' },
-      { src: '/images/travel/qinghai/QH20.jpg' }, { src: '/images/travel/qinghai/QH21.jpg' },
-      { src: '/images/travel/qinghai/QH22.jpg' }, { src: '/images/travel/qinghai/QH23.jpg' },
-      { src: '/images/travel/qinghai/QH24.jpg' }, { src: '/images/travel/qinghai/QH25.jpg' },
-      { src: '/images/travel/qinghai/QH26.jpg' }, { src: '/images/travel/qinghai/QH27.jpg' },
-      { src: '/images/travel/qinghai/QH28.jpg' }, { src: '/images/travel/qinghai/QH29.jpg' },
-      { src: '/images/travel/qinghai/QH30.jpg' }, { src: '/images/travel/qinghai/QH31.jpg' },
-      { src: '/images/travel/qinghai/QH32.jpg' }, { src: '/images/travel/qinghai/QH33.jpg' },
-      { src: '/images/travel/qinghai/QH34.jpg' }, { src: '/images/travel/qinghai/QH35.jpg' },
-      { src: '/images/travel/qinghai/QH36.jpg' }, { src: '/images/travel/qinghai/QH37.jpg' },
-      { src: '/images/travel/qinghai/QH38.jpg' }, { src: '/images/travel/qinghai/QH39.jpg' },
-      { src: '/images/travel/qinghai/QH40.jpg' }, { src: '/images/travel/qinghai/QH41.jpg' },
-      // --- ADD QH42, QH43 ---
-      { src: '/images/travel/qinghai/QH42.jpg' }, { src: '/images/travel/qinghai/QH43.jpg' }
-      // --- END ADD ---
-    ]
-  },
-  {
     id: 'korea',
     title: '韩国',
     description: '我父母所居住的地方。',
@@ -372,6 +484,10 @@ const travelData = [
       { src: '/images/travel/hanguo/HG2.jpg' },
       { src: '/images/travel/hanguo/HG3.jpg' },
       { src: '/images/travel/hanguo/HG4.jpg' },
+      { src: '/images/travel/hanguo/HG5.jpg' }, // <-- ADD HG5
+      { src: '/images/travel/hanguo/HG6.jpg' },  // <-- ADD HG6
+      { src: '/images/travel/hanguo/HG7.jpg' }, // <-- ADD HG7
+      { src: '/images/travel/hanguo/HG8.jpg' }  // <-- ADD HG8
     ]
     // --- END ADD ---
   },
@@ -388,7 +504,19 @@ const experienceData = [
       '吉林师范大学附属中学', 
       '四平市第一高级中学'
     ],
-    alignment: 'right' // Indicate alignment for timeline styling
+    alignment: 'right', // Indicate alignment for timeline styling
+    // --- ADD galleryImages for highschool ---
+    galleryImages: [
+      { src: '/images/exp/edu/gz1.jpg' },
+      { src: '/images/exp/edu/gz2.jpg' },
+      { src: '/images/exp/edu/gz3.jpg' },
+      { src: '/images/exp/edu/gz4.jpg' },
+      { src: '/images/exp/edu/gz5.jpg' },
+      { src: '/images/exp/edu/gz6.jpg' },
+      { src: '/images/exp/edu/gz7.jpg', caption: '张信哲居然在这里开演唱会，还是我家楼下！' }, // <-- ADD caption
+
+    ]
+    // --- END ADD ---
   },
   {
     id: 'university',
@@ -401,8 +529,23 @@ const experienceData = [
         '英语系'
     ],
     alignment: 'left',
-    galleryImages: [ // <-- ADD University Gallery
-      { src: '/images/exp/XS1.jpg', caption: '油头垢面的我' } 
+    galleryImages: [ // <-- MODIFY University Gallery
+      { src: '/images/exp/xisu/XS1.jpg', caption: '油头垢面的我' },
+      { src: '/images/exp/xisu/XS2.jpg' },
+      { src: '/images/exp/xisu/XS3.jpg' },
+      { src: '/images/exp/xisu/XS4.jpg' },
+      { src: '/images/exp/xisu/XS5.jpg' },
+      { src: '/images/exp/xisu/XS6.jpg' },
+      { src: '/images/exp/xisu/XS7.jpg' },
+      { src: '/images/exp/xisu/XS8.jpg' },
+      { src: '/images/exp/xisu/XS9.jpg' },
+      { src: '/images/exp/xisu/XS10.jpg' },
+      { src: '/images/exp/xisu/XS11.png' }, // png extension
+      { src: '/images/exp/xisu/XS12.jpg' },
+      { src: '/images/exp/xisu/XS13.jpg' },
+      { src: '/images/exp/xisu/XS14.jpg' },
+      { src: '/images/exp/xisu/XS15.jpg' },
+      { src: '/images/exp/xisu/XS16.jpg' }
     ]
   },
   {
@@ -438,10 +581,15 @@ const experienceData = [
     ],
     alignment: 'left',
     galleryImages: [
-      { src: '/images/exp/zhiyuan/zhiyuan1.jpg' }, { src: '/images/exp/zhiyuan/zhiyuan2.jpg' },
-      { src: '/images/exp/zhiyuan/zhiyuan3.jpg' }, { src: '/images/exp/zhiyuan/zhiyuan4.jpg' },
-      { src: '/images/exp/zhiyuan/zhiyuan5.jpg' }, { src: '/images/exp/zhiyuan/zhiyuan6.jpg' },
+      { src: '/images/exp/zhiyuan/zhiyuan1.jpg' }, 
+      { src: '/images/exp/zhiyuan/zhiyuan2.jpg' },
+      { src: '/images/exp/zhiyuan/zhiyuan3.jpg', caption: '请大家喝橙汁' }, // <-- Add caption
+      { src: '/images/exp/zhiyuan/zhiyuan4.jpg', caption: '薅来的柳叶刀杂志' }, // <-- Add caption
+      { src: '/images/exp/zhiyuan/zhiyuan5.jpg' }, 
+      { src: '/images/exp/zhiyuan/zhiyuan6.jpg' },
       { src: '/images/exp/zhiyuan/zhiyuan7.jpg' },
+      { src: '/images/exp/zhiyuan/zhiyuan8.jpg' }, // <-- ADD zhiyuan8
+      { src: '/images/exp/zhiyuan/zhiyuan9.jpg' }  // <-- ADD zhiyuan9
     ]
   },
 ];
@@ -454,6 +602,15 @@ const otherData = [
     description: '收集一些喜欢的游戏实体版。',
     imageUrl: '/pictures/collection/SC8.jpg', // <-- Updated cover
     tech: ['游戏'],
+    // --- ADD articleContent --- 
+    articleContent: `
+看得见摸得着的实体游戏总会给我一种安全感，这些大部分都是GalGame的实体还有一部分的唱片和众筹谷子。
+
+我第一款周边其实是这个Minecraft黑胶，当时花了一千多...结果转头就有第二批新货瞬间价格就降到了三百块...
+
+后来逐渐接触到Galgame，经朋友的安利下买了实体《樱之诗》
+    `,
+    // --- END ADD ---
     galleryImages: [
       { src: '/pictures/collection/SC1.jpg' },
       { src: '/pictures/collection/SC2.jpg' },
@@ -481,16 +638,75 @@ const otherData = [
     id: 'tarot-cards',
     title: '塔罗牌',
     description: '偶尔用来探索潜意识或作为思考工具。',
-    imageUrl: '/pictures/TR/TR2.jpg', // <-- Updated cover
+    imageUrl: '/pictures/TR/TR3.jpg', // <-- Updated cover
     tech: [],
+    // --- ADD articleContent --- 
+    articleContent: `
+有段时间我还沉迷八字，塔罗牌这种神秘学，现在看来或许是对未来的焦虑，让我花费精力投入这里吧。
+
+不过即使从现在来看，也依然是很有意思的，牌面的解读，故事的发展，各种明线暗线交织不断，构成了一个个精彩的人生。
+    `,
+    // --- END ADD --- 
     galleryImages: [
-      { src: '/pictures/TR/TR1.jpg' },
+      { src: '/pictures/TR/TR1.jpg', caption: '朋友给我的塔罗牌' }, // <-- ADD caption
       { src: '/pictures/TR/TR2.jpg' },
-      { src: '/pictures/TR/TR3.jpg' }
+      { src: '/pictures/TR/TR3.jpg', caption: '朋友给我的塔罗牌' } // <-- ADD caption
+    ]
+  },
+  // --- ADD New Items ---
+  {
+    id: 'desk-setup', // Unique ID
+    title: '桌搭',
+    description: '我的床桌进化史~最后搬出来了。', // <-- UPDATE description
+    imageUrl: '/pictures/zhuoda/ZD11.jpg', // <-- UPDATE imageUrl
+    tech: [], // Empty tags for now
+    galleryImages: [ // <-- UPDATE galleryImages
+      { src: '/pictures/zhuoda/ZD1.jpg' },
+      { src: '/pictures/zhuoda/ZD2.jpg' },
+      { src: '/pictures/zhuoda/ZD3.jpg' },
+      { src: '/pictures/zhuoda/ZD4.jpg' },
+      { src: '/pictures/zhuoda/ZD5.jpg' },
+      { src: '/pictures/zhuoda/ZD6.jpg' },
+      { src: '/pictures/zhuoda/ZD7.jpg' },
+      { src: '/pictures/zhuoda/ZD8.jpg' },
+      { src: '/pictures/zhuoda/ZD9.jpg' },
+      { src: '/pictures/zhuoda/ZD10.jpg' },
+      { src: '/pictures/zhuoda/ZD11.jpg' },
+    ]
+  },
+  {
+    id: 'hardware', // Unique ID
+    title: '主机/单片机',
+    description: '关于硬件的尝试和探索。', // Placeholder description
+    imageUrl: '/pictures/hard/YJ6.jpg', // <-- UPDATE imageUrl
+    tech: [], // Empty tags for now
+    // --- ADD articleContent --- 
+    articleContent: '  大一的时候就对这些主机感兴趣，组了一台itx服务器，还尝试向学校申请公网ip（不过显然没成功），又考虑搭建内网穿透，还学了一些Linux的知识。\n\n\n  不过折腾了这么长时间，还是选择直接用了现成的云服务器。\n\n\n  现在组装电脑，安装系统什么的也是得心应手，偶尔还帮同学笔记本清灰（下次不敢干了）。还试着玩了单片机，做了一个小闹钟和自动开关，还有买了个树莓派（不过现在在吃灰），焊枪也用过一段时间，不过现在主要专注开发游戏，就没再继续学习了，算是一个小尝试吧。',
+    // --- END ADD --- 
+    galleryImages: [ // <-- MODIFY galleryImages
+      { src: '/pictures/hard/YJ1.jpg', caption: '入手的铁三角唱片机' }, // <-- ADD caption
+      { src: '/pictures/hard/YJ2.jpg' },
+      { src: '/pictures/hard/YJ3.jpg' },
+      { src: '/pictures/hard/YJ4.jpg', caption: '搭的一台itx服务器' }, // <-- ADD caption
+      { src: '/pictures/hard/YJ5.jpg' },
+      { src: '/pictures/hard/YJ6.jpg' }  // <-- ADD YJ6
     ]
   }
+  // --- END ADD ---
 ];
 // --- END ADD --- 
+
+// --- ADD Skills Data --- 
+const skillsData = [
+  { id: 'js-ts', name: 'JavaScript/TypeScript', level: 7, relatedProjects: [6, 7], description: '开发了 Koishi 机器人插件和这个个人网站。' }, // Updated description
+  { id: 'csharp', name: 'C#', level: 5, relatedProjects: [1, 3, 4], description: '我用C#进行 Unity 游戏开发，参加过两次gamejam。' }, 
+  { id: 'unity', name: 'Unity3D', level: 6, relatedProjects: [1, 3, 4], description: '我学习过两年的Unity，参加过两次gamejam。' },
+  { id: 'godot', name: 'Godot', level: 2, relatedProjects: [], description: '学习探索中，暂无关联项目。' }, 
+  { id: 'next-react', name: 'Next.js/React', level: 8, relatedProjects: [7], description: '构建了这个个人网站。' }, 
+  { id: 'html-css-scss', name: 'HTML/CSS/SCSS', level: 7, relatedProjects: [2, 7], description: '我在 FreeCodeCamp 学习了前段知识并制作了一个小作品集和这个网站的样式基础。' }, // Merged SCSS
+  // { id: 'scss', name: 'SCSS', level: 7, relatedProjects: [7], description: '为这个个人网站编写了样式。' } // Removed SCSS entry
+];
+// --- END ADD Skills Data ---
 
 const placeholderPosts = [
   {
@@ -563,6 +779,21 @@ export default function Home() {
   const [activeWorkTab, setActiveWorkTab] = useState('learn'); 
   const blogViewWrapperRef = useRef(null); // <-- ADD Ref for BlogViewWrapper
   const [blogScrollPosition, setBlogScrollPosition] = useState(0); // <-- ADD State for Blog scroll position
+  const [hoveredSkillId, setHoveredSkillId] = useState(null); // <-- ADD State for hovered skill
+  const backClickTimeoutRef = useRef(null); // <-- ADD Ref for back click timeout
+  const [isNavigating, setIsNavigating] = useState(false); // <-- ADD isNavigating state
+  const navigationTimeoutRef = useRef(null); // <-- ADD Ref for navigation timeout
+
+  // --- ADD Refs for content areas --- 
+  const lifeContentAreaRef = useRef(null);
+  const workContentAreaRef = useRef(null);
+  const lifeGameTabRef = useRef(null);
+  const lifeTravelTabRef = useRef(null);
+  const lifeArtTabRef = useRef(null);
+  const lifeOtherTabRef = useRef(null);
+  const workLearnTabRef = useRef(null);
+  const workWorkTabRef = useRef(null);
+  // --- END ADD ---
 
   // --- ADD Navigation Links Data --- 
   const navLinks = [
@@ -574,6 +805,14 @@ export default function Home() {
     { label: 'About', target: 'about-section', ref: aboutSectionRef }, 
   ];
   // --- END ADD ---
+
+  // --- ADD useEffect for logging activeSection --- 
+  /*
+  useEffect(() => {
+    console.log('[activeSection changed]:', activeSection);
+  }, [activeSection]);
+  */
+  // --- END REMOVE ---
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -1029,7 +1268,23 @@ export default function Home() {
   };
 
   const handleColumnClick = (columnIndex) => {
-    console.log(`Column ${columnIndex + 1} clicked`);
+    // --- Navigation Lock (keep check, remove logs) --- 
+    if (isNavigating) {
+      // console.log("Navigation locked, animation in progress.");
+      return;
+    }
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    setIsNavigating(true);
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      navigationTimeoutRef.current = null;
+      // console.log("Navigation unlocked (column click).");
+    }, 800); // Lock for 0.8 seconds
+    // --- END Lock ---
+
+    console.log(`Column ${columnIndex + 1} clicked`); // Keep basic log
     
     // 添加BLOG列的点击处理
     if (columnIndex === 5) { // BLOG列
@@ -1131,9 +1386,45 @@ export default function Home() {
     });
   };
 
-  const handleLifeItemClick = (item) => {
-    console.log("Life item clicked, switching to detail view:", item);
-    
+  const handleLifeItemClick = (item, e) => { // <-- Accept event 'e'
+    // --- Navigation Lock (keep check, remove logs) --- 
+    if (isNavigating) {
+      // console.log("Navigation locked, animation in progress.");
+      return;
+    }
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    setIsNavigating(true);
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      navigationTimeoutRef.current = null;
+      // console.log("Navigation unlocked (life click).");
+    }, 800); // Lock for 0.8 seconds
+    // --- END Lock ---
+
+    // --- Clear previous back click timeout (keep check, remove log) --- 
+    if (backClickTimeoutRef.current) {
+      clearTimeout(backClickTimeoutRef.current);
+      backClickTimeoutRef.current = null;
+      // console.log("Cleared pending back click state reset timeout.");
+    }
+    // --- END Clear ---
+    // console.log("Received event in handleLifeItemClick:", e); // Remove event log
+    // Try both stopPropagation and stopImmediatePropagation
+    if (e) {
+      e.stopPropagation(); 
+      if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
+          e.nativeEvent.stopImmediatePropagation();
+      }
+    } 
+    /* Remove warning block
+    else {
+      console.warn("handleLifeItemClick: Invalid or missing event object.");
+    }
+    */
+    console.log("Life item clicked, switching to detail view:", item); // Keep basic log
+    // console.log("Current activeSection BEFORE set:", activeSection); // Remove state log
     // Record current scroll position AND current active tab before switching
     if (contentWrapperRef.current) {
       setContentScrollPosition(contentWrapperRef.current.scrollTop);
@@ -1144,9 +1435,45 @@ export default function Home() {
     setActiveSection('lifeDetail'); // Set the active section state
   };
 
-  const handleWorkItemClick = (item) => {
-    console.log("Work item clicked, switching to detail view:", item);
-    
+  const handleWorkItemClick = (item, e) => { // <-- Accept event 'e'
+    // --- Navigation Lock (keep check, remove logs) --- 
+    if (isNavigating) {
+      // console.log("Navigation locked, animation in progress.");
+      return;
+    }
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    setIsNavigating(true);
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      navigationTimeoutRef.current = null;
+      // console.log("Navigation unlocked (work click).");
+    }, 800); // Lock for 0.8 seconds
+    // --- END Lock ---
+
+    // --- Clear previous back click timeout (keep check, remove log) --- 
+    if (backClickTimeoutRef.current) {
+      clearTimeout(backClickTimeoutRef.current);
+      backClickTimeoutRef.current = null;
+      // console.log("Cleared pending back click state reset timeout.");
+    }
+    // --- END Clear ---
+    // console.log("Received event in handleWorkItemClick:", e); // Remove event log
+    // Try both stopPropagation and stopImmediatePropagation
+    if (e) {
+      e.stopPropagation();
+      if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
+          e.nativeEvent.stopImmediatePropagation();
+      }
+    }
+    /* Remove warning block
+    else {
+      console.warn("handleWorkItemClick: Invalid or missing event object.");
+    }
+    */
+    console.log("Work item clicked, switching to detail view:", item); // Keep basic log
+    // console.log("Current activeSection BEFORE set:", activeSection); // Remove state log
     // Record current scroll position before switching
     if (contentWrapperRef.current) {
       setContentScrollPosition(contentWrapperRef.current.scrollTop); 
@@ -1157,9 +1484,45 @@ export default function Home() {
     setActiveSection('workDetail'); // Set the active section state
   };
 
-  const handleExperienceItemClick = (item) => {
-    console.log("Experience item clicked, switching to detail view:", item);
-    
+  const handleExperienceItemClick = (item, e) => { // <-- Accept event 'e'
+    // --- Navigation Lock (keep check, remove logs) --- 
+    if (isNavigating) {
+      // console.log("Navigation locked, animation in progress.");
+      return;
+    }
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    setIsNavigating(true);
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      navigationTimeoutRef.current = null;
+      // console.log("Navigation unlocked (exp click).");
+    }, 800); // Lock for 0.8 seconds
+    // --- END Lock ---
+
+    // --- Clear previous back click timeout (keep check, remove log) --- 
+    if (backClickTimeoutRef.current) {
+      clearTimeout(backClickTimeoutRef.current);
+      backClickTimeoutRef.current = null;
+      // console.log("Cleared pending back click state reset timeout.");
+    }
+    // --- END Clear ---
+    // console.log("Received event in handleExperienceItemClick:", e); // Remove event log
+    // Try both stopPropagation and stopImmediatePropagation
+    if (e) {
+      e.stopPropagation();
+      if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
+          e.nativeEvent.stopImmediatePropagation();
+      }
+    }
+    /* Remove warning block
+    else {
+      console.warn("handleExperienceItemClick: Invalid or missing event object.");
+    }
+    */
+    console.log("Experience item clicked, switching to detail view:", item); // Keep basic log
+    // console.log("Current activeSection BEFORE set:", activeSection); // Remove state log
     // Record current scroll position before switching
     if (contentWrapperRef.current) {
       setContentScrollPosition(contentWrapperRef.current.scrollTop); 
@@ -1170,8 +1533,45 @@ export default function Home() {
   };
 
   // --- ADD Handler for Blog Post Click --- 
-  const handleBlogPostClick = (post) => {
-    console.log("Blog post clicked, switching to detail view:", post);
+  const handleBlogPostClick = (post, e) => { // <-- Accept event 'e'
+    // --- Navigation Lock (keep check, remove logs) --- 
+    if (isNavigating) {
+      // console.log("Navigation locked, animation in progress.");
+      return;
+    }
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    setIsNavigating(true);
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      navigationTimeoutRef.current = null;
+      // console.log("Navigation unlocked (blog post click).");
+    }, 800); // Lock for 0.8 seconds
+    // --- END Lock ---
+
+    // --- Clear previous back click timeout (keep check, remove log) --- 
+    if (backClickTimeoutRef.current) {
+      clearTimeout(backClickTimeoutRef.current);
+      backClickTimeoutRef.current = null;
+      // console.log("Cleared pending back click state reset timeout.");
+    }
+    // --- END Clear ---
+    // console.log("Received event in handleBlogPostClick:", e); // Remove event log
+    // Try both stopPropagation and stopImmediatePropagation
+    if (e) {
+      e.stopPropagation();
+      if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
+          e.nativeEvent.stopImmediatePropagation();
+      }
+    }
+    /* Remove warning block
+    else {
+      console.warn("handleBlogPostClick: Invalid or missing event object.");
+    }
+    */
+    console.log("Blog post clicked, switching to detail view:", post); // Keep basic log
+    // console.log("Current activeSection BEFORE set:", activeSection); // Remove state log
     // Save scroll position of the blog view wrapper
     if (blogViewWrapperRef.current) {
       setBlogScrollPosition(blogViewWrapperRef.current.scrollTop);
@@ -1183,9 +1583,27 @@ export default function Home() {
 
   // --- MODIFY Global Back Button Logic ---
   const handleGlobalBackClick = () => {
+    // --- Navigation Lock (keep check, remove logs) --- 
+    if (isNavigating) {
+      console.log("Navigation locked, animation in progress.");
+      return;
+    }
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    setIsNavigating(true);
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      navigationTimeoutRef.current = null;
+      console.log("Navigation unlocked (back click).");
+    }, 800); // Lock for 0.8 seconds
+    // --- END ADD ---
+
     const animationDuration = 1700; // Set delay slightly longer than slideOutToRight (1.6s)
+    console.log("Global back clicked. Current activeSection:", activeSection);
 
     if (activeSection === 'blogDetail') {
+      console.log("Navigating back from blogDetail to blog");
       setActiveSection('blog'); 
       requestAnimationFrame(() => {
         if (blogViewWrapperRef.current) {
@@ -1212,10 +1630,12 @@ export default function Home() {
          setActiveLifeTab(previousActiveLifeTab || 'game');
       } 
         
-      // --- REMOVE this block to prevent scrolling back to section top ---
-      /*
       requestAnimationFrame(() => {
         if (contentWrapperRef.current) { 
+          // --- MODIFY: Always restore scroll position, don't scroll to section top --- 
+          console.log('Restoring scroll position to:', contentScrollPosition);
+          contentWrapperRef.current.scrollTop = contentScrollPosition;
+          /* 
           let targetRef = null;
           if (targetSection === 'life-section') targetRef = lifeSectionRef;
           else if (targetSection === 'works-section') targetRef = worksSectionRef;
@@ -1229,19 +1649,23 @@ export default function Home() {
           } else {
              contentWrapperRef.current.scrollTop = contentScrollPosition;
           }
+          */
+          // --- END MODIFY --- 
         } 
       });
-      */
-      // --- END REMOVE ---
       
       // Use defined duration for all detail views
-      setTimeout(() => {
+      // --- MODIFY Store timeout ID --- 
+      backClickTimeoutRef.current = setTimeout(() => {
+        console.log("Executing delayed state reset after back click.");
         setSelectedLifeItem(null);
         setPreviousActiveLifeTab(null); 
         setSelectedWorkItem(null);
         setSelectedExperienceItem(null);
-        setContentScrollPosition(0); // Keep resetting content scroll state here
+        setContentScrollPosition(0);
+        backClickTimeoutRef.current = null; // Clear ref after execution
       }, animationDuration); 
+      // --- END MODIFY ---
     } else if (activeSection === 'content') {
       handleGoHome(); 
     }
@@ -1277,6 +1701,22 @@ export default function Home() {
 
   // --- ADD Handler for Left Nav Link Clicks ---
   const handleLeftNavLinkClick = (link) => {
+    // --- ADD Navigation Lock --- 
+    if (isNavigating) {
+      console.log("Navigation locked, animation in progress.");
+      return;
+    }
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    setIsNavigating(true);
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      navigationTimeoutRef.current = null;
+      console.log("Navigation unlocked (left nav click).");
+    }, 200); // Lock for 0.2 seconds
+    // --- END ADD ---
+
     // 处理Blog链接点击
     if (link.label === 'Blog') {
       setActiveSection('blog');
@@ -1305,6 +1745,57 @@ export default function Home() {
       }
     }
   };
+  // --- END ADD ---
+
+  // --- ADD useEffect for Dynamic Height Adjustment --- 
+  useEffect(() => {
+    if (activeSection !== 'content' || !contentWrapperRef.current) {
+      // Reset heights when not in content view or refs aren't ready
+      if (lifeContentAreaRef.current) lifeContentAreaRef.current.style.height = 'auto';
+      if (workContentAreaRef.current) workContentAreaRef.current.style.height = 'auto';
+      return;
+    }
+
+    let activeTabRef = null;
+    let targetContainerRef = null;
+
+    if (activeLifeTab) { // Check which life tab is active
+      targetContainerRef = lifeContentAreaRef;
+      switch (activeLifeTab) {
+        case 'game': activeTabRef = lifeGameTabRef; break;
+        case 'travel': activeTabRef = lifeTravelTabRef; break;
+        case 'art': activeTabRef = lifeArtTabRef; break;
+        case 'other': activeTabRef = lifeOtherTabRef; break;
+        default: break;
+      }
+    } else if (activeWorkTab) { // Check which work tab is active
+      targetContainerRef = workContentAreaRef;
+      switch (activeWorkTab) {
+        case 'learn': activeTabRef = workLearnTabRef; break;
+        case 'work': activeTabRef = workWorkTabRef; break;
+        default: break;
+      }
+    }
+
+    if (activeTabRef?.current && targetContainerRef?.current) {
+      // Use requestAnimationFrame to ensure height is measured after render
+      requestAnimationFrame(() => {
+        if (activeTabRef.current && targetContainerRef.current) {
+           // Get the scrollHeight of the active tab's content
+           const contentHeight = activeTabRef.current.scrollHeight;
+           // Set the parent container's height explicitly
+           targetContainerRef.current.style.height = `${contentHeight}px`;
+           // console.log(`Set ${targetContainerRef === lifeContentAreaRef ? 'Life' : 'Work'} container height to: ${contentHeight}px`);
+        }
+      });
+    } else {
+      // Fallback or if no tab identified, reset height
+      if (targetContainerRef?.current) {
+        targetContainerRef.current.style.height = 'auto';
+      }
+    }
+
+  }, [activeSection, activeLifeTab, activeWorkTab]); // Dependencies
   // --- END ADD ---
 
   return (
@@ -1585,33 +2076,67 @@ export default function Home() {
               {/* --- END ADD --- */}
 
               {/* --- ADD Work Content Area --- */}
-              <div className={styles.workContentArea}>
+              <div ref={workContentAreaRef} className={styles.workContentArea}> 
                 {/* Learn Tab Content */}
-                <div className={`${styles.workTabContent} ${activeWorkTab === 'learn' ? styles.activeWorkContent : ''}`}> 
+                <div ref={workLearnTabRef} className={`${styles.workTabContent} ${activeWorkTab === 'learn' ? styles.activeWorkContent : ''}`}> 
                     <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
                         {learnProjects.map(project => (
                           <ProjectCard 
-                            key={project.id} 
+                            key={project.id}
                             project={project} 
-                            onClick={() => handleWorkItemClick(project)}
+                            onClick={handleWorkItemClick} // <-- Pass handler directly
                           />
                         ))}
                     </div>
                 </div>
                 {/* Work Tab Content */}
-                <div className={`${styles.workTabContent} ${activeWorkTab === 'work' ? styles.activeWorkContent : ''}`}> 
+                <div ref={workWorkTabRef} className={`${styles.workTabContent} ${activeWorkTab === 'work' ? styles.activeWorkContent : ''}`}> 
                     <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
                         {workProjects.map(project => (
                           <ProjectCard 
-                            key={project.id} 
+                            key={project.id}
                             project={project} 
-                            onClick={() => handleWorkItemClick(project)}
+                            onClick={handleWorkItemClick} // <-- Pass handler directly
                           />
                         ))}
                     </div>
                 </div>
               </div>
-              {/* --- END ADD --- */}
+              {/* --- END ADD Work Content Area --- */}
+
+              {/* --- ADD Skills Section --- */}
+              <h4 className={styles.subSectionTitle}>技能熟练度 / Skills</h4>
+              <div className={styles.skillGrid}> 
+                {skillsData.map((skill) => (
+                  <div 
+                    key={skill.id} 
+                    className={styles.skillCard}
+                    onMouseEnter={() => setHoveredSkillId(skill.id)} 
+                    onMouseLeave={() => setHoveredSkillId(null)}   
+                  >
+                    <div className={styles.skillCardContent}> 
+                      <span className={styles.skillName}>{skill.name}</span> 
+                      <div className={styles.skillProgressBar}> 
+                        {/* Render block characters instead of spans */} 
+                        {[...Array(10)].map((_, i) => (
+                          <span 
+                            key={i} 
+                            className={i < skill.level ? styles.filledSegment : styles.emptySegment}
+                          >
+                            {i < skill.level ? '█' : '░'} {/* Output characters */} 
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    {hoveredSkillId === skill.id && skill.description && (
+                      <div className={styles.skillHoverDescription}>
+                        {skill.description}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {/* --- END ADD Skills Section --- */}
             </div>
 
             <div id="experience-section" ref={experienceSectionRef} className={`${styles.contentSection} ${styles.experienceSection}`}> {/* <-- ADD Ref */} 
@@ -1626,7 +2151,8 @@ export default function Home() {
                       ${item.type === 'education' ? styles.educationItem : ''}
                       ${styles.clickable}
                     `}
-                    onClick={() => handleExperienceItemClick(item)}
+                    // Ensure item and event are passed correctly
+                    onClick={(e) => handleExperienceItemClick(item, e)} 
                   >
                   <div className={styles.timelinePoint}></div>
                   <div className={styles.timelineContent}>
@@ -1651,9 +2177,15 @@ export default function Home() {
                 </div>
                     </div>
 
-            <div id="life-section" ref={lifeSectionRef} className={`${styles.contentSection} ${styles.lifeSection}`}> 
+            {/* --- MODIFY Add dynamic class based on activeSection --- */}
+            <div 
+              id="life-section" 
+              ref={lifeSectionRef} 
+              className={`${styles.contentSection} ${styles.lifeSection} ${activeSection === 'lifeDetail' ? styles.detailActive : ''}`}
+            > 
               <h2>LIFE</h2>
-              {activeSection === 'content' && (
+              {/* --- REMOVE Conditional Rendering --- */}
+              {/* {activeSection === 'content' && ( */} 
                 <div className={styles.lifeTabButtons}>
                   <button
                     className={`${styles.lifeTabButton} ${activeLifeTab === 'game' ? styles.activeTab : ''}`}
@@ -1680,16 +2212,17 @@ export default function Home() {
                     Other
                   </button>
                 </div>
-              )}
+              {/* )} */} 
+              {/* --- END REMOVE --- */}
 
-              <div className={styles.lifeContentArea}>
-                <div className={`${styles.lifeTabContent} ${activeLifeTab === 'game' ? styles.activeContent : ''}`}>
+              <div ref={lifeContentAreaRef} className={styles.lifeContentArea}>
+                <div ref={lifeGameTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'game' ? styles.activeContent : ''}`}>
                   <div className={styles.gameGrid}>
                     {gameData.map(game => (
                       <ProjectCard 
                         key={game.id} 
                         project={game} 
-                        onClick={() => handleLifeItemClick(game)}
+                        onClick={handleLifeItemClick} // <-- Pass handler directly
                       />
                     ))}
                   </div>
@@ -1715,28 +2248,28 @@ export default function Home() {
                   </div>
                   {/* --- END ADD --- */}
                 </div>
-                <div className={`${styles.lifeTabContent} ${activeLifeTab === 'travel' ? styles.activeContent : ''}`}>
+                <div ref={lifeTravelTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'travel' ? styles.activeContent : ''}`}>
                   <div className={styles.travelGrid}>
                     {travelData.map(place => (
                       <ProjectCard 
                         key={place.id} 
                         project={place} 
-                        onClick={() => handleLifeItemClick(place)}
+                        onClick={handleLifeItemClick} // <-- Pass handler directly
                       />
                     ))}
                   </div>
                 </div>
-                <div className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
+                <div ref={lifeArtTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
                   <p>艺术是个好东西，音乐、绘画、设计还是电影我都喜欢，可回想起来能做的能说的却很少，或许我可以晚点再写...</p>
               </div>
-                <div className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''}`}>
+                <div ref={lifeOtherTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''}`}>
                   {/* --- ADD rendering for otherData --- */}
                   <div className={styles.gameGrid}> {/* Reuse gameGrid style */}
                     {otherData.map(item => (
                       <ProjectCard 
                         key={item.id} 
                         project={item} 
-                        onClick={() => handleLifeItemClick(item)}
+                        onClick={handleLifeItemClick} // <-- Pass handler directly
                       />
                     ))}
                   </div>
