@@ -620,7 +620,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
                   transition={{ 
                     duration: 0.8,
                     ease: [0.25, 1, 0.5, 1],
-                    exit: { duration: 0.7, delay: 0, ease: [0.25, 1, 0.5, 1] }
+                    exit: { duration: 0.8, delay: 0, ease: [0.25, 1, 0.5, 1] }
                   }}
                 />
                 <motion.div
@@ -632,7 +632,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
                     duration: 1.0, // 稍慢
                     delay: 0.05, // 轻微延迟
                     ease: [0.25, 1, 0.5, 1],
-                    exit: { duration: 0.85, delay: 0.1, ease: [0.25, 1, 0.5, 1] } // 退场也稍慢
+                    exit: { duration: 0.9, delay: 0.05, ease: [0.25, 1, 0.5, 1] } 
                   }}
                 />
                 <motion.div
@@ -644,31 +644,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
                     duration: 1.2, // 最慢
                     delay: 0.1, // 更明显的延迟
                     ease: [0.25, 1, 0.5, 1],
-                    exit: { duration: 1.0, delay: 0.2, ease: [0.25, 1, 0.5, 1] } // 退场最慢
-                  }}
-                />
-                <motion.div
-                  className={styles.horizontal_slide_fourth}
-                  initial={{ scaleX: 0, x: "-250%" }}
-                  animate={{ scaleX: 1, x: "0%" }}
-                  exit={{ x: "180%", opacity: 0.08 }}
-                  transition={{ 
-                    duration: 1.4, // 比第三层更慢
-                    delay: 0.15, // 更长的延迟
-                    ease: [0.25, 1, 0.5, 1],
-                    exit: { duration: 1.2, delay: 0.3, ease: [0.25, 1, 0.5, 1] } // 退场更慢
-                  }}
-                />
-                <motion.div
-                  className={styles.horizontal_slide_fifth}
-                  initial={{ scaleX: 0, x: "-300%" }}
-                  animate={{ scaleX: 1, x: "0%" }}
-                  exit={{ x: "200%", opacity: 0.06 }}
-                  transition={{ 
-                    duration: 1.6, // 最慢层
-                    delay: 0.2, // 最明显延迟
-                    ease: [0.25, 1, 0.5, 1],
-                    exit: { duration: 1.4, delay: 0.4, ease: [0.25, 1, 0.5, 1] } // 退场最慢
+                    exit: { duration: 1.0, delay: 0.1, ease: [0.25, 1, 0.5, 1] } 
                   }}
                 />
                 

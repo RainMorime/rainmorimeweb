@@ -488,7 +488,10 @@
   // opacity: 0; // 由动画控制
   pointer-events: none;
   z-index: 1; 
-  animation-fill-mode: forwards; // 保持动画结束状态
+  animation-fill-mode: forwards; // 恢复: 保持动画结束状态
+  // --- 恢复: 移除强制无动画 --- 
+  // animation: none !important; 
+  // opacity: 0; // Let animation handle opacity
 }
 
 // --- 应用特定视图的进入/退出动画 --- 
@@ -497,19 +500,17 @@
   pointer-events: none; // Let children control
 }
 .mainLayout.hidden {
-  animation: slideUpOutSkew 0.5s ease-out forwards;
+  animation: slideUpOutSkew 0.5s ease-out forwards; // 恢复动画
+  // transform: translateY(-80px); // 移除直接设置，让动画控制
 }
 
 .contentWrapper.visible {
-  // animation: slideInFromRight 1.0s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Increase duration
-  // animation: slideInFromRight 1.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Further increase duration
   animation: slideInFromRight 1.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Increase duration further
   pointer-events: auto; // Allow scrolling
 }
 .contentWrapper.hidden {
-  // animation: slideOutToRight 0.9s ease-out forwards; // Increase duration
-  // animation: slideOutToRight 1.3s ease-out forwards; // Further increase duration
-  animation: slideOutToRight 1.6s ease-out forwards; // Increase duration further
+  animation: slideOutToRight 1.6s ease-out forwards; // 恢复动画
+  // transform: translateX(100%); // 移除直接设置，让动画控制
 }
 
 // --- 新增 Keyframes --- 
@@ -4029,23 +4030,38 @@
 }
 
 .lifeTabContent {
-  // --- MODIFY Default (inactive) state ---
-  position: absolute; // RESTORE
-  top: 0; // RESTORE
-  left: 0; // RESTORE
-  width: 100%; // RESTORE
-  // display: none; // REMOVE
-  opacity: 0; // Start hidden
-  pointer-events: none; // ADD back
-  transition: opacity 0.5s ease; // Keep transition
+  // --- MODIFY Default (inactive) state to also set height: 0 --- 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  overflow: hidden; // ADD overflow hidden
+  height: 0; // ADD height 0
+
+  &.activeContent {
+    // --- Active state remains relative to occupy space --- 
+    position: relative;
+    opacity: 1;
+    pointer-events: auto;
+    height: auto; // Ensure active content can have its natural height
+    overflow: visible; // Ensure active content overflow is visible
+  }
 }
 
-.activeContent {
-  // --- MODIFY Active state ---
-  position: relative; // RESTORE
-  // display: block; // REMOVE
-  opacity: 1; // Fade in
-  pointer-events: auto; // ADD back
+.lifeContentArea {
+  width: 100%;
+  height: auto !important; 
+  transition: height 0.3s ease; 
+  overflow: visible;
+  position: relative; 
+}
+
+.compactTabContent {
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 // ... existing code ...
@@ -4194,9 +4210,8 @@
       // opacity: 1; // Animation handles opacity
   }
   &.hidden {
-      // --- MODIFY Animation Duration --- 
-      animation: slideOutToRight 1.2s ease-out forwards; // Change duration from 1.6s to 1.2s
-      // --- END MODIFY --- 
+      animation: slideOutToRight 1.6s ease-out forwards; // Restore exit animation
+      // animation: slideOutToRight 1.2s ease-out forwards; // Revert duration change
       pointer-events: none; // Animation handles opacity
   }
   
@@ -4747,5 +4762,16 @@
   opacity: 0;
   pointer-events: none; // Prevent interaction while hidden
   // transform: translateY(-20px); // Optional: Slight upward slide-out effect <-- REMOVE this line
+}
+
+.compactTabContent {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  min-height: auto !important;
+}
+
+.compactTextContainer {
+  padding: 0;
+  margin: 0 0 10px 0;
 }
 

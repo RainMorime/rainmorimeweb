@@ -797,12 +797,14 @@ export default function Home() {
 
   // --- ADD Navigation Links Data --- 
   const navLinks = [
-    { label: 'Blog', target: 'blog-section', ref: blogSectionRef },       // Change 'blog' target to 'blog-section' and add ref
+    // --- 修改顺序: 将 Blog 移到最后 ---
+    // { label: 'Blog', target: 'blog-section', ref: blogSectionRef },
     { label: 'Works', target: 'works-section', ref: worksSectionRef },
     { label: 'Experience', target: 'experience-section', ref: experienceSectionRef },
     { label: 'Life', target: 'life-section', ref: lifeSectionRef }, // Added Life link
     { label: 'Contact', target: 'contact-section', ref: contactSectionRef },
     { label: 'About', target: 'about-section', ref: aboutSectionRef }, 
+    { label: 'Blog', target: 'blog-section', ref: blogSectionRef }, // 移动到这里
   ];
   // --- END ADD ---
 
@@ -836,7 +838,7 @@ export default function Home() {
       setTimeout(() => {
         setAnimationsComplete(true);
       }, 4200);
-    }, 100);
+    }, 100); // 还原延迟为 100ms
   };
 
   useEffect(() => {
@@ -1723,27 +1725,27 @@ export default function Home() {
       return;
     }
     
-    // All links now navigate within the 'content' view
-    if (activeSection !== 'content') {
-      setActiveSection('content');
-      // Delay scrolling until content view is active
-      setTimeout(() => {
+      // All links now navigate within the 'content' view
+      if (activeSection !== 'content') {
+        setActiveSection('content');
+        // Delay scrolling until content view is active
+        setTimeout(() => {
+          if (link.ref?.current && contentWrapperRef.current) {
+            contentWrapperRef.current.scrollTo({
+              top: link.ref.current.offsetTop,
+              behavior: 'smooth'
+            });
+          }
+        }, 100); 
+      } else {
+        // Already in content view, just scroll
         if (link.ref?.current && contentWrapperRef.current) {
           contentWrapperRef.current.scrollTo({
             top: link.ref.current.offsetTop,
             behavior: 'smooth'
           });
         }
-      }, 100); 
-    } else {
-      // Already in content view, just scroll
-      if (link.ref?.current && contentWrapperRef.current) {
-        contentWrapperRef.current.scrollTo({
-          top: link.ref.current.offsetTop,
-          behavior: 'smooth'
-        });
       }
-    }
   };
   // --- END ADD ---
 
@@ -1756,47 +1758,44 @@ export default function Home() {
       return;
     }
 
-    let activeTabRef = null;
-    let targetContainerRef = null;
+    // Always set content areas to auto height first
+    if (lifeContentAreaRef.current) lifeContentAreaRef.current.style.height = 'auto';
+    if (workContentAreaRef.current) workContentAreaRef.current.style.height = 'auto';
 
-    if (activeLifeTab) { // Check which life tab is active
-      targetContainerRef = lifeContentAreaRef;
-      switch (activeLifeTab) {
-        case 'game': activeTabRef = lifeGameTabRef; break;
-        case 'travel': activeTabRef = lifeTravelTabRef; break;
-        case 'art': activeTabRef = lifeArtTabRef; break;
-        case 'other': activeTabRef = lifeOtherTabRef; break;
-        default: break;
-      }
-    } else if (activeWorkTab) { // Check which work tab is active
-      targetContainerRef = workContentAreaRef;
-      switch (activeWorkTab) {
-        case 'learn': activeTabRef = workLearnTabRef; break;
-        case 'work': activeTabRef = workWorkTabRef; break;
-        default: break;
-      }
-    }
+    // Update height after a short delay to ensure content has rendered
+    const updateHeightTimer = setTimeout(() => {
+      let activeTabRef = null;
+      let targetContainerRef = null;
 
-    if (activeTabRef?.current && targetContainerRef?.current) {
-      // Use requestAnimationFrame to ensure height is measured after render
-      requestAnimationFrame(() => {
-        if (activeTabRef.current && targetContainerRef.current) {
-           // Get the scrollHeight of the active tab's content
-           const contentHeight = activeTabRef.current.scrollHeight;
-           // Set the parent container's height explicitly
-           targetContainerRef.current.style.height = `${contentHeight}px`;
-           // console.log(`Set ${targetContainerRef === lifeContentAreaRef ? 'Life' : 'Work'} container height to: ${contentHeight}px`);
+      if (activeLifeTab) { // Check which life tab is active
+        targetContainerRef = lifeContentAreaRef;
+        switch (activeLifeTab) {
+          case 'game': activeTabRef = lifeGameTabRef; break;
+          case 'travel': activeTabRef = lifeTravelTabRef; break;
+          case 'art': activeTabRef = lifeArtTabRef; break;
+          case 'other': activeTabRef = lifeOtherTabRef; break;
+          default: break;
         }
-      });
-    } else {
-      // Fallback or if no tab identified, reset height
-      if (targetContainerRef?.current) {
-        targetContainerRef.current.style.height = 'auto';
+      } else if (activeWorkTab) { // Check which work tab is active
+        targetContainerRef = workContentAreaRef;
+        switch (activeWorkTab) {
+          case 'learn': activeTabRef = workLearnTabRef; break;
+          case 'work': activeTabRef = workWorkTabRef; break;
+          default: break;
+        }
       }
-    }
 
-  }, [activeSection, activeLifeTab, activeWorkTab]); // Dependencies
-  // --- END ADD ---
+      if (activeTabRef?.current && targetContainerRef?.current) {
+        // Get the scrollHeight of the active tab's content
+        const contentHeight = activeTabRef.current.scrollHeight;
+        // Set the parent container's height explicitly, adding small buffer
+        targetContainerRef.current.style.height = `${contentHeight}px`;
+      }
+    }, 50); // Short delay to ensure content is rendered
+
+    return () => clearTimeout(updateHeightTimer);
+  }, [activeSection, activeLifeTab, activeWorkTab]); 
+  // --- END MODIFY ---
 
   return (
     <div className={`${styles.container} ${isInverted ? styles.inverted : ''}`}>
@@ -2082,7 +2081,7 @@ export default function Home() {
                     <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
                         {learnProjects.map(project => (
                           <ProjectCard 
-                            key={project.id}
+                            key={project.id} 
                             project={project} 
                             onClick={handleWorkItemClick} // <-- Pass handler directly
                           />
@@ -2094,7 +2093,7 @@ export default function Home() {
                     <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
                         {workProjects.map(project => (
                           <ProjectCard 
-                            key={project.id}
+                            key={project.id} 
                             project={project} 
                             onClick={handleWorkItemClick} // <-- Pass handler directly
                           />
@@ -2260,9 +2259,11 @@ export default function Home() {
                   </div>
                 </div>
                 <div ref={lifeArtTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
+                  <div className={styles.compactTextContainer}>
                   <p>艺术是个好东西，音乐、绘画、设计还是电影我都喜欢，可回想起来能做的能说的却很少，或许我可以晚点再写...</p>
               </div>
-                <div ref={lifeOtherTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''}`}>
+                </div>
+                <div ref={lifeOtherTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''} ${styles.compactTabContent}`}>
                   {/* --- ADD rendering for otherData --- */}
                   <div className={styles.gameGrid}> {/* Reuse gameGrid style */}
                     {otherData.map(item => (
