@@ -1802,7 +1802,7 @@ export default function Home() {
       <Head>
         <title>森雨 - RainMorime</title>
         <meta name="description" content="森雨(RainMorime)的个人网站" />
-        <link rel="icon" href="/pictures/RM.jpg" /> {/* Update favicon path */}
+        <link rel="icon" href="pictures/RM.jpg" /> {/* Update favicon path to relative */}
       </Head>
       <div className={styles.leftDotMatrix}></div>
       <MusicPlayer powerLevel={powerLevel} />
