@@ -21,32 +21,32 @@ const playlist = [
   {
     title: "Going home",
     artist: "Kenny G",
-    src: "/music/Kenny G - Going home.mp3"
+    src: "https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/music/Kenny G - Going home.mp3"
   },
   {
     title: "Mice on Venus",
     artist: "C418",
-    src: "/music/C418 - Mice on Venus.flac"
+    src: "https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/music/C418 - Mice on Venus.flac"
   },
   {
     title: "Sweden",
     artist: "C418",
-    src: "/music/C418 - Sweden.flac"
+    src: "https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/music/C418 - Sweden.flac"
   },
   {
     title: "Old Memory",
     artist: "市川淳",
-    src: "/music/市川淳 - Old Memory.flac"
+    src: "https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/music/市川淳 - Old Memory.flac"
   },
   {
     title: "ヨスガノソラ メインテーマ -記憶-",
     artist: "市川淳",
-    src: "/music/市川淳 - ヨスガノソラ メインテーマ -記憶-.flac"
+    src: "https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/music/市川淳 - ヨスガノソラ メインテーマ -記憶-.flac"
   },
   {
     title: "The Dark Side of the Moon",
     artist: "Pink Floyd",
-    src: "/music/Pink Floyd - The Dark Side of the Moon.flac"
+    src: "https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/music/Pink Floyd - The Dark Side of the Moon.flac"
   }
 ];
 
