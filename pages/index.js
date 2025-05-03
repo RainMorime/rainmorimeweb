@@ -22,6 +22,9 @@ import ExperienceDetailView from '../components/ExperienceDetailView';
 import BlogView from '../components/BlogView';
 import BlogDetailView from '../components/BlogDetailView';
 
+// --- ADD Import for favicon --- 
+import favicon from '../assets/RM.jpg'; 
+
 gsap.registerPlugin(ScrollTrigger);
 
 // --- Split Projects Data ---
@@ -1802,7 +1805,8 @@ export default function Home() {
       <Head>
         <title>森雨 - RainMorime</title>
         <meta name="description" content="森雨(RainMorime)的个人网站" />
-        <link rel="icon" href="pictures/RM.jpg" /> {/* Update favicon path to relative */}
+        {/* --- MODIFY: Use imported favicon --- */}
+        <link rel="icon" href={favicon.src} /> 
       </Head>
       <div className={styles.leftDotMatrix}></div>
       <MusicPlayer powerLevel={powerLevel} />
