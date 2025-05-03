@@ -2356,7 +2356,14 @@ export default function Home() {
                   </a>
                 </div>
                 <div className={styles.footerInfo}> 
-                  © 2025 朴相霖 / RainMorime 版权所有
+                  <a 
+                    href="https://creativecommons.org/licenses/by-nc-sa/4.0/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={styles.licenseLink}
+                  >
+                    CC BY-NC-SA 4.0
+                  </a> 2025-PRESENT © RainMorime
                 </div>
               </div>
               <div className={styles.aboutImageContainer}>

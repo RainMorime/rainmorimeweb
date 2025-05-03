@@ -316,7 +316,7 @@
   padding: 0.1em 0.3em; // Add padding to the link itself
   border-radius: 2px;
   transition: background-color 0.2s ease, color 0.2s ease; // Transition link background and color
-  background-color: transparent; // Default transparent background
+  background-color: transparent; // Ensure no background on the link
 
   &:hover {
     text-decoration: none; // Remove underline on hover when background appears
@@ -373,10 +373,10 @@
   justify-content: center;
   padding: 0.2em; 
   border-radius: 2px; 
-  background-color: transparent; 
   transition: background-color 0.2s ease;
   vertical-align: middle; 
   margin-right: -0.2em; 
+  background-color: transparent !important; // Ensure no background on the SVG container
 
   // REMOVE hover rule for icon container background
   /*

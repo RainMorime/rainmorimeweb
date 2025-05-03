@@ -4775,3 +4775,23 @@
   margin: 0 0 10px 0;
 }
 
+// 添加版权超链接样式
+.licenseLink {
+  display: inline-block;
+  // padding: 3px 8px; // 移除旧 padding
+  padding: 6px 12px; // 增大 padding，接近 projectLink，但稍小一点
+  margin-right: 6px;
+  // background-color: rgba(var(--ark-border-rgb), 0.2); // 移除默认背景色
+  background-color: transparent; // 设置默认背景为透明
+  color: var(--ark-text);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid transparent; // 添加透明边框，防止悬停时跳动
+  
+  &:hover {
+    background-color: var(--ark-primary);
+    color: #000000 !important; // 修改为纯黑色并添加 !important
+    border-color: var(--ark-primary); // 悬停时边框颜色与背景一致
+  }
+}
+
