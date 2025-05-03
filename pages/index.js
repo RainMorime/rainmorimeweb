@@ -1809,7 +1809,8 @@ export default function Home() {
         <link rel="icon" href={favicon.src} /> 
       </Head>
       <div className={styles.leftDotMatrix}></div>
-      <MusicPlayer powerLevel={powerLevel} />
+      {/* --- MODIFY: Conditionally render MusicPlayer --- */}
+      {mainVisible && <MusicPlayer powerLevel={powerLevel} />}
       <CustomCursor />
       <RainMorimeEffect />
       <HomeLoadingScreen onComplete={handleLoadingComplete} />
@@ -2055,380 +2056,394 @@ export default function Home() {
             </div>
           </main>
 
-          <div 
-            ref={contentWrapperRef} 
-            className={`${styles.contentWrapper} ${activeSection === 'content' ? styles.visible : styles.hidden}`}
-          >
-            <div id="works-section" ref={worksSectionRef} className={`${styles.contentSection} ${styles.worksSection}`}> {/* <-- ADD Ref */} 
-              <h2>WORKS</h2>
-              {/* --- ADD Work Tab Buttons --- */}
-              <div className={styles.workTabButtons}> {/* Use a specific class */} 
-                  <button
-                    className={`${styles.workTabButton} ${activeWorkTab === 'learn' ? styles.activeTab : ''}`}
-                    onClick={() => handleWorkTabClick('learn')}
-                  >
-                    Learn
-                  </button>
-                  <button
-                    className={`${styles.workTabButton} ${activeWorkTab === 'work' ? styles.activeTab : ''}`}
-                    onClick={() => handleWorkTabClick('work')}
-                  >
-                    Work
-                  </button>
-              </div>
-              {/* --- END ADD --- */}
-
-              {/* --- ADD Work Content Area --- */}
-              <div ref={workContentAreaRef} className={styles.workContentArea}> 
-                {/* Learn Tab Content */}
-                <div ref={workLearnTabRef} className={`${styles.workTabContent} ${activeWorkTab === 'learn' ? styles.activeWorkContent : ''}`}> 
-                    <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
-                        {learnProjects.map(project => (
-                          <ProjectCard 
-                            key={project.id} 
-                            project={project} 
-                            onClick={handleWorkItemClick} // <-- Pass handler directly
-                          />
-                        ))}
-                    </div>
-                </div>
-                {/* Work Tab Content */}
-                <div ref={workWorkTabRef} className={`${styles.workTabContent} ${activeWorkTab === 'work' ? styles.activeWorkContent : ''}`}> 
-                    <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
-                        {workProjects.map(project => (
-                          <ProjectCard 
-                            key={project.id} 
-                            project={project} 
-                            onClick={handleWorkItemClick} // <-- Pass handler directly
-                          />
-                        ))}
-                    </div>
-                </div>
-              </div>
-              {/* --- END ADD Work Content Area --- */}
-
-              {/* --- ADD Skills Section --- */}
-              <h4 className={styles.subSectionTitle}>技能熟练度 / Skills</h4>
-              <div className={styles.skillGrid}> 
-                {skillsData.map((skill) => (
-                  <div 
-                    key={skill.id} 
-                    className={styles.skillCard}
-                    onMouseEnter={() => setHoveredSkillId(skill.id)} 
-                    onMouseLeave={() => setHoveredSkillId(null)}   
-                  >
-                    <div className={styles.skillCardContent}> 
-                      <span className={styles.skillName}>{skill.name}</span> 
-                      <div className={styles.skillProgressBar}> 
-                        {/* Render block characters instead of spans */} 
-                        {[...Array(10)].map((_, i) => (
-                          <span 
-                            key={i} 
-                            className={i < skill.level ? styles.filledSegment : styles.emptySegment}
-                          >
-                            {i < skill.level ? '█' : '░'} {/* Output characters */} 
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    {hoveredSkillId === skill.id && skill.description && (
-                      <div className={styles.skillHoverDescription}>
-                        {skill.description}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {/* --- END ADD Skills Section --- */}
-            </div>
-
-            <div id="experience-section" ref={experienceSectionRef} className={`${styles.contentSection} ${styles.experienceSection}`}> {/* <-- ADD Ref */} 
-              <h2>EXPERIENCE</h2>
-              <div className={styles.experienceTimeline}>
-                {experienceData.map(item => (
-                  <div 
-                    key={item.id} 
-                    className={`
-                      ${styles.timelineItem} 
-                      ${item.alignment === 'left' ? styles.timelineItemLeft : styles.timelineItemRight} 
-                      ${item.type === 'education' ? styles.educationItem : ''}
-                      ${styles.clickable}
-                    `}
-                    // Ensure item and event are passed correctly
-                    onClick={(e) => handleExperienceItemClick(item, e)} 
-                  >
-                  <div className={styles.timelinePoint}></div>
-                  <div className={styles.timelineContent}>
-                      <div className={styles.timelineYear}>
-                        <span className={styles.timelineNumber}>{item.duration.split(' - ')[0]}</span> 
-                        {item.duration.includes(' - ') && ' - '} 
-                        <span className={styles.timelineNumber}>{item.duration.split(' - ')[1]}</span>
-                  </div>
-                      <h3>{item.title}</h3>
-                      {item.details.map((detailLine, index) => (
-                         <p key={index}>
-                           {detailLine.split(/(\d{4}(?:\.\d{2})?)/g).map((part, partIndex) => 
-                             /\d{4}(?:\.\d{2})?/.test(part) ? 
-                             <span key={partIndex} className={styles.timelineNumber}>{part}</span> : 
-                             part
-                           )}
-                         </p>
-                      ))}
-                </div>
-                  </div>
-                ))}
-                </div>
-                    </div>
-
-            {/* --- MODIFY Add dynamic class based on activeSection --- */}
+          {/* --- MODIFY: Conditionally render contentWrapper --- */}
+          {mainVisible && (
             <div 
-              id="life-section" 
-              ref={lifeSectionRef} 
-              className={`${styles.contentSection} ${styles.lifeSection} ${activeSection === 'lifeDetail' ? styles.detailActive : ''}`}
-            > 
-              <h2>LIFE</h2>
-              {/* --- REMOVE Conditional Rendering --- */}
-              {/* {activeSection === 'content' && ( */} 
-                <div className={styles.lifeTabButtons}>
-                  <button
-                    className={`${styles.lifeTabButton} ${activeLifeTab === 'game' ? styles.activeTab : ''}`}
-                    onClick={() => handleLifeTabClick('game')} // Keep using the (now simpler) handler
-                  >
-                    Game
-                  </button>
-                  <button
-                    className={`${styles.lifeTabButton} ${activeLifeTab === 'travel' ? styles.activeTab : ''}`}
-                    onClick={() => handleLifeTabClick('travel')}
-                  >
-                    Travel
-                  </button>
-                  <button
-                    className={`${styles.lifeTabButton} ${activeLifeTab === 'art' ? styles.activeTab : ''}`}
-                    onClick={() => handleLifeTabClick('art')}
-                  >
-                    Art
-                  </button>
-                  <button
-                    className={`${styles.lifeTabButton} ${activeLifeTab === 'other' ? styles.activeTab : ''}`}
-                    onClick={() => handleLifeTabClick('other')}
-                  >
-                    Other
-                  </button>
+              ref={contentWrapperRef} 
+              className={`${styles.contentWrapper} ${activeSection === 'content' ? styles.visible : styles.hidden}`}
+            >
+              <div id="works-section" ref={worksSectionRef} className={`${styles.contentSection} ${styles.worksSection}`}> {/* <-- ADD Ref */} 
+                <h2>WORKS</h2>
+                {/* --- ADD Work Tab Buttons --- */}
+                <div className={styles.workTabButtons}> {/* Use a specific class */} 
+                    <button
+                      className={`${styles.workTabButton} ${activeWorkTab === 'learn' ? styles.activeTab : ''}`}
+                      onClick={() => handleWorkTabClick('learn')}
+                    >
+                      Learn
+                    </button>
+                    <button
+                      className={`${styles.workTabButton} ${activeWorkTab === 'work' ? styles.activeTab : ''}`}
+                      onClick={() => handleWorkTabClick('work')}
+                    >
+                      Work
+                    </button>
                 </div>
-              {/* )} */} 
-              {/* --- END REMOVE --- */}
+                {/* --- END ADD --- */}
 
-              <div ref={lifeContentAreaRef} className={styles.lifeContentArea}>
-                <div ref={lifeGameTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'game' ? styles.activeContent : ''}`}>
-                  <div className={styles.gameGrid}>
-                    {gameData.map(game => (
-                      <ProjectCard 
-                        key={game.id} 
-                        project={game} 
-                        onClick={handleLifeItemClick} // <-- Pass handler directly
-                      />
-                    ))}
+                {/* --- ADD Work Content Area --- */}
+                <div ref={workContentAreaRef} className={styles.workContentArea}> 
+                  {/* Learn Tab Content */}
+                  <div ref={workLearnTabRef} className={`${styles.workTabContent} ${activeWorkTab === 'learn' ? styles.activeWorkContent : ''}`}> 
+                      <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
+                          {learnProjects.map(project => (
+                            <ProjectCard 
+                              key={project.id} 
+                              project={project} 
+                              onClick={handleWorkItemClick} // <-- Pass handler directly
+                            />
+                          ))}
+                      </div>
                   </div>
-                  {/* --- ADD Small Game Cards --- */}
-                  <h4 className={styles.subSectionTitle}>还有这些也玩 / Also Play These</h4>
-                  <div className={styles.smallGameGrid}>
-                    {
-                      [
-                        'The Binding of Isaac: Rebirth',
-                        'Terraria',
-                        'Stardew Valley',
-                        'Warframe',
-                        'Deep Rock Galactic',
-                        'Slay the Spire',
-                        'Stellaris',
-                        'RimWorld'
-                      ].map((gameName) => (
-                        <div key={gameName} className={styles.smallGameCard}>
-                          {gameName}
+                  {/* Work Tab Content */}
+                  <div ref={workWorkTabRef} className={`${styles.workTabContent} ${activeWorkTab === 'work' ? styles.activeWorkContent : ''}`}> 
+                      <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
+                          {workProjects.map(project => (
+                            <ProjectCard 
+                              key={project.id} 
+                              project={project} 
+                              onClick={handleWorkItemClick} // <-- Pass handler directly
+                            />
+                          ))}
+                      </div>
+                  </div>
+                </div>
+                {/* --- END ADD Work Content Area --- */}
+
+                {/* --- ADD Skills Section --- */}
+                <h4 className={styles.subSectionTitle}>技能熟练度 / Skills</h4>
+                <div className={styles.skillGrid}> 
+                  {skillsData.map((skill) => (
+                    <div 
+                      key={skill.id} 
+                      className={styles.skillCard}
+                      onMouseEnter={() => setHoveredSkillId(skill.id)} 
+                      onMouseLeave={() => setHoveredSkillId(null)}   
+                    >
+                      <div className={styles.skillCardContent}> 
+                        <span className={styles.skillName}>{skill.name}</span> 
+                        <div className={styles.skillProgressBar}> 
+                          {/* Render block characters instead of spans */} 
+                          {[...Array(10)].map((_, i) => (
+                            <span 
+                              key={i} 
+                              className={i < skill.level ? styles.filledSegment : styles.emptySegment}
+                            >
+                              {i < skill.level ? '█' : '░'} {/* Output characters */} 
+                            </span>
+                          ))}
                         </div>
-                      ))
-                    }
-                  </div>
-                  {/* --- END ADD --- */}
+                      </div>
+                      {hoveredSkillId === skill.id && skill.description && (
+                        <div className={styles.skillHoverDescription}>
+                          {skill.description}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
-                <div ref={lifeTravelTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'travel' ? styles.activeContent : ''}`}>
-                  <div className={styles.travelGrid}>
-                    {travelData.map(place => (
-                      <ProjectCard 
-                        key={place.id} 
-                        project={place} 
-                        onClick={handleLifeItemClick} // <-- Pass handler directly
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div ref={lifeArtTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
-                  <div className={styles.compactTextContainer}>
-                  <p>艺术是个好东西，音乐、绘画、设计还是电影我都喜欢，可回想起来能做的能说的却很少，或许我可以晚点再写...</p>
-              </div>
-                </div>
-                <div ref={lifeOtherTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''} ${styles.compactTabContent}`}>
-                  {/* --- ADD rendering for otherData --- */}
-                  <div className={styles.gameGrid}> {/* Reuse gameGrid style */}
-                    {otherData.map(item => (
-                      <ProjectCard 
-                        key={item.id} 
-                        project={item} 
-                        onClick={handleLifeItemClick} // <-- Pass handler directly
-                      />
-                    ))}
-                  </div>
-                  {/* --- END ADD --- */}
-            </div>
-              </div>
-            </div>
-
-            <div id="contact-section" ref={contactSectionRef} className={`${styles.contentSection} ${styles.contactSection}`}> {/* <-- ADD Ref */} 
-              <h2>CONTACT</h2>
-              <div className={styles.radarDisplay}>
-                <div className={styles.scanner}></div>
-                <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
-                <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple1}`}></div>
-                <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple2}`}></div>
-                <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple3}`}></div>
+                {/* --- END ADD Skills Section --- */}
               </div>
 
-              <button
-                type="button"
-                className={`${styles.logItem} ${styles.radarContact1}`}
-                onClick={handleCopyEmail}
-              >
-                <div className={styles.logIconContainer}>
-                  <svg className={styles.logIcon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M3.00977 5.83789C3 5.28561 3.44772 4.83789 4 4.83789H20C20.5523 4.83789 21 5.28561 21 5.83789V17.1621C21 17.7144 20.5523 18.1621 20 18.1621H4C3.44772 18.1621 3 17.7144 3 17.1621V5.83789H3.00977ZM5.01817 6.83789L11.0535 11.4847C11.6463 11.9223 12.4249 11.9223 13.0177 11.4847L19.053 6.83789H5.01817Z" fill="currentColor"/>
-                  </svg>
+              <div id="experience-section" ref={experienceSectionRef} className={`${styles.contentSection} ${styles.experienceSection}`}> {/* <-- ADD Ref */} 
+                <h2>EXPERIENCE</h2>
+                <div className={styles.experienceTimeline}>
+                  {experienceData.map(item => (
+                    <div 
+                      key={item.id} 
+                      className={`
+                        ${styles.timelineItem} 
+                        ${item.alignment === 'left' ? styles.timelineItemLeft : styles.timelineItemRight} 
+                        ${item.type === 'education' ? styles.educationItem : ''}
+                        ${styles.clickable}
+                      `}
+                      // Ensure item and event are passed correctly
+                      onClick={(e) => handleExperienceItemClick(item, e)} 
+                    >
+                    <div className={styles.timelinePoint}></div>
+                    <div className={styles.timelineContent}>
+                        <div className={styles.timelineYear}>
+                          <span className={styles.timelineNumber}>{item.duration.split(' - ')[0]}</span> 
+                          {item.duration.includes(' - ') && ' - '} 
+                          <span className={styles.timelineNumber}>{item.duration.split(' - ')[1]}</span>
+                    </div>
+                        <h3>{item.title}</h3>
+                        {item.details.map((detailLine, index) => (
+                           <p key={index}>
+                             {detailLine.split(/(\\d{4}(?:\\.\\d{2})?)/g).map((part, partIndex) => 
+                               /\\d{4}(?:\\.\\d{2})?/.test(part) ? 
+                               <span key={partIndex} className={styles.timelineNumber}>{part}</span> : 
+                               part
+                             )}
+                           </p>
+                        ))}
+                  </div>
+                    </div>
+                  ))}
+                  </div>
+                      </div>
+
+              {/* --- MODIFY Add dynamic class based on activeSection --- */}
+              <div 
+                id="life-section" 
+                ref={lifeSectionRef} 
+                className={`${styles.contentSection} ${styles.lifeSection} ${activeSection === 'lifeDetail' ? styles.detailActive : ''}`}
+              > 
+                <h2>LIFE</h2>
+                {/* --- REMOVE Conditional Rendering --- */}
+                {/* {activeSection === 'content' && ( */} 
+                  <div className={styles.lifeTabButtons}>
+                    <button
+                      className={`${styles.lifeTabButton} ${activeLifeTab === 'game' ? styles.activeTab : ''}`}
+                      onClick={() => handleLifeTabClick('game')} // Keep using the (now simpler) handler
+                    >
+                      Game
+                    </button>
+                    <button
+                      className={`${styles.lifeTabButton} ${activeLifeTab === 'travel' ? styles.activeTab : ''}`}
+                      onClick={() => handleLifeTabClick('travel')}
+                    >
+                      Travel
+                    </button>
+                    <button
+                      className={`${styles.lifeTabButton} ${activeLifeTab === 'art' ? styles.activeTab : ''}`}
+                      onClick={() => handleLifeTabClick('art')}
+                    >
+                      Art
+                    </button>
+                    <button
+                      className={`${styles.lifeTabButton} ${activeLifeTab === 'other' ? styles.activeTab : ''}`}
+                      onClick={() => handleLifeTabClick('other')}
+                    >
+                      Other
+                    </button>
+                  </div>
+                {/* )} */} 
+                {/* --- END REMOVE --- */}
+
+                <div ref={lifeContentAreaRef} className={styles.lifeContentArea}>
+                  <div ref={lifeGameTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'game' ? styles.activeContent : ''}`}>
+                    <div className={styles.gameGrid}>
+                      {gameData.map(game => (
+                        <ProjectCard 
+                          key={game.id} 
+                          project={game} 
+                          onClick={handleLifeItemClick} // <-- Pass handler directly
+                        />
+                      ))}
+                    </div>
+                    {/* --- ADD Small Game Cards --- */}
+                    <h4 className={styles.subSectionTitle}>还有这些也玩 / Also Play These</h4>
+                    <div className={styles.smallGameGrid}>
+                      {
+                        [
+                          'The Binding of Isaac: Rebirth',
+                          'Terraria',
+                          'Stardew Valley',
+                          'Warframe',
+                          'Deep Rock Galactic',
+                          'Slay the Spire',
+                          'Stellaris',
+                          'RimWorld'
+                        ].map((gameName) => (
+                          <div key={gameName} className={styles.smallGameCard}>
+                            {gameName}
+                          </div>
+                        ))
+                      }
+                    </div>
+                    {/* --- END ADD --- */}
+                  </div>
+                  <div ref={lifeTravelTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'travel' ? styles.activeContent : ''}`}>
+                    <div className={styles.travelGrid}>
+                      {travelData.map(place => (
+                        <ProjectCard 
+                          key={place.id} 
+                          project={place} 
+                          onClick={handleLifeItemClick} // <-- Pass handler directly
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div ref={lifeArtTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
+                    <div className={styles.compactTextContainer}>
+                    <p>艺术是个好东西，音乐、绘画、设计还是电影我都喜欢，可回想起来能做的能说的却很少，或许我可以晚点再写...</p>
                 </div>
-                <div className={styles.contactIconRipple}></div>
-                <span className={styles.emailText}>rainmorime@qq.com</span>
-                {isEmailCopied && <span className={styles.copyFeedback}>Copied!</span>}
-              </button>
-              <div className={`${styles.logItem} ${styles.radarContact2}`}>
-                  <a href="https://github.com/RainMorime" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
-                    <div className={styles.logIconContainer}>
-                      <svg className={styles.logIcon} viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" fill="currentColor"></path>
-                      </svg>
+                  </div>
+                  <div ref={lifeOtherTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''} ${styles.compactTabContent}`}>
+                    {/* --- ADD rendering for otherData --- */}
+                    <div className={styles.gameGrid}> {/* Reuse gameGrid style */}
+                      {otherData.map(item => (
+                        <ProjectCard 
+                          key={item.id} 
+                          project={item} 
+                          onClick={handleLifeItemClick} // <-- Pass handler directly
+                        />
+                      ))}
                     </div>
-                    <div className={styles.contactIconRipple}></div>
-                  </a>
+                    {/* --- END ADD --- */}
               </div>
-              <div className={`${styles.logItem} ${styles.radarContact3}`}>
-                  <a href="https://space.bilibili.com/28913719" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
-                    <div className={styles.logIconContainer}>
-                      <svg className={styles.logIcon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                          <path fill="none" d="M0 0h24v24H0z"/>
-                          <path fill="currentColor" d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768L17.08 5.996h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.166L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.18.199-.258l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.69-.56-1.25-1.25-1.25zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z"/>
-                        </g>
-                      </svg>
-                    </div>
-                    <div className={styles.contactIconRipple}></div>
-                  </a>
+                </div>
               </div>
-              {/* --- ADD STEAM ICON --- */}
-              <div className={`${styles.logItem} ${styles.radarContact4}`}>
-                  <a href="https://steamcommunity.com/id/RainMorime/" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
-                    <div className={styles.logIconContainer}>
-                         {/* --- Use new inline Steam SVG with currentColor --- */}
-                         <svg className={styles.logIcon} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                           <path fill="currentColor" d="M15.974 0c-8.401 0-15.292 6.479-15.943 14.714l8.573 3.547c0.729-0.495 1.604-0.786 2.552-0.786 0.083 0 0.167 0.005 0.25 0.005l3.813-5.521v-0.078c0-3.328 2.703-6.031 6.031-6.031s6.036 2.708 6.036 6.036c0 3.328-2.708 6.031-6.036 6.031h-0.135l-5.438 3.88c0 0.073 0.005 0.141 0.005 0.214 0 2.5-2.021 4.526-4.521 4.526-2.177 0-4.021-1.563-4.443-3.635l-6.135-2.542c1.901 6.719 8.063 11.641 15.391 11.641 8.833 0 15.995-7.161 15.995-16s-7.161-16-15.995-16zM10.052 24.281l-1.964-0.813c0.349 0.724 0.953 1.328 1.755 1.667 1.729 0.719 3.724-0.104 4.443-1.833 0.349-0.844 0.349-1.76 0.005-2.599-0.344-0.844-1-1.495-1.839-1.844-0.828-0.349-1.719-0.333-2.5-0.042l2.026 0.839c1.276 0.536 1.88 2 1.349 3.276s-2 1.88-3.276 1.349zM25.271 11.875c0-2.214-1.802-4.021-4.016-4.021-2.224 0-4.021 1.807-4.021 4.021 0 2.219 1.797 4.021 4.021 4.021 2.214 0 4.016-1.802 4.016-4.021zM18.245 11.87c0-1.672 1.349-3.021 3.016-3.021s3.026 1.349 3.026 3.021c0 1.667-1.359 3.021-3.026 3.021s-3.016-1.354-3.016-3.021z"/>
-                         </svg>
-                         {/* --- End new Steam SVG --- */}
+
+              <div id="contact-section" ref={contactSectionRef} className={`${styles.contentSection} ${styles.contactSection}`}> {/* <-- ADD Ref */} 
+                <h2>CONTACT</h2>
+                <div className={styles.radarDisplay}>
+                  <div className={styles.scanner}></div>
+                  <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
+                  <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple1}`}></div>
+                  <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple2}`}></div>
+                  <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple3}`}></div>
+                </div>
+
+                <button
+                  type="button"
+                  className={`${styles.logItem} ${styles.radarContact1}`}
+                  onClick={handleCopyEmail}
+                >
+                  <div className={styles.logIconContainer}>
+                    <svg className={styles.logIcon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M3.00977 5.83789C3 5.28561 3.44772 4.83789 4 4.83789H20C20.5523 4.83789 21 5.28561 21 5.83789V17.1621C21 17.7144 20.5523 18.1621 20 18.1621H4C3.44772 18.1621 3 17.7144 3 17.1621V5.83789H3.00977ZM5.01817 6.83789L11.0535 11.4847C11.6463 11.9223 12.4249 11.9223 13.0177 11.4847L19.053 6.83789H5.01817Z" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <div className={styles.contactIconRipple}></div>
+                  <span className={styles.emailText}>rainmorime@qq.com</span>
+                  {isEmailCopied && <span className={styles.copyFeedback}>Copied!</span>}
+                </button>
+                <div className={`${styles.logItem} ${styles.radarContact2}`}>
+                    <a href="https://github.com/RainMorime" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
+                      <div className={styles.logIconContainer}>
+                        <svg className={styles.logIcon} viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                          <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" fill="currentColor"></path>
+                        </svg>
                       </div>
                       <div className={styles.contactIconRipple}></div>
                     </a>
                 </div>
-              {/* --- END STEAM ICON --- */}
-            </div>
+                <div className={`${styles.logItem} ${styles.radarContact3}`}>
+                    <a href="https://space.bilibili.com/28913719" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
+                      <div className={styles.logIconContainer}>
+                        <svg className={styles.logIcon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <g>
+                            <path fill="none" d="M0 0h24v24H0z"/>
+                            <path fill="currentColor" d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768L17.08 5.996h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.166L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.18.199-.258l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.69-.56-1.25-1.25-1.25zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z"/>
+                          </g>
+                        </svg>
+                      </div>
+                      <div className={styles.contactIconRipple}></div>
+                    </a>
+                </div>
+                {/* --- ADD STEAM ICON --- */}
+                <div className={`${styles.logItem} ${styles.radarContact4}`}>
+                    <a href="https://steamcommunity.com/id/RainMorime/" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
+                      <div className={styles.logIconContainer}>
+                           {/* --- Use new inline Steam SVG with currentColor --- */}
+                           <svg className={styles.logIcon} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                             <path fill="currentColor" d="M15.974 0c-8.401 0-15.292 6.479-15.943 14.714l8.573 3.547c0.729-0.495 1.604-0.786 2.552-0.786 0.083 0 0.167 0.005 0.25 0.005l3.813-5.521v-0.078c0-3.328 2.703-6.031 6.031-6.031s6.036 2.708 6.036 6.036c0 3.328-2.708 6.031-6.036 6.031h-0.135l-5.438 3.88c0 0.073 0.005 0.141 0.005 0.214 0 2.5-2.021 4.526-4.521 4.526-2.177 0-4.021-1.563-4.443-3.635l-6.135-2.542c1.901 6.719 8.063 11.641 15.391 11.641 8.833 0 15.995-7.161 15.995-16s-7.161-16-15.995-16zM10.052 24.281l-1.964-0.813c0.349 0.724 0.953 1.328 1.755 1.667 1.729 0.719 3.724-0.104 4.443-1.833 0.349-0.844 0.349-1.76 0.005-2.599-0.344-0.844-1-1.495-1.839-1.844-0.828-0.349-1.719-0.333-2.5-0.042l2.026 0.839c1.276 0.536 1.88 2 1.349 3.276s-2 1.88-3.276 1.349zM25.271 11.875c0-2.214-1.802-4.021-4.016-4.021-2.224 0-4.021 1.807-4.021 4.021 0 2.219 1.797 4.021 4.021 4.021 2.214 0 4.016-1.802 4.016-4.021zM18.245 11.87c0-1.672 1.349-3.021 3.016-3.021s3.026 1.349 3.026 3.021c0 1.667-1.359 3.021-3.026 3.021s-3.016-1.354-3.016-3.021z"/>
+                           </svg>
+                           {/* --- End new Steam SVG --- */}
+                      </div>
+                      <div className={styles.contactIconRipple}></div>
+                    </a>
+                </div>
+                {/* --- END STEAM ICON --- */}
+              </div>
 
-            <div id="about-section" ref={aboutSectionRef} className={`${styles.contentSection} ${styles.aboutSection}`}> 
-              <Noise />
-              <div ref={aboutContentRef}>
-                <h2>ABOUT</h2>
-                <div className={styles.footerInfo}>
-                  <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
-                    ICP备案: 陕ICP备2023011267号-1
-                  </a>
+              <div id="about-section" ref={aboutSectionRef} className={`${styles.contentSection} ${styles.aboutSection}`}> 
+                <Noise />
+                <div ref={aboutContentRef}>
+                  <h2>ABOUT</h2>
+                  <div className={styles.footerInfo}>
+                    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
+                      ICP备案: 陕ICP备2023011267号-1
+                    </a>
+                  </div>
+                  <div className={styles.footerInfo}> 
+                    <a 
+                      href="https://creativecommons.org/licenses/by-nc-sa/4.0/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={styles.licenseLink}
+                    >
+                      CC BY-NC-SA 4.0
+                    </a> 2025-PRESENT © RainMorime
+                  </div>
                 </div>
-                <div className={styles.footerInfo}> 
-                  <a 
-                    href="https://creativecommons.org/licenses/by-nc-sa/4.0/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={styles.licenseLink}
-                  >
-                    CC BY-NC-SA 4.0
-                  </a> 2025-PRESENT © RainMorime
+                <div className={styles.aboutImageContainer}>
+                  <img 
+                    src="/pictures/www.rainmorime.com.png" 
+                    alt="Website QR Code" 
+                    className={styles.aboutImage} 
+                  />
                 </div>
-              </div>
-              <div className={styles.aboutImageContainer}>
-                <img 
-                  src="/pictures/www.rainmorime.com.png" 
-                  alt="Website QR Code" 
-                  className={styles.aboutImage} 
-                />
               </div>
             </div>
-          </div>
+          )}
+          {/* --- END MODIFY --- */}
+
+          {/* Detail View Wrappers remain outside contentWrapper */}
+          {/* --- MODIFY: Conditionally render DetailViewWrappers --- */}
+          {mainVisible && (
+            <>
+              <div 
+                className={`${styles.detailViewWrapper} ${activeSection === 'lifeDetail' ? styles.visible : styles.hidden}`}
+              >
+                {selectedLifeItem && (
+                  <LifeDetailView 
+                    item={selectedLifeItem}
+                  />
+                )}
+              </div>
+
+              <div 
+                className={`${styles.detailViewWrapper} ${activeSection === 'workDetail' ? styles.visible : styles.hidden}`}
+              >
+                {selectedWorkItem && (
+                  <WorkDetailView 
+                    item={selectedWorkItem}
+                  />
+                )}
+              </div>
+
+              <div 
+                className={`${styles.detailViewWrapper} ${activeSection === 'experienceDetail' ? styles.visible : styles.hidden}`}
+              >
+                {selectedExperienceItem && (
+                  <ExperienceDetailView 
+                    item={selectedExperienceItem}
+                  />
+                )}
+              </div>
+
+              {/* Blog详情视图 */}
+              <div 
+                className={`${styles.detailViewWrapper} ${activeSection === 'blogDetail' ? styles.visible : styles.hidden}`}
+              >
+                {selectedBlogPost && (
+                  <BlogDetailView 
+                    item={selectedBlogPost}
+                  />
+                )}
+              </div>
+            </>
+          )}
+          {/* --- END MODIFY --- */}
+
+          {/* 添加独立的Blog视图容器 */}
+          {/* --- MODIFY: Conditionally render BlogViewWrapper --- */}
+          {mainVisible && (
+            <div 
+              ref={blogViewWrapperRef} // <-- Assign the ref here
+              className={`${styles.blogViewWrapper} ${activeSection === 'blog' ? styles.visible : styles.hidden}`}
+            >
+              <BlogView 
+                onPostClick={handleBlogPostClick} 
+              />
+            </div>
+          )}
+          {/* --- END MODIFY --- */}
         </>
       )}
-
-      {/* Detail View Wrappers remain outside contentWrapper */}
-      <div 
-        className={`${styles.detailViewWrapper} ${activeSection === 'lifeDetail' ? styles.visible : styles.hidden}`}
-      >
-        {selectedLifeItem && (
-          <LifeDetailView 
-            item={selectedLifeItem}
-          />
-        )}
-      </div>
-
-      <div 
-        className={`${styles.detailViewWrapper} ${activeSection === 'workDetail' ? styles.visible : styles.hidden}`}
-      >
-        {selectedWorkItem && (
-          <WorkDetailView 
-            item={selectedWorkItem}
-          />
-        )}
-      </div>
-
-      <div 
-        className={`${styles.detailViewWrapper} ${activeSection === 'experienceDetail' ? styles.visible : styles.hidden}`}
-      >
-        {selectedExperienceItem && (
-          <ExperienceDetailView 
-            item={selectedExperienceItem}
-          />
-        )}
-      </div>
-
-      {/* Blog详情视图 */}
-      <div 
-        className={`${styles.detailViewWrapper} ${activeSection === 'blogDetail' ? styles.visible : styles.hidden}`}
-      >
-        {selectedBlogPost && (
-          <BlogDetailView 
-            item={selectedBlogPost}
-          />
-        )}
-      </div>
-
-      {/* 添加独立的Blog视图容器 */}
-      <div 
-        ref={blogViewWrapperRef} // <-- Assign the ref here
-        className={`${styles.blogViewWrapper} ${activeSection === 'blog' ? styles.visible : styles.hidden}`}
-      >
-        <BlogView 
-          onPostClick={handleBlogPostClick} 
-        />
-      </div>
     </div>
   );
 }

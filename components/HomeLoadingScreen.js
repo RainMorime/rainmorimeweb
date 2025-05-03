@@ -14,6 +14,7 @@ const HomeLoadingScreen = ({ onComplete }) => {
   const [showSplitLines, setShowSplitLines] = useState(false);
   const [letterDelays, setLetterDelays] = useState([]); // 新增：存储字母随机延迟
   const [rainLetterDelays, setRainLetterDelays] = useState([]); // 新增：存储 RAIN 字母随机延迟
+  const [dotStyles, setDotStyles] = useState([]); // 新增：存储散落点样式
   
   const containerRef = useRef(null);
   const consoleContentRef = useRef(null);
@@ -396,6 +397,21 @@ const HomeLoadingScreen = ({ onComplete }) => {
     }
   }, [loading]); // 依赖 loading 状态
   
+  // 新增：在客户端生成散落点样式
+  useEffect(() => {
+    if (loading) { // 只在加载时生成
+      const styles = [];
+      for (let i = 0; i < 7; i++) { // 生成 7 个点的样式
+        styles.push({
+          left: `${15 + Math.random() * 70}%`,
+          bottom: `${5 + Math.random() * 10}%`,
+          transform: `scale(${0.5 + Math.random() * 0.5})`
+        });
+      }
+      setDotStyles(styles);
+    }
+  }, [loading]); // 依赖 loading
+  
   // 优化的退场动画设置
   const exitTransition = {
     duration: 1.2,
@@ -741,12 +757,14 @@ const HomeLoadingScreen = ({ onComplete }) => {
                    { [...Array(60)].map((_, i) => { // 添加 60 条刻度线 (每 6 度一条)
                       const angle = i * 6;
                       const rad = angle * Math.PI / 180;
-                      const rInner = 46.5; // 修改：内半径，使其小于外圈半径，指向内侧
-                      const rOuter = 48;   // 修改：外半径，与外圈半径一致
-                      const x1 = 50 + rInner * Math.cos(rad);
-                      const y1 = 50 + rInner * Math.sin(rad);
-                      const x2 = 50 + rOuter * Math.cos(rad);
-                      const y2 = 50 + rOuter * Math.sin(rad);
+                      const rInner = 46.5;
+                      const rOuter = 48;
+                      // --- MODIFY: Round coordinates to fix hydration error ---
+                      const x1 = (50 + rInner * Math.cos(rad)).toFixed(5);
+                      const y1 = (50 + rInner * Math.sin(rad)).toFixed(5);
+                      const x2 = (50 + rOuter * Math.cos(rad)).toFixed(5);
+                      const y2 = (50 + rOuter * Math.sin(rad)).toFixed(5);
+                      // --- END MODIFY ---
                       return (
                         <line
                           key={`outer-tick-${i}`}
@@ -789,12 +807,14 @@ const HomeLoadingScreen = ({ onComplete }) => {
                    { [...Array(36)].map((_, i) => { // 增加到 36 条刻度线
                       const angle = i * 10; // 每 10 度一条
                       const rad = angle * Math.PI / 180; // 弧度
-                      const rInner = 28.5; // 刻度线内半径 (更靠近外圈)
-                      const rOuter = 30;   // 刻度线外半径 (保持不变)
-                      const x1 = 50 + rInner * Math.cos(rad);
-                      const y1 = 50 + rInner * Math.sin(rad);
-                      const x2 = 50 + rOuter * Math.cos(rad);
-                      const y2 = 50 + rOuter * Math.sin(rad);
+                      const rInner = 28.5;
+                      const rOuter = 30;
+                      // --- MODIFY: Round coordinates to fix hydration error ---
+                      const x1 = (50 + rInner * Math.cos(rad)).toFixed(5);
+                      const y1 = (50 + rInner * Math.sin(rad)).toFixed(5);
+                      const x2 = (50 + rOuter * Math.cos(rad)).toFixed(5);
+                      const y2 = (50 + rOuter * Math.sin(rad)).toFixed(5);
+                      // --- END MODIFY ---
                       return (
                         <line
                           key={`tick-${i}`}
@@ -888,20 +908,22 @@ const HomeLoadingScreen = ({ onComplete }) => {
 
               {/* 底部散落点 */}
               <div className={styles.hud_scatter_dots}>
-                 {[...Array(7)].map((_, i) => (
-                    <motion.div 
-                      key={`dot-${i}`} 
-                      className={styles.scatter_dot} 
-                      style={{ 
-                        left: `${15 + Math.random() * 70}%`, 
-                        bottom: `${5 + Math.random() * 10}%`,
-                        transform: `scale(${0.5 + Math.random() * 0.5})`
-                      }} 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.3 + Math.random() * 0.3, transition: { delay: 0.8 + Math.random() * 0.5, duration: 0.5 } }}
-                      exit={{ opacity: 0 }} // 添加退出动画
-                    />
-                 ))}
+                {/* --- MODIFY: Render dots based on state --- */}
+                {dotStyles.map((style, i) => (
+                  <motion.div
+                    key={`dot-${i}`}
+                    className={styles.scatter_dot}
+                    style={style} // 应用来自 state 的样式
+                    initial={{ opacity: 0 }}
+                    // 使用固定的动画值或基于索引的微小变化，避免随机性
+                    animate={{
+                      opacity: 0.4 + (i * 0.05), // Example: slightly vary opacity based on index
+                      transition: { delay: 0.8 + (i * 0.08), duration: 0.5 } // Example: vary delay
+                    }}
+                    exit={{ opacity: 0 }}
+                  />
+                ))}
+                {/* --- END MODIFY --- */}
               </div>
             </motion.div>
             
