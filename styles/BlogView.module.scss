@@ -1,5 +1,6 @@
 /* styles/BlogView.module.scss */
 
+// 博客视图容器
 .blogContainer {
     /* 半屏布局样式 */
     position: absolute; 
@@ -19,6 +20,7 @@
     }
 }
   
+// 博客标题
 .blogTitle {
     font-family: 'Dosis', monospace; 
     font-size: 2rem; 

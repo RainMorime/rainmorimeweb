@@ -3,162 +3,138 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Physics, usePlane, Debug } from '@react-three/cannon';
 import { Line } from '@react-three/drei';
 import * as THREE from 'three';
-import Tesseract from './Tesseract'; // Import the Tesseract component
+import Tesseract from './Tesseract'; // 导入 Tesseract 组件
 
-// Invisible plane for the ground
+// 物理碰撞的不可见地面
 function Plane(props) {
   const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
+    rotation: [-Math.PI / 2, 0, 0], // 水平旋转
     material: {
-      restitution: 0.3, // 给地面一点弹性
+      restitution: 0.3, // 弹性
     },
     ...props
   }));
   return (
-    <mesh ref={ref} receiveShadow> {/* Make plane receive shadows if needed */} 
-      <planeGeometry args={[100, 100]} />
-      <meshStandardMaterial color="#050a11" transparent opacity={0} /> {/* Invisible */} 
+    <mesh ref={ref} receiveShadow> {/* 接收阴影 */}
+      <planeGeometry args={[100, 100]} /> {/* 尺寸 */}
+      <meshStandardMaterial color="#050a11" transparent opacity={0} /> {/* 透明 */}
     </mesh>
   );
 }
 
-// Helper component to contain the useFrame logic
+// 场景逻辑处理 (例如更新连接线)
 function SceneLogic({ isConnecting, tesseractRef, batteryPosition3D, setConnectionLinePoints }) {
   useFrame(({ camera }) => {
+    // Tesseract 正在连接且相关引用和位置存在
     if (isConnecting && tesseractRef.current && batteryPosition3D) {
       const tesseractWorldPos = new THREE.Vector3();
-      // Access the actual mesh ref inside the Tesseract component if possible
+      // 获取 Tesseract 的物理实体引用
       const physicsMesh = tesseractRef.current.meshRef ? tesseractRef.current.meshRef.current : tesseractRef.current;
       
       if (physicsMesh) {
-        physicsMesh.getWorldPosition(tesseractWorldPos);
+        physicsMesh.getWorldPosition(tesseractWorldPos); // 获取 Tesseract 世界坐标
 
-        // Convert battery NDC to world space using the current camera
-        const batteryWorldPos = new THREE.Vector3(batteryPosition3D.x, batteryPosition3D.y, 0.5); // Start with NDC
+        // 将电池的 NDC 坐标转换为世界坐标
+        const batteryWorldPos = new THREE.Vector3(batteryPosition3D.x, batteryPosition3D.y, 0.5);
         batteryWorldPos.unproject(camera);
         const dir = batteryWorldPos.sub(camera.position).normalize();
-        const distance = (batteryPosition3D.z - camera.position.z) / dir.z; // Project onto a plane at z=0 relative to battery
+        const distance = (batteryPosition3D.z - camera.position.z) / dir.z;
         const finalBatteryWorldPos = camera.position.clone().add(dir.multiplyScalar(distance));
 
-        // Clamp positions slightly to avoid extreme line lengths if something goes wrong
+        // 限制坐标范围，防止线条过长
         tesseractWorldPos.clampLength(0, 50); 
         finalBatteryWorldPos.clampLength(0, 50);
 
+        // 更新连接线端点
         setConnectionLinePoints([tesseractWorldPos, finalBatteryWorldPos]);
       } else {
-         // Optionally reset points if the ref is lost
+         // 可选: 若 Tesseract 引用丢失，重置连接线点
          // setConnectionLinePoints([new THREE.Vector3(), new THREE.Vector3()]);
       }
     }
   });
-  return null; // This component doesn't render anything itself
+  return null; // 不渲染任何可见内容
 }
 
-// Main 3D Scene Component
+// Tesseract 3D 场景主组件
 const TesseractExperience = ({ chargeBattery, isActivated, isInverted }) => {
-  const [batteryPosition3D, setBatteryPosition3D] = useState(null);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const tesseractRef = useRef(); // Ref to access Tesseract component
-  const [isTesseractDragging, setIsTesseractDragging] = useState(false);
-  const glRef = useRef(null);
-  const [connectionLinePoints, setConnectionLinePoints] = useState([
+  const [batteryPosition3D, setBatteryPosition3D] = useState(null); // 电池 3D NDC 坐标
+  const [isConnecting, setIsConnecting] = useState(false); // Tesseract 是否连接到电池
+  const tesseractRef = useRef(); // Tesseract 组件引用
+  const [isTesseractDragging, setIsTesseractDragging] = useState(false); // Tesseract 是否被拖拽
+  const glRef = useRef(null); // R3F Canvas WebGLRenderer 实例引用
+  const [connectionLinePoints, setConnectionLinePoints] = useState([ // 连接线起点和终点
     new THREE.Vector3(0, 0, 0),
     new THREE.Vector3(0, 0, 0),
   ]);
 
-  // Get battery DOM element position and convert to NDC
+  // 获取电池图标 DOM 位置并转换为 NDC 坐标
   useEffect(() => {
-    console.log('[TesseractExperience] useEffect for battery position triggered.'); // DEBUG LOG
-    // Use attribute selector which is more robust with CSS Modules
-    const batterySelector = '[class*="powerDisplay"]'; 
+    const batterySelector = '[class*="powerDisplay"]'; // 电池容器选择器
     const batteryElement = document.querySelector(batterySelector);
-    console.log('[TesseractExperience] Querying for battery element with selector:', batterySelector); // DEBUG LOG
 
     if (!batteryElement) {
-      console.error("[TesseractExperience] Could not find battery element using selector:", batterySelector);
-      setBatteryPosition3D(null); // Ensure state is null if element not found early
-      return; // Stop if element not found
+      console.error("[TesseractExperience] 找不到电池元素，选择器:", batterySelector);
+      setBatteryPosition3D(null);
+      return;
     }
-    console.log('[TesseractExperience] Found battery element:', batteryElement); // DEBUG LOG
 
     const updatePosition = () => {
-      console.log('[TesseractExperience] updatePosition function called.'); // DEBUG LOG
-      const batteryRect = batteryElement.getBoundingClientRect();
-      // --- NEW: Get canvas element and its bounding box ---
-      const canvasElement = glRef.current?.domElement;
-      // --- NEW: Find the specific battery icon element ---
-      const iconSelector = '[class*="batteryIcon"]'; // Selector for the icon
+      const canvasElement = glRef.current?.domElement; // Canvas DOM 元素
+      const iconSelector = '[class*="batteryIcon"]'; // 电池图标选择器
       const iconElement = batteryElement.querySelector(iconSelector);
-      console.log('[TesseractExperience] Querying for icon element with selector:', iconSelector); // DEBUG LOG
 
       if (!canvasElement) {
-        console.error("[TesseractExperience] Canvas element not found via glRef.");
+        console.error("[TesseractExperience] Canvas 元素未找到 (glRef)。");
         setBatteryPosition3D(null);
         return;
       }
-      // --- NEW: Check if icon element was found ---
       if (!iconElement) {
-        console.error("[TesseractExperience] Battery icon element not found inside powerDisplay.");
+        console.error("[TesseractExperience] 在 powerDisplay 中找不到电池图标元素。");
         setBatteryPosition3D(null);
         return;
       }
-      console.log('[TesseractExperience] Found icon element:', iconElement); // DEBUG LOG
 
-      // --- NEW: Get icon bounding box ---
       const canvasRect = canvasElement.getBoundingClientRect();
-      const iconRect = iconElement.getBoundingClientRect(); 
-      console.log('[TesseractExperience] Canvas Rect:', canvasRect); // DEBUG LOG
-      console.log('[TesseractExperience] Icon Rect:', iconRect); // DEBUG LOG
+      const iconRect = iconElement.getBoundingClientRect(); // 图标边界框
 
-      // Ensure rect dimensions are valid before calculating
-      // --- MODIFIED: Use iconRect for calculation ---
+      // 确保矩形尺寸有效
       if (iconRect.width > 0 && iconRect.height > 0 && canvasRect.width > 0 && canvasRect.height > 0) {
-        
-        // Calculate position relative to the canvas
-        // --- MODIFIED: Target the right edge of the ICON + offset (positive terminal) ---
-        const relativeX = (iconRect.right + 4) - canvasRect.left; // Use iconRect.right + offset
-        // --- MODIFIED: Target the vertical center of the ICON ---
-        const relativeY = (iconRect.top + iconRect.height / 2) - canvasRect.top; // Use iconRect center
+        // 计算图标相对于 Canvas 的中心点 (右侧偏移模拟电池正极)
+        const relativeX = (iconRect.right + 4) - canvasRect.left;
+        const relativeY = (iconRect.top + iconRect.height / 2) - canvasRect.top;
 
-        // Convert relative position to Canvas NDC
+        // Canvas 内相对坐标转换为 NDC (-1 到 1)
         const canvasNdcX = (relativeX / canvasRect.width) * 2 - 1;
         const canvasNdcY = -(relativeY / canvasRect.height) * 2 + 1;
         
-        // Use a small positive z-value to ensure it's in front of the camera's near plane
-        // --- MODIFIED: Use canvas NDC ---
-        const newPosition = { x: canvasNdcX, y: canvasNdcY, z: 0.1 };
-        console.log('[TesseractExperience] Calculated new batteryPosition3D (NDC):', newPosition); // DEBUG LOG
+        // 设置 3D 位置 (NDC 坐标), z 设为 0.1 确保在相机近平面之前
+        const newPosition = { x: canvasNdcX, y: canvasNdcY, z: 0.1 }; 
         setBatteryPosition3D(newPosition); 
       } else {
-        console.warn('[TesseractExperience] Invalid rect dimensions, setting batteryPosition3D to null.'); // DEBUG LOG
+        console.warn('[TesseractExperience] 无效的矩形尺寸，无法计算电池位置。');
         setBatteryPosition3D(null); 
       }
     };
 
-    // --- MODIFIED: Add a delay before the initial call --- 
-    const initialTimeoutId = setTimeout(() => {
-        updatePosition(); // Initial position calculation after delay
-    }, 100); // 100ms delay, adjust if needed
+    // 延迟执行首次位置计算
+    const initialTimeoutId = setTimeout(updatePosition, 100);
 
-    window.addEventListener('resize', updatePosition);
+    window.addEventListener('resize', updatePosition); // 监听窗口大小变化
     
-    // Also update on scroll potentially, if layout shifts
-    const scrollSelector = '[class*="contentWrapper"]'; // Use attribute selector
-    const scrollContainer = document.querySelector(scrollSelector); // Adjust if needed
-    console.log('[TesseractExperience] Querying for scroll container with selector:', scrollSelector); // DEBUG LOG
+    // 监听内容区域滚动
+    const scrollSelector = '[class*="contentWrapper"]'; // 内容滚动容器选择器
+    const scrollContainer = document.querySelector(scrollSelector);
     
     if (scrollContainer) {
-        console.log('[TesseractExperience] Found scroll container, adding scroll listener.'); // DEBUG LOG
         scrollContainer.addEventListener('scroll', updatePosition);
     } else {
-        console.warn('[TesseractExperience] Scroll container not found, adding listener to window.'); // DEBUG LOG
+        console.warn('[TesseractExperience] 找不到滚动容器，将在 window 上监听滚动。');
         window.addEventListener('scroll', updatePosition);
     }
 
-    return () => {
-      // --- MODIFIED: Clear the timeout on cleanup --- 
+    return () => { // 清理
       clearTimeout(initialTimeoutId);
-      console.log('[TesseractExperience] Cleaning up useEffect for battery position.'); // DEBUG LOG
       window.removeEventListener('resize', updatePosition);
        if (scrollContainer) {
           scrollContainer.removeEventListener('scroll', updatePosition);
@@ -166,101 +142,100 @@ const TesseractExperience = ({ chargeBattery, isActivated, isInverted }) => {
           window.removeEventListener('scroll', updatePosition);
        }
     };
-  }, []); // Keep dependencies empty for DOM element finding
+  }, []); // 仅在挂载和卸载时运行
 
-  // --- NEW: useEffect to control canvas pointerEvents based on Tesseract dragging state ---
+  // 根据 Tesseract 拖拽状态，控制 Canvas 鼠标事件响应
+  // 拖拽时允许 Canvas 捕获事件，否则禁用以允许下方 UI 交互
   useEffect(() => {
-    const canvas = glRef.current?.domElement; // Get canvas from stored gl instance
+    const canvas = glRef.current?.domElement;
     if (canvas) {
-      // console.log(`[TesseractExperience] Setting canvas pointerEvents to: ${isTesseractDragging ? 'auto' : 'none'}`); // DEBUG LOG
       canvas.style.pointerEvents = isTesseractDragging ? 'auto' : 'none';
     }
-    // Cleanup function (optional but good practice)
-    return () => {
-       if (canvas) {
-        // console.log("[TesseractExperience] Resetting pointerEvents on cleanup");
-        // canvas.style.pointerEvents = 'none'; // Reset if component unmounts while dragging
-      }
-    };
-  }, [isTesseractDragging]); // Depend only on the dragging state
+  }, [isTesseractDragging]);
 
+  // 更新连接状态回调
   const handleConnectChange = (connecting) => {
-    if (connecting !== isConnecting) {
+    if (connecting !== isConnecting) { // 仅当状态变化时更新
       setIsConnecting(connecting);
     }
   };
 
   return (
+    // 3D Canvas 容器 div
     <div style={{ 
       position: 'fixed', 
-      top: '17.5vh',      // Red Box Top Edge (Estimated)
-      left: '7.3vw',     // Red Box Left Edge (Estimated)
-      width: '40.2vw',    // Red Box Width (Estimated)
-      height: '65vh',   // Red Box Height (Estimated)
-      zIndex: 7, 
-      pointerEvents: 'none',
+      top: '17.5vh',    // 匹配 UI 红色区域顶部
+      left: '7.3vw',   // 匹配红色区域左侧
+      width: '40.2vw',  // 匹配红色区域宽度
+      height: '65vh', // 匹配红色区域高度
+      zIndex: 7, // 层级
+      pointerEvents: 'none', // 容器不响应鼠标事件
     }}>
       <Canvas
-        shadows
-        camera={{ position: [-3, -1, 8], fov: 50 }}
+        shadows // 启用阴影
+        camera={{ position: [-3, -1, 8], fov: 50 }} // 相机
         style={{ 
-          background: 'transparent',
-          userSelect: 'none',
+          background: 'transparent', // 背景透明
+          userSelect: 'none', // 禁用文本选择
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           msUserSelect: 'none'
         }}
-        gl={{ alpha: true }}
-        onCreated={({ gl }) => {
-          glRef.current = gl; // Store gl instance
-          gl.setClearColor(new THREE.Color(0, 0, 0), 0);
+        gl={{ alpha: true }} // WebGL 透明背景
+        onCreated={({ gl }) => { // Canvas 创建后
+          glRef.current = gl; // 存储 WebGLRenderer
+          gl.setClearColor(new THREE.Color(0, 0, 0), 0); // 清除颜色为透明
         }}
       >
-        <Suspense fallback={null}>
+        <Suspense fallback={null}> {/* 异步加载占位符 */}
+          {/* 灯光 */}
           <ambientLight intensity={0.4} />
           <directionalLight
             position={[5, 10, 5]}
             intensity={1.5}
-            castShadow
-            shadow-mapSize-width={1024}
+            castShadow // 平行光投射阴影
+            shadow-mapSize-width={1024} // 阴影贴图分辨率
             shadow-mapSize-height={1024}
           />
           <pointLight position={[-5, -5, -5]} intensity={0.5} color="red" />
           <pointLight position={[0, 5, -10]} intensity={0.8} color="blue" />
 
+          {/* 激活时渲染物理世界和 Tesseract */}
           {isActivated && (
-            <Physics gravity={[0, -9.82, 0]}>
-              <Plane position={[0, -3, 0]} />
-              {batteryPosition3D ? ( // Conditional rendering based on batteryPosition3D
+            <Physics gravity={[0, -9.82, 0]}> {/* 物理世界及重力 */}
+              <Plane position={[0, -3, 0]} /> {/* 地面 */} 
+              {batteryPosition3D ? ( // 电池位置计算完成后渲染 Tesseract
                 <Tesseract
                   ref={tesseractRef}
-                  position={[0, 1, 0]}
+                  position={[0, 1, 0]} // Tesseract 初始位置 (Y 轴会被物理引擎覆盖)
                   batteryPosition3D={batteryPosition3D}
                   onConnectChange={handleConnectChange}
                   chargeBattery={chargeBattery}
-                  onDraggingChange={setIsTesseractDragging}
-                  isInverted={isInverted}
+                  onDraggingChange={setIsTesseractDragging} // 拖拽状态回调
+                  isInverted={isInverted} // 反色状态
                 />
               ) : (
-                // Optionally log or render a placeholder if batteryPosition3D is null
-                 null // Render nothing if position is not ready
+                 null // 电池位置未就绪则不渲染 Tesseract
               )}
+              {/* <Debug color="blue" scale={1.1} /> */} {/* 可选: 物理调试视图 */}
             </Physics>
           )}
+          {/* 激活且连接时渲染连接线 */}
           {isActivated && isConnecting && (
             <Line
-              points={connectionLinePoints}
-              color="#888888"
-              lineWidth={2}
+              points={connectionLinePoints} // 连接线端点
+              color="#888888" // 线条颜色
+              lineWidth={2} // 线条宽度
               dashed={false}
             />
           )}
+          {/* 场景逻辑辅助组件 */}
           {isActivated && (
              <SceneLogic 
                 isConnecting={isConnecting} 
                 tesseractRef={tesseractRef} 
                 batteryPosition3D={batteryPosition3D} 
-                setConnectionLinePoints={setConnectionLinePoints}
+                setConnectionLinePoints={setConnectionLinePoints} // 更新连接线点的函数
              />
           )}
         </Suspense>

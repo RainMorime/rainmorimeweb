@@ -63,7 +63,7 @@ body {
 }
 
 body::-webkit-scrollbar {
-  display: none; /* WebKit browsers */
+  display: none; 
 }
 
 a {
@@ -212,7 +212,7 @@ button {
   }
 }
 
-/* 添加明日方舟风格的滚动条 */
+/* 添加滚动条 */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -231,7 +231,7 @@ button {
   background: var(--ark-accent);
 }
 
-/* 添加明日方舟风格的文本选择样式 */
+/* 添加文本选择样式 */
 ::selection {
   background: var(--ark-primary-glow);
   color: #ffffff;

@@ -6,40 +6,34 @@
   font-display: swap;
 }
 
-// 明日方舟风格变量已移至globals.scss
+// Ark Knights 风格变量已移至 globals.scss
 
 .container {
   width: 100%;
-  height: 100vh; // 恢复: 固定高度
-  // min-height: 100vh; // 移除
-  display: flex; // 可以移除，因为子元素是绝对定位
-  flex-direction: column; // 可以移除
-  position: relative; // 保持 relative，作为绝对定位子元素的基准
+  height: 100vh; // 固定高度
+  position: relative; // 作为绝对定位子元素的基准
   background-color: var(--ark-dark-blue);
   color: var(--ark-text);
-  overflow: hidden; // 恢复: 隐藏溢出，防止容器滚动条出现
-  // scroll-behavior: smooth; // 移除，滚动由 contentWrapper 处理
-  transition: filter 0.5s ease-in-out; // 新增: 为 filter 添加过渡效果
+  overflow: hidden; // 隐藏溢出，防止容器滚动条出现
+  transition: filter 0.5s ease-in-out; // filter 过渡效果
 }
 
-// --- 新增: 负色效果 --- 
+// 负色 (Inverted) 效果
 .inverted {
-  // filter: invert(1) hue-rotate(180deg); // 移除滤镜
-  
-  /* 新增: 覆盖 CSS 变量以应用粉紫色主题 */
+  // 覆盖 CSS 变量以应用粉紫色主题
   --ark-primary: #E08FFF; 
   --ark-primary-rgb: 224, 143, 255;
   --ark-highlight-green: #E08FFF; 
   --ark-highlight-green-rgb: 224, 143, 255;
   
-  // --- 新增: 手动模拟反转核心颜色 ---
+  // 手动模拟反转核心颜色
   --ark-dark-blue: #f0f0f0; // 浅灰色背景
   --ark-text: #222222;     // 深灰色文字
   --ark-border: rgba(0, 0, 0, 0.3); // 深色透明边框
   --ark-border-rgb: 0, 0, 0;
   --ark-text-secondary: #555555; // 中深灰次要文字
   
-  // --- 新增: 特定元素样式覆盖 ---
+  // 特定元素样式覆盖
   &.container {
     background-color: var(--ark-dark-blue); // 应用浅灰色背景
     color: var(--ark-text); // 应用深灰色文字
@@ -76,18 +70,17 @@
     background-size: 100% 4px;
   }
   
-  // 左侧面板边框和角标颜色已通过变量覆盖
+  // 左侧面板边框和角标颜色通过变量覆盖
   .leftPanel {
-    // 如果需要，可以添加特定调整
+    // 可添加特定调整
   }
   
-  // Logo 滤镜保持不变，在浅色背景下应变为深灰色
+  // Logo 滤镜保持不变 (在浅色背景下应变为深灰色)
   
-  // HUD 元素颜色已通过变量覆盖
+  // HUD 元素颜色通过变量覆盖
   
-  // 打字机文本和线条颜色已通过变量覆盖
+  // 打字机文本和线条颜色通过变量覆盖
   .fateTextContainer, .envParamsContainer {
-     // 调整颜色变量
     .fateText, .envParamsText {
        color: var(--ark-text-secondary);
     }
@@ -97,23 +90,23 @@
           background-color: var(--ark-border);
        }
     }
-    .envParamsText::after { // Typing cursor
+    .envParamsText::after { // 打字光标
        color: var(--ark-text-secondary);
     }
-    &.typingActive .envParamsText::after { // Ensure cursor override applies
+    &.typingActive .envParamsText::after { // 确保光标覆盖生效
        color: var(--ark-text-secondary);
     }
-     &.typingActive .fateText::after { // Ensure cursor override applies
+     &.typingActive .fateText::after { // 确保光标覆盖生效
        color: var(--ark-text-secondary);
     }
   }
   
-  // 电池图标和文字颜色已通过变量覆盖
+  // 电池图标和文字颜色通过变量覆盖
   .powerDisplay {
      color: var(--ark-text-secondary); // 灰色文字
      .batteryIcon {
         border-color: var(--ark-text-secondary); // 灰色边框
-        &::after { // Positive terminal
+        &::after { // 正极
           background-color: var(--ark-text-secondary); // 灰色正极
         }
      }
@@ -124,11 +117,11 @@
         }
      }
      .powerText {
-        // Optional: Adjust if needed
+        // 可选调整
      }
   }
   
-  // 右侧面板和列的悬停效果等颜色已通过变量覆盖
+  // 右侧面板和列的悬停效果等颜色通过变量覆盖
   .column:hover:not(.nonInteractive) {
      &:not(.worksColumn) {
        background-color: rgba(var(--ark-highlight-green-rgb), 0.08);
@@ -140,8 +133,8 @@
           text-shadow: 0 0 8px var(--ark-highlight-green);
        }
      }
-     // ... 其他悬停效果中的颜色也会自动使用新变量值 ...
-     .hudOverlay::after { /* Scanlines inside column */
+     // 其他悬停效果中的颜色也会自动使用新变量值
+     .hudOverlay::after { // 列内部扫描线
         background: repeating-linear-gradient(
           to bottom,
           transparent,
@@ -168,35 +161,34 @@
      .taskText {
         color: var(--ark-highlight-green);
      }
-     // Branch styles
+     // 分支样式
      .branchSquare {
         background-color: var(--ark-highlight-green);
      }
      .branchText {
         color: var(--ark-highlight-green);
      }
-      // LIFE ECG
+      // LIFE ECG 波形
      .column2:hover:not(.nonInteractive) .hudOverlay::before, 
      .column2:hover:not(.nonInteractive) .hudOverlay::after {
-        // Update SVG stroke color - this is complex, might need inline style or JS
-        // For now, just update the drop shadow
+        // SVG stroke 颜色更新复杂，暂只更新阴影
         filter: drop-shadow(0 0 2px var(--ark-highlight-green));
      }
-     // CONTACT Ripples
+     // CONTACT 波纹
      @keyframes contactRippleExpandShadow {
       0% {
-        // ... border/shadow using --ark-highlight-green-rgb ...
+        // 使用 --ark-highlight-green-rgb 定义边框/阴影
         border: 1px solid rgba(178, 242, 187, 0.9);
         box-shadow: 0 0 0 0px rgba(178, 242, 187, 1); 
         opacity: 0.9;
         transform: translate(-50%, -50%) scale(0.1);
       }
       100% {
-        // ... border/shadow using --ark-highlight-green-rgb ...
+        // 使用 --ark-highlight-green-rgb 定义边框/阴影
         border: 1px solid rgba(178, 242, 187, 0); 
         box-shadow: 0 0 0 25px rgba(178, 242, 187, 0); 
         opacity: 0;
-        transform: translate(-50%, -50%) scale(2.2); // Expand even larger
+        transform: translate(-50%, -50%) scale(2.2); // 扩大最终缩放
       }
     }
   }
@@ -229,7 +221,7 @@
   
   .aboutSection {
      background-color: rgba(255, 255, 255, 0.8); // 浅色半透明背景
-     // 内部文字/按钮颜色已通过变量覆盖
+     // 内部文字/按钮颜色通过变量覆盖
   }
 
   .footerInfo {
@@ -451,92 +443,74 @@
   z-index: 2;
 }
 
+// 主布局和内容包装器
 .mainLayout, 
-.contentWrapper { // 新增 .contentWrapper
-  position: absolute; 
+.contentWrapper {
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  // transition: opacity 0.5s ease-out; // 移除旧过渡
-  opacity: 0; // 初始状态设为透明 (动画会覆盖)
-  pointer-events: none; 
+  opacity: 0;
+  pointer-events: none;
 }
 
 .mainLayout {
-  // flex: 1; // 移除 flex: 1
-  // display: flex; // 移除 flex
-  // 移除 width, height, top, left, position: relative
-  // 保留 position: absolute 和显隐控制
-  // overflow: hidden; // 移除，由内部 rightPanel 控制
   user-select: none;
-  -webkit-user-select: none; 
-  -moz-user-select: none; 
-  -ms-user-select: none; 
-  pointer-events: none; // --- ADD: Ensure layout containers don't block events --- 
-}
-
-// --- visible / hidden 控制 (z-index 调整 + 动画) --- 
-.visible {
-  // opacity: 1; // 由动画控制
-  pointer-events: auto; 
-  z-index: 3; 
-  animation-fill-mode: forwards; // 保持动画结束状态
-}
-
-.hidden { 
-  // opacity: 0; // 由动画控制
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   pointer-events: none;
-  z-index: 1; 
-  animation-fill-mode: forwards; // 恢复: 保持动画结束状态
-  // --- 恢复: 移除强制无动画 --- 
-  // animation: none !important; 
-  // opacity: 0; // Let animation handle opacity
 }
 
-// --- 应用特定视图的进入/退出动画 --- 
+// 显示/隐藏状态控制
+.visible {
+  pointer-events: auto;
+  z-index: 3;
+  animation-fill-mode: forwards;
+}
+
+.hidden {
+  pointer-events: none;
+  z-index: 1;
+  animation-fill-mode: forwards;
+}
+
+// 视图切换动画
 .mainLayout.visible {
   animation: slideDownInSkew 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-  pointer-events: none; // Let children control
+  pointer-events: none;
 }
+
 .mainLayout.hidden {
-  animation: slideUpOutSkew 0.5s ease-out forwards; // 恢复动画
-  // transform: translateY(-80px); // 移除直接设置，让动画控制
+  animation: slideUpOutSkew 0.5s ease-out forwards;
 }
 
 .contentWrapper.visible {
-  animation: slideInFromRight 1.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; // Increase duration further
-  pointer-events: auto; // Allow scrolling
-}
-.contentWrapper.hidden {
-  animation: slideOutToRight 1.6s ease-out forwards; // 恢复动画
-  // transform: translateX(100%); // 移除直接设置，让动画控制
+  animation: slideInFromRight 1.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  pointer-events: auto;
 }
 
-// --- 新增 Keyframes --- 
+.contentWrapper.hidden {
+  animation: slideOutToRight 1.6s ease-out forwards;
+}
+
+// 动画关键帧
 @keyframes slideUpOutSkew {
   from {
     opacity: 1;
-    // transform: translateY(0); // 初始状态
-    // 模拟右侧面板向上滑出，可以只移动内容
-    // 对 mainLayout 本身做动画可能简单点
-    // 如果只想影响 rightPanel，需要更复杂的选择器或结构
-    // 暂时只做向上+淡出
     transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translateY(-80px); // 向上移动一点
-    // 可以加一点 skew 或 rotate 使其倾斜消失，但这会影响整个 mainLayout
-    // 如果只想影响 rightPanel，需要更复杂的选择器或结构
-    // 暂时只做向上+淡出
+    transform: translateY(-80px);
   }
 }
 
 @keyframes slideDownInSkew {
   from {
     opacity: 0;
-    transform: translateY(-80px); // 从上方进入
+    transform: translateY(-80px);
   }
   to {
     opacity: 1;
@@ -547,7 +521,7 @@
 @keyframes slideInFromRight {
   from {
     opacity: 0;
-    transform: translateX(100%); // 从右侧屏幕外开始
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
@@ -562,42 +536,36 @@
   }
   to {
     opacity: 0;
-    transform: translateX(100%); // 滑出到右侧屏幕外
+    transform: translateX(100%);
   }
 }
 
+// 左侧面板
 .leftPanel {
-  // flex: 1; // 移除 flex: 1
-  width: calc(100% / 1.618); // 设置明确宽度
-  height: 100vh; // 设置明确高度
-  position: fixed; // 修改为 fixed
-  top: 0; // 添加
-  left: -2vw; // 修改: 向左偏移 2vw
-  background-color: transparent; 
+  width: calc(100% / 1.618);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -2vw;
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-  // position: relative; // 移除
-  z-index: 10; // 修改: 提升层级 (高于视图切换层 和 3D 视图)
-  pointer-events: none; // --- ADD: Disable pointer events by default --- 
-  overflow: hidden; // 新增: 添加遮罩效果，隐藏溢出内容
+  z-index: 10;
+  pointer-events: none;
+  overflow: hidden;
 
-  // --- ADD: Enable pointer events for specific children --- 
-  & > * { // Target direct children initially, refine if needed
-    pointer-events: auto; 
+  & > * {
+    pointer-events: auto;
   }
-  // --- OR (More specific): ---
-  // .leverContainer, .powerDisplay /* other interactive elements */ {
-  //   pointer-events: auto;
-  // }
 
-  // 添加.animated类用于触发动画
+  // 动画状态
   &.animated {
     &::after {
       animation: expandBorder 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
     }
     &::before {
-      animation: fadeInCorner 0.8s ease-out 0.6s forwards; // 延迟0.6s开始
+      animation: fadeInCorner 0.8s ease-out 0.6s forwards;
     }
     .logoContainer {
       animation: revealLogo 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -605,38 +573,38 @@
     }
   }
 
-  // 修改：边框初始状态为中心点
+  // 边框装饰
   &::after {
     content: '';
-    position: absolute; // 边框相对于固定的 leftPanel 定位
+    position: absolute;
     top: 50%;
     left: 50%;
     width: 0;
     height: 0;
     border: 0px solid var(--ark-border);
-    z-index: 1; // 在 leftPanel 内部的堆叠顺序
+    z-index: 1;
     pointer-events: none;
     background-color: transparent;
-    transform: translate(-50%, -50%); // 确保从中心扩展
+    transform: translate(-50%, -50%);
   }
   
-  // 修改：角标初始状态为透明
+  // 角标装饰
   &::before {
     content: '';
-    position: absolute; // 角标相对于固定的 leftPanel 定位
-    top: 17.5%; // 修改: 与边框 top 对齐
+    position: absolute;
+    top: 17.5%;
     left: 15%;
     width: 25px;
     height: 25px;
     border-top: 2px solid var(--ark-primary);
     border-left: 2px solid var(--ark-primary);
-    z-index: 2; // 在 leftPanel 内部的堆叠顺序
+    z-index: 2;
     background-color: transparent;
-    opacity: 0; // 初始透明
+    opacity: 0;
   }
 }
 
-// 新增边框展开动画
+// 边框展开动画
 @keyframes expandBorder {
   0% {
     top: 50%;
@@ -647,25 +615,22 @@
     transform: translate(-50%, -50%);
   }
   100% {
-    top: 17.5%; // 修改: 实现垂直居中 (100 - 65) / 2
+    top: 17.5%;
     left: 15%;
-    width: 65%; // 修改: 从 70% 缩小到 65%
-    height: 65%; // 修改: 从 70% 缩小到 65%
+    width: 65%;
+    height: 65%;
     border-width: 1px;
-    transform: translate(0, 0); // 恢复正常位置
+    transform: translate(0, 0);
   }
 }
 
-// 新增角标淡入动画
+// 角标淡入动画
 @keyframes fadeInCorner {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
+// LOGO容器
 .logoContainer {
   display: flex;
   justify-content: center;
@@ -673,27 +638,23 @@
   width: 100%;
   height: 100%;
   background-image: url('/pictures/RM2.png');
-  background-position: 47% 48%; // 修改: 稍微向左上移动
+  background-position: 47% 48%;
   background-repeat: no-repeat;
-  background-size: 57%; // 修改: 从 50% 增大到 65%
-  filter: grayscale(100%) brightness(0.8) drop-shadow(0 0 5px rgba(0, 0, 0, 0.1)); // 修改: 亮度从 0.6 提高到 0.8
+  background-size: 57%;
+  filter: grayscale(100%) brightness(0.8) drop-shadow(0 0 5px rgba(0, 0, 0, 0.1));
   pointer-events: none;
   position: relative;
   z-index: 3;
-  // 修改：添加clip-path实现遮罩效果
-  clip-path: inset(45% 45% 45% 45%); // 初始为中心小区域
-  opacity: 0; // 初始透明
-  
-  // 移除之前的扫描线效果，避免冲突
-  // &::after { ... }
+  clip-path: inset(45% 45% 45% 45%);
+  opacity: 0;
 }
 
-// 修改Logo展开动画，使其更平滑
+// LOGO展开动画
 @keyframes revealLogo {
   0% {
     clip-path: inset(45% 45% 45% 45%);
     opacity: 0;
-    transform: scale(0.95); // 轻微缩小
+    transform: scale(0.95);
   }
   100% {
     clip-path: inset(0% 0% 0% 0%);
@@ -702,31 +663,18 @@
   }
 }
 
+// 右侧面板
 .rightPanel {
-  // flex: 0.618; // 移除 flex
-  // 调整为绝对定位在 mainLayout 内部
   position: absolute;
   top: 0;
-  left: calc(100% / 1.618 - 3.5vw); // 修改: 向左偏移 2vw
-  width: calc(100% * 0.618 / 1.618); // 设置明确宽度
+  left: calc(100% / 1.618 - 3.5vw);
+  width: calc(100% * 0.618 / 1.618);
   height: 100%;
   background-color: transparent;
-  // position: relative; // 移除
   transform: skewX(-15deg);
   transform-origin: left center;
-  // 修改: 允许子元素溢出 (为了 ABOUT 列的 HUD)
-  overflow: visible; 
-  // z-index 不再重要，因为它在 mainLayout 内部
-  pointer-events: none; // --- ADD: Disable pointer events by default --- 
-
-  // --- 新增: 收回动画类 --- // 移除
-  /*
-  &.hidden {
-    opacity: 0;
-    transform: translateY(-50px) skewX(-15deg); // 向上移动并保持倾斜
-    pointer-events: none; // 隐藏后不响应事件
-  }
-  */
+  overflow: visible;
+  pointer-events: none;
 }
 
 .column {
@@ -734,32 +682,28 @@
   height: 100%;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  // --- MODIFIED: Increase z-index significantly ---
-  z-index: 10; 
-  pointer-events: auto; // --- ADD: Explicitly enable pointer events for columns --- 
+  z-index: 10;
+  pointer-events: auto;
   background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; // 新增: 裁剪超出边界的子元素 (包括动画)
+  overflow: hidden;
 
   &:hover {
-    // 仅当交互启用时应用悬停效果
     &:not(.nonInteractive) {
-
-      // 默认悬停效果 (排除 worksColumn)
       &:not(.worksColumn) {
         background-color: rgba(178, 242, 187, 0.08);
 
         &::after,
         &::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30%;
-            height: 2px;
-            background: var(--ark-highlight-green);
+          content: '';
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 30%;
+          height: 2px;
+          background: var(--ark-highlight-green);
         }
         &::after { bottom: 0; }
         &::before { top: 0; }
@@ -773,13 +717,13 @@
     }
   }
 
-  /* 新增：禁用交互时的样式 */
   &.nonInteractive {
     pointer-events: none;
     cursor: default;
   }
 }
 
+// 文字脉冲动画
 @keyframes textPulse {
   0% {
     color: rgba(255, 255, 255, 0.7);
@@ -791,109 +735,98 @@
   }
 }
 
-/* 垂直线条样式 - 添加辉光 */
+// 垂直线条
 .verticalLine {
   position: absolute;
   top: 0;
   width: 1px;
   height: 100%;
-  background-color: var(--ark-primary); // Should be white now
+  background-color: var(--ark-primary);
   z-index: 3;
   pointer-events: none;
-  opacity: 0; // 初始隐藏
+  opacity: 0;
   box-shadow: 0 0 3px rgba(255, 255, 255, 0.3), 0 0 1px rgba(255, 255, 255, 0.5);
 
   &.animated {
-    // 公共设置
-    animation-duration: 0.8s; // 出现动画时长
+    animation-duration: 0.8s;
     animation-fill-mode: forwards;
     animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
-    animation-iteration-count: 1; // 只播放一次
+    animation-iteration-count: 1;
 
-    // 交错动画延迟（所有线条共享）
     @for $i from 0 through 5 {
       &:nth-child(#{$i + 1}) {
         animation-delay: #{$i * 0.15}s;
       }
     }
     
-    // 第一条到第三条：从上到下
     &:nth-child(-n+3) {
       animation-name: lineAppearTopDown;
-      transform-origin: top; 
+      transform-origin: top;
     }
     
-    // 第四条到第六条：从下到上
     &:nth-child(n+4) {
       animation-name: lineAppearBottomUp;
       transform-origin: bottom;
     }
   }
 
-  // --- Pulsing Effect --- 
   &::after {
     content: '';
     position: absolute;
-    left: 50%; 
-    top: 0; // Start position for background
-    width: 3px; // Slightly wider head
-    height: 100%; // Cover full line height for background positioning
-    // Use gradient for meteor trail effect
+    left: 50%;
+    top: 0;
+    width: 3px;
+    height: 100%;
     background-image: linear-gradient(
-      to bottom, 
-      var(--ark-highlight-green) 0%, 
-      rgba(178, 242, 187, 0.5) 15%, // Shorten bright head
-      transparent 40% // Shorten tail fade out point (Original: 60%)
+      to bottom,
+      var(--ark-highlight-green) 0%,
+      rgba(178, 242, 187, 0.5) 15%,
+      transparent 40%
     );
-    background-size: 100% 200%; // Slightly reduce background height (Original: 250%)
+    background-size: 100% 200%;
     background-repeat: no-repeat;
-    background-position: 0% -100%; // Adjust starting position (Original: -150%)
-    opacity: 0; 
-    transform: translateX(-50%); 
-    transform-origin: center center; // Set transform origin for scaling
-    // Keep a subtle glow
+    background-position: 0% -100%;
+    opacity: 0;
+    transform: translateX(-50%);
+    transform-origin: center center;
     filter: drop-shadow(0 0 5px var(--ark-highlight-green));
   }
 
-  // Apply NORMAL (Top->Bottom) animation
   &.pulsing::after {
-    // Reset transform just in case (if element could alternate between pulse types)
     transform: translateX(-50%) scaleY(1);
-    animation: pulseMeteor 2s ease-out forwards; // New animation name
+    animation: pulseMeteor 2s ease-out forwards;
   }
   
-  // Apply REVERSE (Bottom->Top) animation
   &.pulsingReverse::after {
-    // Flip the element vertically to reverse the gradient direction visually
     transform: translateX(-50%) scaleY(-1);
-    animation: pulseMeteorReverse 2s ease-out forwards; // New animation name
+    animation: pulseMeteorReverse 2s ease-out forwards;
   }
 }
 
-// 从上到下动画
+// 线条动画
 @keyframes lineAppearTopDown {
   0% {
     opacity: 0;
     transform: scaleY(0);
   }
   100% {
-    opacity: 0.5; // 保持浅色
+    opacity: 0.5;
     transform: scaleY(1);
   }
 }
 
-// 新增：从下到上动画
 @keyframes lineAppearBottomUp {
   0% {
     opacity: 0;
     transform: scaleY(0);
   }
   100% {
-    opacity: 0.5; // 保持浅色
+    opacity: 0.5;
     transform: scaleY(1);
   }
 }
 
+// 垂直文字
 .verticalText {
   display: flex;
   flex-direction: column;
@@ -904,24 +837,22 @@
   
   .charItem {
     margin: 10px 0;
-    transform: skewX(15deg); // 抵消父元素的倾斜
-    // --- 修改: 加大字体灰度 ---
-    color: rgba(200, 200, 200, 0.5); // 从 rgba(255, 255, 255, 0.6) 调暗
-    transition: all 0.1s ease; // Faster transition consistent with VerticalShinyText
-    text-shadow: 0 0 3px rgba(0, 150, 255, 0.2); // 保持原有的细微阴影
-    // --- 修改: 应用新字体 ---
-    font-family: 'ZELDA Free', sans-serif; // 使用新字体，并提供回退
-    font-size: 1.1rem; // 可以根据新字体调整大小，这里稍微增大一点
-    line-height: 1; // 可能需要调整行高适应新字体
+    transform: skewX(15deg);
+    color: rgba(200, 200, 200, 0.5);
+    transition: all 0.1s ease;
+    text-shadow: 0 0 3px rgba(0, 150, 255, 0.2);
+    font-family: 'ZELDA Free', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1;
   }
 }
 
-// 明日方舟风格HUD元素 - 修改为每个角只有一个对应位置的边框装饰
+// HUD元素
 .hudElement {
   position: fixed;
   font-family: 'Dosis', monospace;
   font-size: 0.7rem;
-  color: var(--ark-text-secondary); // 灰色文字
+  color: var(--ark-text-secondary);
   padding: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -930,24 +861,24 @@
   z-index: 10;
   opacity: 0;
   transition: opacity 0.8s ease, transform 0.8s ease;
-  pointer-events: none; // --- ADD: Disable pointer events for HUDs by default --- 
+  pointer-events: none;
   
   &.visible {
     opacity: 1;
   }
   
-  // 通用装饰元素
   &::before {
     content: '';
     position: absolute;
     width: 20px;
     height: 20px;
-    border-color: var(--ark-border); // 深色边框
+    border-color: var(--ark-border);
     border-style: solid;
     border-width: 0;
     background-color: transparent;
   }
   
+  // 位置变体
   &.topLeft {
     top: 20px;
     left: 20px;
@@ -1589,6 +1520,7 @@
 
 // Responsive
 @media (max-width: 768px) {
+  // 首页布局
   .hero_content {
     flex-direction: column;
     gap: 3rem;
@@ -1598,15 +1530,11 @@
     padding: 1rem;
     text-align: center;
     
-    h1 {
-      margin-top: 3rem;
-    }
-    
-    p {
-      margin: 0 auto 2rem;
-    }
+    h1 { margin-top: 3rem; }
+    p { margin: 0 auto 2rem; }
   }
   
+  // 内容区域布局
   .about_content,
   .contact_content {
     flex-direction: column;
@@ -1616,6 +1544,7 @@
     padding: 4rem 5%;
   }
   
+  // 页脚布局
   .footer_content {
     flex-direction: column;
     text-align: center;

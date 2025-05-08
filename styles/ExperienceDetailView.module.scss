@@ -23,8 +23,8 @@
 
 .detailMeta {
   display: flex;
-  flex-wrap: wrap; // Allow wrapping on smaller screens
-  gap: 20px; // Space between meta items
+  flex-wrap: wrap; 
+  gap: 20px; 
   margin-bottom: 25px;
   font-family: 'Consolas', monospace;
   font-size: 0.9rem;
@@ -38,15 +38,13 @@
   text-transform: uppercase;
 }
 
-// Style for numbers within duration/details
 .timelineNumber {
   font-family: 'Consolas', monospace;
-  // Add other styles if needed, e.g.:
-  // color: var(--ark-primary);
+  color: var(--ark-primary);
 }
 
 .detailBody {
-  margin-bottom: 30px; // Space before related images
+  margin-bottom: 30px; 
 }
 
 .detailParagraph {
@@ -55,11 +53,10 @@
   color: var(--ark-text); 
   line-height: 1.9; 
   opacity: 0.9;
-  margin-bottom: 1em; // Space between paragraphs
+  margin-bottom: 1em; 
 }
 
 
-// --- Styles for Related Images Section (Copied from LifeDetailView) ---
 .relatedImagesSection {
   margin-top: 40px; 
   padding-top: 20px; 
@@ -107,9 +104,7 @@
     transform: scale(1.05); 
   }
 }
-// --- END Related Images Styles ---
 
-// --- Inverted Mode Specific Styles ---
 :global(.inverted) {
   .detailTitle {
     color: var(--ark-primary);
@@ -126,6 +121,6 @@
   }
   
   .detailParagraph {
-     color: var(--ark-text); // Ensure main text color is applied
+     color: var(--ark-text); 
   }
 } 

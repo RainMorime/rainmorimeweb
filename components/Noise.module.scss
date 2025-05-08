@@ -1,10 +1,10 @@
 .noiseOverlay {
-  position: absolute;
+  position: absolute; /* 绝对定位，覆盖父元素 */
   left: 0;
   top: 0;
-  width: 100%; /* Cover parent width */
-  height: 100%; /* Cover parent height */
-  pointer-events: none; /* Allow clicks through */
-  z-index: 0; /* Place behind content but above background color */
-  opacity: 0.9; /* 修改: 提高 opacity 使噪点更明显 */
+  width: 100%; /* 宽度充满父元素 */
+  height: 100%; /* 高度充满父元素 */
+  pointer-events: none; /* 允许鼠标事件穿透 */
+  z-index: 0; /* 层级：在背景色之上，内容之下 */
+  opacity: 0.9; /* 噪点透明度 (值越大越明显) */
 } 

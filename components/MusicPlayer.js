@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './MusicPlayer.module.scss';
 
-// --- 修改: 终端风格的简洁线条图标 --- 
+// 播放器控制图标 (SVG)
 const PlayIcon = () => <svg viewBox="0 0 10 10" width="10" height="10"><polygon points="3,2 8,5 3,8" fill="currentColor" /></svg>;
 const PauseIcon = () => <svg viewBox="0 0 10 10" width="10" height="10">
   <rect x="2" y="2" width="2" height="6" fill="currentColor" />
@@ -16,7 +16,7 @@ const NextIcon = () => <svg viewBox="0 0 10 10" width="10" height="10">
   <rect x="7" y="2" width="1" height="6" fill="currentColor" />
 </svg>;
 
-// --- 修改: 播放列表数据 --- 
+// 播放列表数据
 const playlist = [
   {
     title: "Going home",
@@ -50,194 +50,162 @@ const playlist = [
   }
 ];
 
-const DRAG_THRESHOLD = 50; // 拖动多少像素触发切换
+const DRAG_THRESHOLD = 50; // 拖动切换唱片的最小像素阈值
 
 const MusicPlayer = ({ powerLevel }) => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const progressBarRef = useRef(null);
-  // --- 修改: 使用播放列表索引 --- 
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  // --- 新增: 播放列表可见状态 --- 
-  const [isPlaylistVisible, setIsPlaylistVisible] = useState(false); 
+  const [isOpen, setIsOpen] = useState(true); // 抽屉是否展开
+  const [isPlaying, setIsPlaying] = useState(false); // 是否正在播放
+  const audioRef = useRef(null); // Audio 元素引用
+  const [currentTime, setCurrentTime] = useState(0); // 当前播放时间
+  const [duration, setDuration] = useState(0); // 音频总时长
+  const progressBarRef = useRef(null); // 进度条填充元素引用
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // 当前播放歌曲在列表中的索引
+  const [isPlaylistVisible, setIsPlaylistVisible] = useState(false); // 播放列表是否可见
 
-  // --- 新增: 判断是否满电 --- 
-  const isFullPower = powerLevel === 100;
+  const isFullPower = powerLevel === 100; // 是否为满电状态 (影响唱臂样式)
 
-  // --- 新增: 拖动状态 ---
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStartX, setDragStartX] = useState(0);
-  const [dragCurrentX, setDragCurrentX] = useState(0);
-  const [dragOffsetX, setDragOffsetX] = useState(0); // 当前唱片的偏移
-  const [incomingTrackIndex, setIncomingTrackIndex] = useState(-1); // 即将播放的歌曲索引，-1表示无
-  const [incomingTrackOffsetX, setIncomingTrackOffsetX] = useState(0); // 即将进入唱片的偏移
-  const vinylContainerRef = useRef(null);
-  const dragCurrentXRef = useRef(0); // 新增 Ref 存储实时 X 坐标
-  const handleRef = useRef(null); // 新增 Ref 引用 handle 元素
-  const animationTimeouts = useRef([]); // 新增 Ref 存储 setTimeout ID
+  // 唱片拖动相关状态
+  const [isDragging, setIsDragging] = useState(false); // 是否正在拖动唱片
+  const [dragStartX, setDragStartX] = useState(0); // 拖动起始 X 坐标
+  // const [dragCurrentX, setDragCurrentX] = useState(0); // 当前拖动 X 坐标 (已由 dragCurrentXRef 替代主要功能)
+  const [dragOffsetX, setDragOffsetX] = useState(0); // 当前唱片的水平偏移量 (用于视觉效果)
+  const [incomingTrackIndex, setIncomingTrackIndex] = useState(-1); // 即将通过拖动切换到的歌曲索引 (-1 表示无)
+  const [incomingTrackOffsetX, setIncomingTrackOffsetX] = useState(0); // 即将进入唱片的水平偏移量
+  const vinylContainerRef = useRef(null); // 唱片机制容器引用
+  const dragCurrentXRef = useRef(0); // 实时存储拖动过程中的 X 坐标 (用于 mouseup/leave 事件)
+  const handleRef = useRef(null); // 播放器抽屉把手元素引用 (用于播放状态指示动画)
+  const animationTimeouts = useRef([]); // 存储把手动画的 setTimeout ID (用于随机化动画)
 
-  // --- 设置默认音量 ---
+  // 组件挂载时设置默认音量
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = 0.7; // 设置默认音量为 70%
+      audioRef.current.volume = 0.7; // 默认音量 70%
     }
-  }, []); // 空依赖数组确保只在挂载时运行一次
+  }, []);
 
-  const currentTrack = playlist[currentTrackIndex]; // 获取当前歌曲信息
-  // --- 新增: 获取下一个和上一个歌曲的信息 (用于拖动显示) ---
+  const currentTrack = playlist[currentTrackIndex]; // 当前歌曲对象
+  // 下一首和上一首的歌曲信息 (用于拖动时预览)
   const nextTrackIndex = (currentTrackIndex + 1) % playlist.length;
   const prevTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
-  const incomingTrack = playlist[incomingTrackIndex] ?? null;
+  const incomingTrack = playlist[incomingTrackIndex] ?? null; // 即将播放的歌曲对象
 
-  // --- 修改: 显示标题和艺术家 --- 
-  const displayTitle = `${currentTrack.title} - ${currentTrack.artist}`;
+  // 显示的歌曲标题和艺术家
+  const displayTitle = currentTrack ? `${currentTrack.title} - ${currentTrack.artist}` : "";
 
+  // 切换抽屉展开/收起状态
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
-    // 关闭抽屉时也隐藏播放列表
-    if (isOpen) {
-        setIsPlaylistVisible(false); 
-    }
+    if (isOpen) setIsPlaylistVisible(false); // 关闭抽屉时同时隐藏播放列表
   };
 
+  // 切换播放/暂停状态 (主要通过 audio 事件更新 isPlaying)
   const togglePlay = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // 防止事件冒泡 (例如点击唱臂区域时)
     const audio = audioRef.current;
-    if (!audio) {
-      console.error('Audio Ref not found!');
-      return;
-    }
+    if (!audio) return;
 
     if (isPlaying) {
       audio.pause();
     } else {
-      // --- 简化播放逻辑：直接播放 --- 
       const playPromise = audio.play();
       if (playPromise !== undefined) {
         playPromise.catch(error => {
-          console.error("Error attempting to play audio:", error);
-          // 确保状态同步，即使播放失败
-          setIsPlaying(false); 
+          console.error("播放音频时出错:", error);
+          setIsPlaying(false); // 确保播放失败时状态同步
         });
       }
     }
-    // 注意: isPlaying 状态由 audio 元素的 play/pause 事件监听器自动更新
   };
 
-  // --- 修改: 上一首 (现在由 handleDragEnd 触发) --- 
+  // 切换到上一首 (由拖动逻辑调用)
   const handlePrev = () => {
-    setCurrentTrackIndex((prevIndex) => {
-      const newIndex = (prevIndex - 1 + playlist.length) % playlist.length;
-      return newIndex;
-    });
+    setCurrentTrackIndex((prevIndex) => (prevIndex - 1 + playlist.length) % playlist.length);
   };
 
-  // --- 修改: 下一首 (现在由 handleDragEnd 触发) --- 
+  // 切换到下一首 (由拖动逻辑调用)
   const handleNext = () => {
-    setCurrentTrackIndex((prevIndex) => {
-      const newIndex = (prevIndex + 1) % playlist.length;
-      return newIndex;
-    });
+    setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % playlist.length);
   };
   
-  // --- 新增: 选择歌曲 --- 
+  // 从播放列表选择歌曲
   const selectTrack = (index) => {
     if (index !== currentTrackIndex) {
       setCurrentTrackIndex(index);
     } else {
-      // 如果点击的是当前歌曲，则切换播放/暂停状态
-      togglePlay(new Event('synthetic')); // 创建一个合成事件
+      togglePlay(new Event('synthetic')); // 点击当前歌曲则切换播放/暂停
     }
   };
 
-  // --- 新增: 切换播放列表可见性 --- 
+  // 切换播放列表的可见性
   const togglePlaylist = () => {
     setIsPlaylistVisible(!isPlaylistVisible);
   };
 
-  // --- 新增: 拖动处理函数 ---
+  // 唱片拖动开始 (鼠标按下)
   const handleMouseDown = (e) => {
-    if (e.button !== 0) return; // 只响应左键
+    if (e.button !== 0) return; // 仅左键
     setIsDragging(true);
     setDragStartX(e.clientX);
-    setDragCurrentX(e.clientX);
-    // 移除平滑过渡，以便实时跟踪鼠标
+    dragCurrentXRef.current = e.clientX; // 初始化实时 X 坐标
+    // 拖动时移除唱片过渡动画，以实现实时跟踪
     if (vinylContainerRef.current) {
       vinylContainerRef.current.querySelectorAll(`.${styles.vinylRecord}`).forEach(el => {
         el.style.transition = 'none';
       });
     }
-    // 阻止默认的拖动行为，如图片拖动
-    e.preventDefault(); 
+    e.preventDefault(); // 阻止默认拖动行为 (如图片拖动)
   };
 
+  // 唱片拖动中 (鼠标移动)
   const handleMouseMove = (e) => {
     if (!isDragging) return;
-    const currentX = e.clientX;
-    // setDragCurrentX(currentX); // 仍然更新状态以便其他地方可能需要
-    dragCurrentXRef.current = currentX; // 实时更新 Ref
+    dragCurrentXRef.current = e.clientX; // 更新实时 X 坐标
+    const offsetX = dragCurrentXRef.current - dragStartX;
+    setDragOffsetX(offsetX); // 更新当前唱片的视觉偏移
 
-    const offsetX = currentX - dragStartX;
-    setDragOffsetX(offsetX);
-
-    // 计算即将进入的唱片
-    if (offsetX > DRAG_THRESHOLD / 2) { // 向右拖动 (显示上一首)
+    // 根据拖动方向和距离，判断是否预显示上一首/下一首唱片
+    if (offsetX > DRAG_THRESHOLD / 2) { // 向右拖 (上一首)
       setIncomingTrackIndex(prevTrackIndex);
-      // 让即将进入的唱片从左侧滑入，偏移量与当前唱片相反但稍小
       setIncomingTrackOffsetX(offsetX - (vinylContainerRef.current?.offsetWidth || 200)); 
-    } else if (offsetX < -DRAG_THRESHOLD / 2) { // 向左拖动 (显示下一首)
+    } else if (offsetX < -DRAG_THRESHOLD / 2) { // 向左拖 (下一首)
       setIncomingTrackIndex(nextTrackIndex);
-      // 让即将进入的唱片从右侧滑入
       setIncomingTrackOffsetX(offsetX + (vinylContainerRef.current?.offsetWidth || 200)); 
-    } else {
+    } else { // 未达到预显示阈值
       setIncomingTrackIndex(-1);
       setIncomingTrackOffsetX(0);
     }
   };
 
+  // 唱片拖动结束 (鼠标松开或移出窗口)
   const handleMouseUpOrLeave = (e) => {
     if (!isDragging) return;
-
-    // 使用 Ref 计算最终偏移量
     const finalOffsetX = dragCurrentXRef.current - dragStartX;
-
     setIsDragging(false);
 
-    if (Math.abs(finalOffsetX) > DRAG_THRESHOLD) {
-      if (finalOffsetX > 0) {
-        // 向右拖动超过阈值，切换到上一首
+    if (Math.abs(finalOffsetX) > DRAG_THRESHOLD) { // 拖动超过阈值，执行切换
+      if (finalOffsetX > 0) { // 向右，切换到上一首
         handlePrev();
-        // 让当前唱片完全滑出右侧，即将进入的唱片滑到中间
-        setDragOffsetX(vinylContainerRef.current?.offsetWidth || 200);
-        setIncomingTrackOffsetX(0);
-      } else {
-        // 向左拖动超过阈值，切换到下一首
+        setDragOffsetX(vinylContainerRef.current?.offsetWidth || 200); // 当前唱片滑出右侧
+      } else { // 向左，切换到下一首
         handleNext();
-        // 让当前唱片完全滑出左侧，即将进入的唱片滑到中间
-        setDragOffsetX(-(vinylContainerRef.current?.offsetWidth || 200));
-        setIncomingTrackOffsetX(0);
+        setDragOffsetX(-(vinylContainerRef.current?.offsetWidth || 200)); // 当前唱片滑出左侧
       }
-      // 切换后短暂延迟重置偏移量，等待动画结束
+      setIncomingTrackOffsetX(0); // 即将进入的唱片滑到中间
+      // 动画结束后重置偏移和预备轨道索引
       setTimeout(() => {
         setDragOffsetX(0);
         setIncomingTrackIndex(-1);
-      }, 300); // 匹配过渡时间
-    } else {
-      // 未超过阈值，弹回原位
+      }, 300); // 延迟时间应匹配 CSS 过渡时间
+    } else { // 未超过阈值，弹回原位
       setDragOffsetX(0);
       setIncomingTrackIndex(-1);
     }
-
-    // 重置起始点和 Ref
+    // 重置拖动起始点
     setDragStartX(0);
-    setDragCurrentX(0); // 保持状态重置
-    dragCurrentXRef.current = 0; // 重置 Ref
+    // dragCurrentXRef.current 在下一次 mousedown 时会被重置
   };
 
-  // --- 新增: 绑定全局事件监听器以处理鼠标移出容器的情况 ---
+  // 监听拖动状态，绑定/解绑全局 mousemove 和 mouseup 事件
   useEffect(() => {
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
@@ -246,91 +214,69 @@ const MusicPlayer = ({ powerLevel }) => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUpOrLeave);
     }
-
-    return () => {
+    return () => { // 清理全局事件监听器
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUpOrLeave);
     };
-  }, [isDragging, dragStartX]); // 添加依赖
+  }, [isDragging, dragStartX]); // 依赖 isDragging 和 dragStartX (确保 dragStartX 更新时能正确计算偏移)
 
-  // --- 修改: 监听歌曲索引变化，自动加载并播放 --- 
+  // 监听当前歌曲索引变化，自动加载新歌曲并根据当前播放状态决定是否播放
   useEffect(() => {
-    if (audioRef.current && playlist[currentTrackIndex]) { // Check if index is valid
+    if (audioRef.current && playlist[currentTrackIndex]) {
       const newSrc = playlist[currentTrackIndex].src;
+      const currentFullSrcPath = audioRef.current.src ? new URL(audioRef.current.src).pathname : null;
+      const newFullSrcPath = new URL(newSrc, window.location.origin).pathname;
 
-      // Only change source if it's different
-      // Compare full URL pathnames to be safe
-      const currentFullSrc = audioRef.current.src ? new URL(audioRef.current.src).pathname : null;
-      const newFullSrcPath = new URL(newSrc, window.location.origin).pathname; // Resolve relative path
-
-      if (currentFullSrc !== newFullSrcPath) { 
+      if (currentFullSrcPath !== newFullSrcPath) { // 仅当歌曲源不同时才加载
           audioRef.current.src = newSrc;
-          audioRef.current.load(); // Explicitly load the new source
-
-          // Determine if playback should start automatically
-          const shouldPlay = isPlaying; // Capture isPlaying state *before* potential async ops
-
-          if (shouldPlay) {
+          audioRef.current.load();
+          if (isPlaying) { // 如果之前是播放状态，则尝试自动播放新加载的歌曲
               const playPromise = audioRef.current.play();
               if (playPromise !== undefined) {
-                  playPromise.then(() => {
-                  }).catch(error => {
-                    console.error("[TrackChange] Error auto-playing track:", error);
-                    // If autoplay fails, ensure the state reflects paused
-                    setIsPlaying(false);
+                  playPromise.catch(error => {
+                    console.error("[歌曲切换] 自动播放错误:", error);
+                    setIsPlaying(false); // 自动播放失败，更新状态
                   });
               }
           }
       }
-
-    } else {
-        console.warn(`[TrackChange] Audio ref or track index ${currentTrackIndex} invalid.`);
     }
-  }, [currentTrackIndex]); // Keep only currentTrackIndex dependency
+  }, [currentTrackIndex]); // 依赖 currentTrackIndex
 
+  // Audio 元素事件监听 (播放进度、元数据加载、播放/暂停状态、播放结束)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const updateProgress = () => {
+    const updateProgress = () => { // 更新播放时间和进度条
       setCurrentTime(audio.currentTime);
       if (progressBarRef.current && duration > 0) {
         const progress = (audio.currentTime / duration) * 100;
         progressBarRef.current.style.width = `${progress}%`;
       }
     };
-
-    const setAudioData = () => {
+    const setAudioData = () => { // 音频元数据加载完成时设置总时长和当前时间
       setDuration(audio.duration);
-      setCurrentTime(audio.currentTime); // 加载后更新一次时间
+      setCurrentTime(audio.currentTime);
     };
-
-    const setAudioPlaying = () => setIsPlaying(true);
-    const setAudioPaused = () => setIsPlaying(false);
-    const handleEnded = () => {
-        // Playback finished, go to the next song index first
-        // We call handleNext to update the index state correctly
-        handleNext(); 
-
-        // Then, directly try to play. This might be more reliable after 'ended'.
-        // Note: handleNext already updated currentTrackIndex, so useEffect will also run
-        // to load the correct source, but we attempt play here just in case.
-        // A short delay might help ensure the source is loaded by the useEffect before playing
+    const setAudioPlaying = () => setIsPlaying(true); // 音频开始播放
+    const setAudioPaused = () => setIsPlaying(false);  // 音频暂停
+    const handleEnded = () => { // 音频播放结束，自动播放下一首
+        handleNext(); // 更新歌曲索引
+        // handleNext 会触发上面的 useEffect 来加载并可能播放新歌，这里可选择是否强制播放
+        // 此处增加短暂延时尝试播放，确保 useEffect 中的 src 加载完成
         setTimeout(() => {
-            if (audioRef.current && !audioRef.current.paused) {
-            } else if (audioRef.current) {
+            if (audioRef.current && audioRef.current.paused) { // 确认是否真的需要播放
                 const playPromise = audioRef.current.play();
                 if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        setIsPlaying(true); // Ensure state is correct
-                    }).catch(error => {
-                        console.error("[handleEnded] Error directly playing next track after ended:", error);
-                        // If direct play fails, ensure state is paused
-                        setIsPlaying(false); 
-                    });
+                    playPromise.then(() => setIsPlaying(true))
+                               .catch(error => {
+                                   console.error("[播放结束] 播放下一首错误:", error);
+                                   setIsPlaying(false);
+                                });
                 }
             }
-        }, 50); // Small delay
+        }, 50);
     };
 
     audio.addEventListener('timeupdate', updateProgress);
@@ -339,213 +285,166 @@ const MusicPlayer = ({ powerLevel }) => {
     audio.addEventListener('pause', setAudioPaused);
     audio.addEventListener('ended', handleEnded);
 
-    // --- 修改: 清理函数也要更新 --- 
-    return () => {
+    return () => { // 清理所有 Audio 事件监听器
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('loadedmetadata', setAudioData);
       audio.removeEventListener('play', setAudioPlaying);
       audio.removeEventListener('pause', setAudioPaused);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [duration]); // Keep duration dependency for now
+  }, [duration]); // 依赖 duration (当 duration 变化时，可能需要重新计算进度)
 
-  // --- 新增: 处理动画迭代和随机延迟 --- 
+  // 处理抽屉把手上指示播放状态的动画条的随机延迟效果
   useEffect(() => {
     const handleElement = handleRef.current;
     if (!handleElement) return;
-
     const bars = handleElement.querySelectorAll(`.${styles.handleBar}`);
 
     const handleAnimationIteration = (event) => {
         const bar = event.target;
-        // 暂停动画
-        bar.style.animationPlayState = 'paused';
-        // 清除可能存在的旧 timeout
+        bar.style.animationPlayState = 'paused'; // 暂停当前动画
+        // 清除该 bar 可能存在的旧 timeout
         const existingTimeoutIndex = animationTimeouts.current.findIndex(t => t.element === bar);
         if (existingTimeoutIndex > -1) {
             clearTimeout(animationTimeouts.current[existingTimeoutIndex].id);
             animationTimeouts.current.splice(existingTimeoutIndex, 1);
         }
-        // 计算随机延迟 (300ms - 1200ms)
-        const randomDelay = Math.random() * 900 + 300;
-        // 设置 timeout 恢复动画
-        const timeoutId = setTimeout(() => {
+        const randomDelay = Math.random() * 900 + 300; // 随机延迟 300ms - 1200ms
+        const timeoutId = setTimeout(() => { // 延迟后恢复动画
             bar.style.animationPlayState = 'running';
-            // 从 timeouts ref 中移除
             const indexToRemove = animationTimeouts.current.findIndex(t => t.element === bar);
-            if (indexToRemove > -1) {
-                animationTimeouts.current.splice(indexToRemove, 1);
-            }
+            if (indexToRemove > -1) animationTimeouts.current.splice(indexToRemove, 1);
         }, randomDelay);
-        // 存储 timeout ID 和对应的元素
-        animationTimeouts.current.push({ id: timeoutId, element: bar });
+        animationTimeouts.current.push({ id: timeoutId, element: bar }); // 存储新的 timeout
     };
 
-    if (isPlaying) {
+    if (isPlaying) { // 播放时，为每个 bar 添加迭代监听并启动动画
         bars.forEach(bar => {
-            // 确保初始状态是 running
             bar.style.animationPlayState = 'running';
             bar.addEventListener('animationiteration', handleAnimationIteration);
         });
-    } else {
-        // 清除所有 timeouts
+    } else { // 暂停时，清除所有 timeout 和监听，并重置动画状态
         animationTimeouts.current.forEach(t => clearTimeout(t.id));
         animationTimeouts.current = [];
-        // 移除监听器并重置状态
         bars.forEach(bar => {
             bar.removeEventListener('animationiteration', handleAnimationIteration);
-            // 重置样式，避免下次播放时状态不对
             bar.style.animationPlayState = ''; 
         });
     }
 
-    // 清理函数
-    return () => {
-        // 清除所有 timeouts
+    return () => { // 清理
         animationTimeouts.current.forEach(t => clearTimeout(t.id));
         animationTimeouts.current = [];
-        // 移除所有监听器
         if (handleElement) {
              const currentBars = handleElement.querySelectorAll(`.${styles.handleBar}`);
              currentBars.forEach(bar => {
                  bar.removeEventListener('animationiteration', handleAnimationIteration);
-                 bar.style.animationPlayState = ''; // 确保清理
+                 bar.style.animationPlayState = '';
              });
         }
     };
-  }, [isPlaying]); // 依赖 isPlaying 状态
+  }, [isPlaying]);
 
   return (
     <div className={`${styles.playerContainer} ${isOpen ? styles.open : ''}`}>
-      {/* 修改: 调整类名逻辑，添加 Bars 容器 */}
+      {/* 抽屉把手：点击切换抽屉，播放时显示动画条和当前歌曲名 (若收起) */}
       <div 
         ref={handleRef} 
         className={`
           ${styles.handle} 
           ${!isOpen && isPlaying ? styles.expanded : ''} 
-          ${isPlaying ? styles.playing : ''} // 只要播放就应用 playing
+          ${isPlaying ? styles.playing : ''}
         `}
         onClick={toggleDrawer}
       >
-        {/* 线条容器 */}
+        {/* 动画线条容器 */}
         <div className={styles.handleBarsContainer}>
-          <div className={styles.handleBar}></div>
-          <div className={styles.handleBar}></div>
-          <div className={styles.handleBar}></div>
-          <div className={styles.handleBar}></div>
-          <div className={styles.handleBar}></div>
-          <div className={styles.handleBar}></div>
-          <div className={styles.handleBar}></div>
+          {[...Array(7)].map((_, i) => <div key={i} className={styles.handleBar}></div>)}
         </div>
 
-        {/* 条件渲染: 仅在收起且播放时显示歌曲信息 */}
-        {!isOpen && isPlaying && (
+        {/* 收起且播放时，在把手上显示当前歌曲名 (竖排) */}
+        {!isOpen && isPlaying && currentTrack && (
           <div className={styles.handleTrackInfo}>
             <div className={styles.handleTrackTitle}>
-              {(currentTrack?.title || '').split('').map((char, index) => (
+              {(currentTrack.title || '').split('').map((char, index) => (
                 <span key={`title-${index}`} className={styles.charItem}>{char === ' ' ? '\u00A0' : char}</span>
               ))}
             </div>
           </div>
         )}
       </div>
-      {/* --- 修改: 将 audio 元素移到外面，避免 playerContent 隐藏时无法访问 --- */}
-      <audio ref={audioRef} preload="metadata"></audio> 
+      
+      <audio ref={audioRef} preload="metadata"></audio> {/* 音频播放核心元素 */}
 
-      {/* --- 修改: 黑胶唱片机制容器，添加拖动事件监听 --- */}
+      {/* 唱片拖动切换机制容器 */}
       <div 
         ref={vinylContainerRef}
         className={styles.vinylMechanismContainer}
         onMouseDown={handleMouseDown}
-        // onMouseLeave={handleMouseUpOrLeave} // 改用全局监听 mouseup
       >
-        <div className={styles.vinylPlatter}>
+        <div className={styles.vinylPlatter}> {/* 唱盘 (固定部分) */}
           {/* 当前播放的唱片 */}
           <div 
-            className={`
-              ${styles.vinylRecord} 
-              ${isPlaying ? styles.recordSpinning : ''}
-            `}
-            style={{ 
-              transform: `translateX(${dragOffsetX}px)`,
-              opacity: 1 // 始终保持不透明
-            }}
+            className={`${styles.vinylRecord} ${isPlaying ? styles.recordSpinning : ''}`}
+            style={{ transform: `translateX(${dragOffsetX}px)`}}
           >
-            <div className={styles.vinylLabel}></div>
+            <div className={styles.vinylLabel}></div> {/* 唱片中心标签 */} 
           </div>
-          {/* 即将进入的唱片 */}
+          {/* 即将进入的唱片 (拖动时预览) */}
           {incomingTrackIndex !== -1 && incomingTrack && (
              <div 
-                className={`
-                  ${styles.vinylRecord} 
-                  ${styles.incomingVinylRecord}
-                `}
+                className={`${styles.vinylRecord} ${styles.incomingVinylRecord}`}
                 style={{ 
                   transform: `translateX(${incomingTrackOffsetX}px)`,
-                  // 过渡由 isDragging 控制，拖动时无过渡，松开时有过渡
-                  transition: isDragging ? 'none' : 'transform 0.3s ease-out', // 移除 opacity 过渡
-                  opacity: 1 // 始终保持不透明
+                  transition: isDragging ? 'none' : 'transform 0.3s ease-out', // 拖动时无过渡，松开时有过渡
+                  opacity: 1 // 始终可见，通过位置控制显示
                 }}
              >
-               {/* 可以选择是否为 incoming 唱片也添加旋转和标签 */}
                <div className={styles.vinylLabel}></div> 
              </div>
           )}
         </div>
 
-        {/* 修改: 添加包裹容器并应用旋转类 */}
+        {/* 唱臂组件：点击区域控制播放/暂停，播放时有动画 */}
         <div className={`${styles.tonearmAssembly} ${isPlaying ? styles.tonearmPlaying : ''}`}>
-          {/* 唱臂点击区域 */}  
           <div 
-            className={styles.tonearmHitbox}
+            className={styles.tonearmHitbox} // 唱臂的点击热区
             onClick={togglePlay}
-            title={isPlaying ? "暂停音乐" : "播放音乐"}
+            title={isPlaying ? "暂停" : "播放"}
           ></div>
-          {/* 唱臂: 移除旋转类 */}
           <div 
-            className={`
-              ${styles.tonearm} 
-              ${!isFullPower ? styles.tonearmLowPower : ''} // 保留低电量样式
-            `}
-            style={{ 
-              // 保留阴影样式
-              boxShadow: isPlaying && isFullPower ? '0 0 5px rgba(var(--ark-primary-rgb), 0.3)' : 'none'
-            }}
+            className={`${styles.tonearm} ${!isFullPower ? styles.tonearmLowPower : ''}`}
+            style={{ boxShadow: isPlaying && isFullPower ? '0 0 5px rgba(var(--ark-primary-rgb), 0.3)' : 'none'}}
           />
         </div>
       </div>
 
+      {/* 播放器主要内容区域 (抽屉内) */}
       <div className={styles.playerContent}>
-        {/* --- 修改: 包裹歌曲信息和按钮 --- */}
-        <div className={styles.trackInfoContainer}>
+        <div className={styles.trackInfoContainer}> {/* 歌曲信息与播放列表切换按钮容器 */}
           <div className={styles.trackInfo}>
             <div className={styles.trackTitle}>{displayTitle}</div>
           </div>
-          {/* --- 修改: 根据电量添加条件 className --- */}
           <button 
-            className={`
-              ${styles.playlistToggleButton} 
-              ${!isFullPower ? styles.toggleButtonLowPower : ''} // 添加低电量样式
-            `}
+            className={`${styles.playlistToggleButton} ${!isFullPower ? styles.toggleButtonLowPower : ''}`}
             onClick={togglePlaylist}
             title={isPlaylistVisible ? "收起列表" : "展开列表"}
           >
-            <span className={styles.toggleButtonLine}></span>
-            <span className={styles.toggleButtonLine}></span>
-            <span className={styles.toggleButtonLine}></span>
+            {[...Array(3)].map((_, i) => <span key={i} className={styles.toggleButtonLine}></span>)}
           </button>
         </div>
-        <div className={styles.progressBarContainer}>
+        <div className={styles.progressBarContainer}> {/* 播放进度条 */}
           <div ref={progressBarRef} className={styles.progressBar}></div>
         </div>
       </div>
-      {/* --- 修改: 根据状态添加 visible 类 --- */}
+      
+      {/* 播放列表 */}
       <div className={`${styles.playlistContainer} ${isPlaylistVisible ? styles.visible : ''}`}>
         {playlist.map((track, index) => (
           <div 
             key={index} 
             className={`${styles.playlistItem} ${index === currentTrackIndex ? styles.activePlaylistItem : ''}`}
-            onClick={() => selectTrack(index)} // 添加点击事件
+            onClick={() => selectTrack(index)}
           >
             <span className={styles.playlistItemTitle}>{track.title}</span>
             <span className={styles.playlistItemArtist}>{track.artist}</span>

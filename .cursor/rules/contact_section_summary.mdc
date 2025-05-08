@@ -29,6 +29,10 @@ This rule summarizes the key changes and features implemented in the CONTACT sec
     *   The user's contact details (Email, GitHub, Bilibili) are presented as interactive icons positioned outside the radar circle but within the Contact section (`.logItem`, `.radarContact1` to `.radarContact3`).
     *   Icons (`.logIcon`) are displayed within background squares (`.logIconContainer`).
     *   The Bilibili icon uses an inline SVG from `[public/pictures/bilibili-svgrepo-com.svg](mdc:public/pictures/bilibili-svgrepo-com.svg)` to ensure proper styling.
+    *   **Steam Icon:** A Steam icon (`.radarContact4`) linking to the user's profile was added.
+        *   Uses an inline SVG within `[pages/index.js](mdc:pages/index.js)`.
+        *   The SVG's `<path>` `fill` is set to `currentColor`.
+        *   The parent `.logIconContainer` in `[styles/Home.module.scss](mdc:styles/Home.module.scss)` sets the actual `color` (green or pink) to control the icon's appearance, ensuring it matches the site's theme and inverted state.
     *   Each icon has a dedicated, continuous ripple effect originating from its center (`.contactIconRipple`).
         *   The ripple animation (`contactRippleExpandShadow`) was adjusted for visibility.
         *   In the `.inverted` state, these icon ripples are hidden.
@@ -39,7 +43,10 @@ This rule summarizes the key changes and features implemented in the CONTACT sec
     *   A "Copied!" feedback message (`.copyFeedback`) appears briefly above the icon after copying, using a float-up-fade-out animation (`floatUpFadeOut`).
     *   Hovering over the email button reveals the full email address (`.emailText`) sliding in from the right.
 
-4.  **Styling and Layout:**
+4.  **Steam Icon Position (`.radarContact4`):**
+    *   The Steam icon has been repositioned via absolute positioning (`bottom: 58%; right: 36%;`).
+
+5.  **Styling and Layout:**
     *   The overall layout uses absolute positioning for the contact icons relative to the `.contactSection`.
     *   The `CONTACT` section has a background image (`[public/pictures/h.png](mdc:public/pictures/h.png)`) applied, positioned towards the bottom (`background-position: center 300px`).
     *   A negative `margin-bottom` was added to `.contactSection` to create an overlap with the `.aboutSection` below it.

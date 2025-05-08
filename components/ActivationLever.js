@@ -37,20 +37,20 @@ const ActivationLever = ({ onActivate, isActive, iconType, isAnimated }) => {
       onClick={handleLeverClick}
     >
       <svg viewBox="0 0 50 90" className={styles.leverSvg}>
-        {/* Base/Slot */}
+        {/* 底座/插槽 */}
         <rect 
           x="15" y="5" 
           width="20" height="70" 
           className={styles.base}
         />
-        {/* Slot Line inside base */}
+        {/* 底座内的插槽线 */}
         <line 
            x1="25" y1="15" 
            x2="25" y2="65" 
            className={styles.slotLine} 
         />
 
-        {/* Lever Handle (Group for easier animation if needed later) */}
+        {/* 控制杆手柄 (编组以便将来需要时更容易制作动画) */}
         <g transform={`translate(0, ${handleY - 15})`}>
             <line 
               x1="10" y1="15" 
@@ -64,7 +64,7 @@ const ActivationLever = ({ onActivate, isActive, iconType, isAnimated }) => {
             />
         </g>
 
-        {/* Indicator Light */}
+        {/* 指示灯 */}
         <circle 
           cx="25" cy="70" 
           r="3.5" 

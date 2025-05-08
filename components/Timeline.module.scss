@@ -1,58 +1,63 @@
 /* components/Timeline.module.scss */
 
+/* 时间线容器 */
 .timelineContainer {
   position: relative;
-  padding-left: 40px; /* 为线条和点留出空间 */
+  padding-left: 40px; /* 左侧留白，用于放置时间点和连接线 */
   margin-top: 20px;
 }
 
+/* 单个时间线项目 */
 .timelineItem {
   position: relative;
-  margin-bottom: 30px; /* 项目之间的间距 */
-  padding-bottom: 10px; /* 增加底部内边距确保线条不重叠 */
+  margin-bottom: 30px; /* 项目间垂直间距 */
+  padding-bottom: 10px; /* 底部内边距，确保连接线不与下方内容重叠 */
 
   &:last-child {
     margin-bottom: 0;
-    padding-bottom: 0; /* 最后一个项目不需要底部内边距 */
+    padding-bottom: 0; /* 最后一项无底部间距和内边距 */
   }
 }
 
+/* 时间点圆圈 */
 .timelineDot {
   position: absolute;
-  left: -28px; /* 将点定位到容器左侧 */
-  top: 4px; /* 微调垂直位置，使其与标题对齐 */
+  left: -28px; /* 定位到左侧留白区域 */
+  top: 4px; /* 垂直位置微调 */
   width: 16px;
   height: 16px;
-  background-color: var(--ark-primary); /* 使用主题高亮色 */
+  background-color: var(--ark-primary); /* 主题高亮色 */
   border-radius: 50%;
-  border: 2px solid var(--ark-dark-blue); /* 背景色边框，使其看起来镂空 */
-  box-shadow: 0 0 5px rgba(var(--ark-primary-rgb), 0.5); /* 添加辉光 */
+  border: 2px solid var(--ark-dark-blue); /* 用背景色做边框，产生镂空效果 */
+  box-shadow: 0 0 5px rgba(var(--ark-primary-rgb), 0.5); /* 外发光效果 */
   z-index: 1;
 }
 
+/* 时间线连接线 */
 .timelineLine {
   position: absolute;
-  left: -20px; /* 线条位置，与点的中心对齐 */
-  top: 12px; /* 从点的下方开始 */
-  bottom: -30px; /* 一直延伸到下一个项目的间距处，需要微调 */
+  left: -20px; /* 水平位置与圆点中心对齐 */
+  top: 12px; /* 从圆点下方开始 */
+  bottom: -30px; /* 延伸到下一个项目间距处 (根据 margin-bottom 调整) */
   width: 2px;
-  background-color: rgba(var(--ark-border-rgb), 0.4); /* 使用半透明边框色 */
+  background-color: rgba(var(--ark-border-rgb), 0.4); /* 半透明边框色 */
 }
 
-/* 最后一个项目的线条处理 (如果需要隐藏) */
+/* 隐藏最后一个项目的连接线 */
 .timelineItem:last-child .timelineLine {
   display: none;
 }
 
-
+/* 时间线项目内容区域 */
 .timelineContent {
   position: relative;
-  background-color: rgba(var(--ark-dark-blue-rgb), 0.2); /* 可选：给内容区加个浅背景 */
+  background-color: rgba(var(--ark-dark-blue-rgb), 0.2); /* 可选的浅背景色 */
   padding: 15px;
   border-radius: 4px;
   border: 1px solid rgba(var(--ark-border-rgb), 0.3);
 }
 
+/* 日期文本 */
 .timelineDate {
   display: block;
   font-size: 0.8rem;
@@ -61,19 +66,22 @@
   opacity: 0.8;
 }
 
+/* 标题文本 */
 .timelineTitle {
   font-size: 1.1rem;
   color: var(--ark-text);
-  margin: 0 0 5px 0; /* 调整标题边距 */
+  margin: 0 0 5px 0;
 }
 
+/* 机构/地点文本 */
 .timelineInstitution {
   font-size: 0.95rem;
   color: var(--ark-text);
-  font-style: italic; /* 斜体显示机构名 */
+  font-style: italic; /* 斜体 */
   margin: 0 0 10px 0;
 }
 
+/* 描述文本 */
 .timelineDescription {
   font-size: 0.9rem;
   color: var(--ark-text-secondary);
@@ -81,27 +89,29 @@
   margin: 0;
 }
 
-/* 满电反色状态下的调整 */
+/* 全局反色模式下的样式调整 */
+/* 使用 :global() 选择器应用到全局 .inverted 类 */
 :global(.inverted) .timelineDot {
-  border-color: #ffffff; /* 反色背景 */
-  background-color: var(--ark-primary); /* 保持高亮色 */
+  border-color: #ffffff; /* 反色时背景色为白色，边框相应调整 */
+  background-color: var(--ark-primary); /* 圆点颜色保持不变或根据需要调整 */
 }
 
 :global(.inverted) .timelineLine {
-   background-color: rgba(var(--ark-border-rgb), 0.5); /* 反色下边框可能更亮 */
+   background-color: rgba(var(--ark-border-rgb), 0.5); /* 连接线颜色可适当调亮 */
 }
 
 :global(.inverted) .timelineContent {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.08); /* 内容区域背景调整 */
   border-color: rgba(var(--ark-border-rgb), 0.6);
 }
 
+/* 反色模式下文本颜色调整 */
 :global(.inverted) .timelineDate,
 :global(.inverted) .timelineInstitution,
 :global(.inverted) .timelineDescription {
-   color: var(--ark-text-secondary);
+   color: var(--ark-text-secondary); /* 次要文本颜色 */
 }
 
 :global(.inverted) .timelineTitle {
-   color: var(--ark-text);
+   color: var(--ark-text); /* 主要文本颜色 */
 } 

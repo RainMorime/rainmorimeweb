@@ -1,8 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
 import CustomCursor from '../components/CustomCursor';
-import styles from '../styles/Page.module.scss'; // We might need to create this style file later
-import homeStyles from '../styles/Home.module.scss'; // Import home styles
+import styles from '../styles/Page.module.scss'; 
+import homeStyles from '../styles/Home.module.scss'; 
 
 export default function Work() {
   return (

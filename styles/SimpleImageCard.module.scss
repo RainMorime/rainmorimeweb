@@ -1,10 +1,10 @@
 /* styles/SimpleImageCard.module.scss */
 
 .cardContainer {
-  width: 200px; // Adjust width to be similar to game cards' effective size
-  background-color: rgba(var(--ark-secondary-rgb), 0.1); // Similar background
+  width: 200px; 
+  background-color: rgba(var(--ark-secondary-rgb), 0.1); 
   border: 1px solid var(--ark-border);
-  position: relative; // Context for potential absolute children if needed later
+  position: relative; 
   transition: all 0.3s ease;
   overflow: hidden;
   display: flex;
@@ -13,19 +13,19 @@
   &:hover {
     background-color: rgba(var(--ark-secondary-rgb), 0.18);
     border-color: var(--ark-primary);
-    transform: translateY(-3px); // Slightly less lift than ProjectCard
+    transform: translateY(-3px); 
     box-shadow: 0 3px 10px rgba(var(--ark-primary-rgb), 0.08);
   }
 }
 
 .cardImage {
   width: 100%;
-  padding-top: 75%; // Aspect ratio (e.g., 4:3). Adjust as needed.
-  background-color: var(--ark-primary); // Placeholder color if no image
+  padding-top: 75%; 
+  background-color: var(--ark-primary); 
   background-size: cover;
   background-position: center;
-  border-bottom: 1px solid var(--ark-border); // Separator line
-  position: relative; // For placeholder text or overlays
+  border-bottom: 1px solid var(--ark-border); 
+  position: relative; 
 }
 
 .placeholderText {
@@ -40,11 +40,11 @@
 
 .cardTitle {
   font-family: 'Dosis', monospace;
-  font-size: 1rem; // Smaller title than ProjectCard
+  font-size: 1rem; 
   font-weight: bold;
   color: var(--ark-primary);
-  padding: 10px 12px; // Adjust padding
-  margin: 0; // Remove default margin
+  padding: 10px 12px; 
+  margin: 0; 
   text-align: center;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -53,7 +53,6 @@
   text-overflow: ellipsis;
 }
 
-// --- Inverted Mode ---
 :global(.inverted) {
   .cardContainer {
     background-color: rgba(var(--ark-primary-rgb), 0.05);

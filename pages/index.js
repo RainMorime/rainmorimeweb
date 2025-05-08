@@ -22,12 +22,10 @@ import ExperienceDetailView from '../components/ExperienceDetailView';
 import BlogView from '../components/BlogView';
 import BlogDetailView from '../components/BlogDetailView';
 
-// --- ADD Import for favicon --- 
 import favicon from '../assets/RM.jpg'; 
 
 gsap.registerPlugin(ScrollTrigger);
 
-// --- Split Projects Data ---
 const learnProjects = [
   {
     id: 1,
@@ -45,13 +43,12 @@ const learnProjects = [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/robby/RB1.png' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/robby/RB2.png' }
     ],
-    // --- FIX and ADD articleContent using template literal ---
+
     articleContent: `
 这两个小Demo是我大一学习 M_Studio老师的课程制作的 [M_Studio老师的空间](https://space.bilibili.com/370283072)
 
 还有两份笔记（写的零碎见谅）
     `
-    // --- END FIX and ADD ---
   },
   {
     id: 2,
@@ -60,10 +57,8 @@ const learnProjects = [
     tech: ['HTML', 'CSS', '前端'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/freecode/freecode.png',
-    // --- ADD articleContent --- 
     articleContent: '[你可以在这里看到我的练习作品集](https://www.freecodecamp.org/certification/RainMorime/responsive-web-design)\n\n我从这里学到了一些前端知识。',
-    // --- END ADD --- 
-    galleryImages: [ // <-- ADD galleryImages
+    galleryImages: [ 
        { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/freecode/freecode.png' }
     ]
   },
@@ -74,14 +69,11 @@ const learnProjects = [
     tech: ['Unity3D', '卡牌', '游戏开发'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/2024unity/gm2.png',
-    // --- ADD galleryImages --- 
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/2024unity/gm1.png' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/2024unity/gm2.png' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/2024unity/gm3.png' }
     ],
-    // --- END ADD ---
-    // --- ADD articleContent --- 
     articleContent: `
 GameJam主题: It Never Ends
 
@@ -91,7 +83,6 @@ GameJam主题: It Never Ends
 
 如果你感兴趣，可也看我的视频 [赌徒](https://www.bilibili.com/video/BV1NJCHYQEW6)
     `
-    // --- END ADD ---
   },
   {
     id: 4,
@@ -100,14 +91,12 @@ GameJam主题: It Never Ends
     tech: ['Unity3D', 'AI', '游戏开发'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/aiagent/AG1.jpg',
-    // --- ADD galleryImages --- 
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/aiagent/AG1.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/aiagent/AG2.png' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/aiagent/AG3.png' }
     ],
-    // --- END ADD ---
-    // --- ADD articleContent --- 
+
     articleContent: `
 "迷路的旅人徘徊在未知的岔路口，恍惚间，一位神秘的占卜师现身，为旅人抽取命运的塔罗牌。通过占卜师的指引和谜题的解密，旅人逐步拼凑出回家的方向。在塔罗牌的指示中，旅人用智慧与直觉寻找正确的路径，直至命运的终点，终于找到了回家的路。"
 
@@ -119,7 +108,6 @@ GameJam主题: It Never Ends
 
 一个利用AI制作游戏的开发比赛，在这里我学习了如何将Agent融入游戏的方法，你可以用AI设定游戏规则，也可以作为一个NPC，还可以从模型中藏入通关的线索。对我未来的游戏注入更多的可能。
     `
-    // --- END ADD ---
   },
 ];
 
@@ -131,7 +119,6 @@ const workProjects = [
     tech: ['Minecraft', '服务器', '策划'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/campfire/yh0.jpg',
-    // --- ADD articleContent --- 
     articleContent: `
 我在这个服务器中参与了武器和怪物的策划。
 
@@ -141,14 +128,12 @@ const workProjects = [
 
 玩法有点像剑与魔法的搜打撤，在群岛之间和玩家组队挑战BOSS，有自由的锻造装备，自定义属性成长曲线，可以打包票的说玩法是非常创意有新颖的，希望你玩得愉快。
     `,
-    // --- END ADD ---
-    // --- ADD galleryImages --- 
+
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/campfire/yh0.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/campfire/yh.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/campfire/yh1.jpg' }
     ]
-    // --- END ADD ---
   },
   {
     id: 6,
@@ -157,7 +142,6 @@ const workProjects = [
     tech: ['TypeScript', 'JavaScript', 'Koishi', '插件开发'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/koishi/koishi.png',
-    // --- ADD articleContent and galleryImages ---
     articleContent: `
 我通过koishi框架使用TypeScript制作了两个插件
 \n我还搭建了自己的腾讯官方Bot
@@ -167,16 +151,14 @@ const workProjects = [
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/koishi/koishi.png' }
     ]
-    // --- END ADD ---
   },
   {
     id: 7,
     title: '个人网站',
     description: 'Next.js, React, SCSS',
-    tech: ['Next.js', 'React', 'SCSS'], // <-- REMOVE 'Vercel'
+    tech: ['Next.js', 'React', 'SCSS'], 
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/web/wb1.png', 
-    // --- ADD galleryImages --- 
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/web/wb0.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/web/wb1.png' },
@@ -186,8 +168,7 @@ const workProjects = [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/web/wb5.png' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/projects/web/wb6.png' }
     ],
-    // --- END ADD ---
-    // --- ADD articleContent --- 
+
     articleContent: `
 对于我来说，个人网站就像自己的秘密基地吧，所以也是花费了一个多月的时间把他搭建了起来，在这里无论怎么诉说自己的辛酸还是喜悦都不会感到羞耻，就如我的签名一样，你来到了这里，我们的命运就与此刻相会纠缠。
 
@@ -199,7 +180,6 @@ const workProjects = [
 
 一些网站旧设
     `
-    // --- END ADD ---
   }
 ];
 
@@ -221,7 +201,6 @@ const gameData = [
     tech: ['视觉小说', '恋爱', '音乐'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/WHITE_ALBUM/w10.jpg',
-    // Add article content for WHITE ALBUM
     articleContent: '  转眼又到了白色相簿的季节了。\n\n\n  少见地把这部作品的游戏、动漫、漫画都完整体验了一遍。总体来说，个人感受的质量排序是：动漫 > 游戏 > 漫画。漫画虽也不错，但篇幅所限，许多情节未能充分展开便匆匆结束。\n\n\n  故事背景设定在日本签订广场协议后的时代，讲述了一名普通青年藤井冬弥，在成为偶像的女友森川由绮身边所经历的奔赴与追忆。故事中弥漫着白雪般的清寒与苦涩，情感如泡沫般易碎，似幻影般迷离。冬弥与由绮在高中结为恋人，但当由绮踏上偶像之路后，两人的人生轨迹便注定渐行渐远，难以相交。与其他多数恋爱游戏不同，《WHITE ALBUM》开篇时，"恋人"就已是由绮，因此玩家选择任何其他角色的线路，都似乎伴随着一种"背离"感（甚至在由绮本线中，出轨的主体有时反而是由绮自己）。\n\n\n  在这个清冷又略带压抑的环境里，似乎每个人心中都缺失了一角，而冬弥恰好能填补这份空缺——无论是多年求而不得的学姐观月麻奈，青梅竹马且痛失亲兄的河岛遥，缺少父母关爱的泽仓美咲，还是活在哥哥阴影下的绪方理奈，甚至是倾慕由绮、带着禁断之恋寻求慰藉的制作人筱冢弥生。游戏中，无论选择哪条线路，是软弱还是释怀，由绮似乎总会原谅冬弥。即便她自己可能随时会因失去冬弥而崩溃，却仍会虔诚地祈愿冬弥的幸福。与由绮形成鲜明对比的是理奈，她愿意牺牲自己的偶像事业，只为换取与冬弥的比翼双飞。\n\n\n  或许由绮并非不重视冬弥，只是在那个连座机电话都算奢侈品的时代，距离产生的漫长疑虑和日渐稀疏的沟通，为二人的"白色相簿"蒙上了厚厚的尘埃。心意在模糊中摇摆，那份果断也变得软弱。圣诞节、情人节仅有的几句交谈，让所有想说的话都成了未竟之弦。在这道不清、辩不明的白雪映衬下，两人似乎注定渐行渐远。（恰如"音书断绝，春闺梦里，相思难解"）\n\n\n  重制版新增的小夜子线，感觉反而更契合冬弥的处境。经历了偶像事业与高考双重失利的小夜子，与同样迷失在情感迷宫中的冬弥相互依偎取暖。可惜结局稍显仓促，未能深入描绘后续发展，留下了些许遗憾（结尾甚至没有明确的表示，更像是和大家都维持了友人关系）。\n\n\n  更令人感到压抑的是，游戏中许多局面近乎无解，除非玩家扮演圣人。选择往往导向某种形式的"社会性死亡"（如与基友七濑彰决裂，或选择已分手的学姐麻奈），或是走向充满不确定性的未来（如经纪人弥生线、遥线）。错误与误会在剧情中交替上演，任何一点逃避都会催化弥漫其中的不甘与苦涩，最终伴随着经济大衰退的最后一片雪花，凝结成难以抹去的伤痕。（不过，单就结局而言，多数线路也算得上是某种形式的 Happy Ending）。\n\n\n  而动漫则将多条线路融合，使得主角藤井冬弥的行为更具争议性（甚至被戏称为"四大人渣"之一），从某种意义上说，是对一人的背离"升级"为了对多人的摇摆。动画在细节刻画和艺术表现上更为出色，无论是冬弥自圆其说的"女神论"，还是绪方英二所追求的"真物"，都探讨了更深层次的内涵，压抑的情绪也渲染得更为强烈。\n\n\n  游戏和动漫中，基友七濑彰的形象反差极大。原作中他更像个清秀的伙伴，而在动漫里，出于对学姐麻奈的爱慕（原作亦有此设定），他屡次与冬弥产生冲突。动画中甚至加入了学姐设计与冬弥（当时女友是由绮）表白接吻、冬弥事后又试图撮合学姐与基友、学姐却仍心系冬弥最终拒绝基友等更为纠结的剧情。动画增补了许多设定，例如由绮和冬弥的童年相识（尽管那段用特殊方式驱赶坏人的回忆过于羞耻以致冬弥遗忘），更深刻地描绘了一个年轻人在社会洪流中逐渐迷失本心，在形形色色的情感中沉沦的过程。\n\n\n  由于动画只有一个结局，其编排也最为精妙和富于戏剧性。冬弥思考了漫长的篇幅去确认由绮是否还爱他、是否会等他，而由绮甚至无需回答——因为别说几个月，由绮已经等待了他十年。彼时，在舞台上与冬弥相视的那一瞬，跨越时光的追忆交汇，将"白色相簿"的故事推向了真正的高潮。\n\n\n  而这份复杂的情感体验，也自然地引向了续作——《WHITE ALBUM 2》。',
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/WHITE_ALBUM/w1.jpg' },
@@ -271,7 +250,7 @@ const gameData = [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Stray/stray13.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Stray/stray14.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Stray/stray15.jpg' },
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Stray/stray16.jpg' } // <-- ADD stray16
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Stray/stray16.jpg' }
     ]
   },
   {
@@ -281,11 +260,10 @@ const gameData = [
     tech: ['东方Project', '动作', '粉丝创作'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Touhou/TH3.png',
-    // --- ADD Touhou Article --- 
+    // Touhou 文章内容
     articleContent: '  对于东方来说，我了解并不是很多，但优质的同人还有游戏深深吸引了我。\n\n\n  我玩过《东方冰之勇者记》《东方夜雀食堂》《东方大战争》《东方幻灵录》\n\n\n  《东方冰之勇者记》也是我第一个真正意义上的全成就，耐心无伤打完了每一个boss',
-    // --- END ADD ---
     galleryImages: [
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Touhou/CG1.png' }, // <-- Add CG1 if not present
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Touhou/CG1.png' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Touhou/CG2.png' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Touhou/CG3.png' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Touhou/TH1.jpg' },
@@ -303,9 +281,8 @@ const gameData = [
     tech: ['FPS', '机甲'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Titalfall/titan13.jpg',
-    // --- ADD Titanfall Article --- 
+    // Titanfall 文章内容
     articleContent: '协议三，投掷铁驭！\n\n相信我！',
-    // --- END ADD ---
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Titalfall/titan1.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/Titalfall/titan2.jpg' },
@@ -327,9 +304,8 @@ const gameData = [
     tech: ['ARPG', '神话', '动作'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/BLACKMYTH/WK3.jpg',
-    // --- ADD Wukong Article --- 
+    // Wukong 文章内容
     articleContent: '  《黑神话：悟空》是我期盼许久的作品。能够第一时间体验到这部备受瞩目的国产3A大作，心情无疑是激动万分的。虽然我相对较少涉足纯粹的动作游戏领域，但那种通过磨练技巧、攻克难关最终获得的酣畅淋漓的成就感，对我有着难以抗拒的吸引力。\n\n\n  为了第一时间玩上游戏，我早上七八点就兴冲冲地赶到了网吧，却没想到还要等好长时间——网吧的机械硬盘解压游戏竟然耗费了足足一个小时。直到将近十一点，我才终于进入了游戏。\n\n\n  然而，真正的挑战才刚开始。面对第一个Boss黄风大圣，我打了快一下午。鏖战许久后我才发现，自己从头到尾根本没拿法宝纯硬扛。\n\n\n  这场艰难的战斗一直持续到凌晨三点多。本想上传录制的视频，结果网吧缓慢的上传速度又将时间拖到了四点。出门发现外面下起了大雨，没带伞的我只能一路跑回家，淋了个透湿。而且手机也早就没电关机。\n\n\n  站在家门口，面对电子锁，我发现自己还忘记了密码...在门口苦思冥想了半个多小时无果，累的不行的我直接就在门口蹲着睡了一会儿。等醒的时候，我又冒着雨四处寻找能充电的地方，最终幸运地找到一位出租车司机帮我充了会儿电。手机亮起的瞬间，密码也奇迹般地回到了脑海，这场折腾的夜晚才终于画上了句号。\n\n\n  虽然过程充满波折，但这无疑是一次极其深刻而难忘的游戏初体验。\n\n\n',
-    // --- END ADD ---
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/BLACKMYTH/WK0.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/BLACKMYTH/WK1.jpg' },
@@ -375,14 +351,13 @@ const travelData = [
   {
     id: 'jilin',
     title: '吉林',
-    description: '我出生的地方，我的故乡。', // Example description
-    tech: ['故乡'], // Example tags
-    link: '#', // Optional link
-    imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/jilin/JL1.jpg', // Placeholder image path
-    // --- ADD Jilin Article Content --- 
+    description: '我出生的地方，我的故乡。',
+    tech: ['故乡'],
+    link: '#',
+    imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/jilin/JL1.jpg', 
+    // Jilin 文章内容
     articleContent: '  吉林省公主岭市，小时候是归四平市的，长大了划归给长春。我出生在这里，但在四平长大，我很小的时候，爸妈就去韩国务工，是我的姑姑照顾我长大，对我来说，她就是我的第二个母亲。\n\n\n  还有我的爷爷（准确来说，是我表姐的爷爷，我的爷爷奶奶姥姥姥爷都在我出生前或是很小的时候离世了。），苍发花眉，爱抽烟。当时我小学的时候还玩上烟卡（把烟盒的头叠成一个小卡片），爷爷就主动抽各种不同的烟让我做烟卡玩。我当时还劝爷爷少抽点烟，对身体不好，结果一语成谶，在初中时爷爷患上肺癌，仅仅几个月就夺走了他的生命。\n\n\n  回想起来，当时家人还瞒着我爷爷患病这件事，在我的追问下才说出来实情。面对注射吗啡才能缓解痛苦的爷爷，我泣不成声，第一次对死亡有了概念。\n\n\n  后来高考那年，我的姑姑因乳腺癌离世，我也遗憾落榜离开故乡，选择了遥远的西安。\n\n\n  故地新时，你随时可以回去，但已经没有人在等你了。',
-    // --- END ADD ---
-    // Add gallery images for Jilin
+    // Jilin 相册图片
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/jilin/JL1.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/jilin/JL2.jpg' },
@@ -402,10 +377,9 @@ const travelData = [
     tech: ['大学'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX5.jpg',
-    // --- ADD Shaanxi Article --- 
+    // Shaanxi 文章内容
     articleContent: '  陕西，我大学所在的地方。说实话，我不喜欢这个地方，春秋很短，天气总是阴着的，空气也很差，吃饭也不便宜。我也很少在陕西周边旅行过，对我来说，这只是我的一个落脚处。\n\n\n  说来也好笑，当初选择西安，是因为我觉得它是一个"一线城市"，现在来看我还是了解少了，游戏行业在这里并不是很发达，活动也很少见，很难找到同好。\n\n\n  虽然如此，他依然也将会是陪伴我四年的城市，这里有独特的烟火气，碳水和古迹随处可即（西安考古博物馆甚至就在我家楼下）。还在西安里结识了许多有趣的人，在大学中与这座长安城达成了和解。',
-    // --- END ADD ---
-    // --- ADD Shaanxi Gallery --- 
+    // Shaanxi 相册图片
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX1.jpg' }, { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX2.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX3.jpg' }, { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX4.jpg' },
@@ -415,16 +389,15 @@ const travelData = [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX11.jpg' }, { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX12.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX13.jpg' }, { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/shaanxi/SX14.jpg' },
     ]
-    // --- END ADD ---
   },
   {
     id: 'chongqing',
     title: '重庆',
-    description: '魔幻3D城市。', // Placeholder description
-    tech: ['城市'], // Placeholder tags
+    description: '魔幻3D城市。',
+    tech: ['城市'],
     link: '#',
-    imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/chongqing/CQ1.jpg', // <-- UPDATE imageUrl
-    galleryImages: [ // <-- UPDATE galleryImages
+    imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/chongqing/CQ1.jpg',
+    galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/chongqing/CQ1.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/chongqing/CQ2.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/chongqing/CQ3.jpg' },
@@ -442,13 +415,13 @@ const travelData = [
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/qinghai/QH36.jpg',
     articleContent: '  青海，绝对是个难忘的旅程。23年国庆和同学一起去的，两个人拍拍脑袋也没什么计划就扎进了这片无垠高原（全靠打车），体验到春夏秋冬四个季节的感受，神奇的体验。\n\n\n  首先就是我这辈子都忘不了的坎布拉森林公园，一开始定位就定错了，我们十点多从西入口进入，信誓旦旦要靠徒步穿过去！两人三根杖就开始了漫长的徒步，这一走，就是从早上十点走到了将近半夜两点。快零点的时候，开始下雨，我们披着一次性雨衣，两个人交错打着手电筒，一步一步沿着公路漫长的徒步，山岗沉寂无声，只能听见自己的心跳，结果一点多看到我们才走到了一半的路程才能看到正式的景区。\n\n\n  雨水逐渐夹带着雪花，又转为小冰雹，我先一步撑不住，我怕真的要失温死在这里，当时真是绝望，还好我同学够冷静，在强往上走之后找到了景区求助电话，当地村民开车带我们去远处的民宿。后来的两天基本就昏在民宿里。据村民说当地还有狼出没，没遇上真是不幸中的万幸。\n\n\n  之后我们打车回到城市，老老实实地招了个司机师父带我们走。\n\n\n  又见过海天一线的青海湖，落日下的茶卡盐湖，还有暴风雪下的岗什卡雪峰（当初还行作死再爬一次山峰，可惜风雪太大不了了之了）',
     galleryImages: [
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/hard/YJ1.jpg', caption: '入手的铁三角唱片机' }, // <-- ADD caption
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/pictures/hard/YJ1.jpg', caption: '入手的铁三角唱片机' },
       { src: '/pictures/hard/YJ2.jpg' },
       { src: '/pictures/hard/YJ3.jpg' },
-      { src: '/pictures/hard/YJ4.jpg', caption: '搭的一台itx服务器' }, // <-- ADD caption
+      { src: '/pictures/hard/YJ4.jpg', caption: '搭的一台itx服务器' },
       { src: '/pictures/hard/YJ5.jpg' },
       { src: '/pictures/hard/YJ6.jpg' },
-      { src: '/pictures/hard/YJ11.jpg', caption: '给笔记本清灰' } // <-- ADD YJ11 with caption
+      { src: '/pictures/hard/YJ11.jpg', caption: '给笔记本清灰' }
     ]
   },
   {
@@ -480,26 +453,25 @@ const travelData = [
     tech: ['家'],
     link: '#',
     imageUrl: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG2.jpg',
-    // --- ADD Korea Article and Gallery --- 
+    // Korea 文章及相册
     articleContent: '  韩国是我父母务工居住的地方，和我也有一些联系。现在偶尔看望父母就会回到这里，这里清冷疏离，陌生的面孔陌生的人，没有支付手段，在这里我像还是那尚未涉世的孩子，只能依偎着父母。\n\n\n  不过有了父母，这里就是我的家。',
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG1.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG2.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG3.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG4.jpg' },
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG5.jpg' }, // <-- ADD HG5
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG6.jpg' },  // <-- ADD HG6
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG7.jpg' }, // <-- ADD HG7
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG8.jpg' }  // <-- ADD HG8
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG5.jpg' },
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG6.jpg' },
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG7.jpg' },
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/travel/hanguo/HG8.jpg' }
     ]
-    // --- END ADD ---
   },
 ];
 
 const experienceData = [
   {
     id: 'highschool',
-    type: 'education', // Differentiate between education and work/volunteer
+    type: 'education', 
     duration: '2016 - 2022',
     title: '初中 / 高中',
     location: '吉林师范大学附属中学 / 四平市第一高级中学',
@@ -507,8 +479,8 @@ const experienceData = [
       '吉林师范大学附属中学', 
       '四平市第一高级中学'
     ],
-    alignment: 'right', // Indicate alignment for timeline styling
-    // --- ADD galleryImages for highschool ---
+    alignment: 'right', // 时间轴样式对齐
+    // 高中时期相册
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/edu/gz1.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/edu/gz2.jpg' },
@@ -516,10 +488,9 @@ const experienceData = [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/edu/gz4.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/edu/gz5.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/edu/gz6.jpg' },
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/edu/gz7.jpg', caption: '张信哲居然在这里开演唱会，还是我家楼下！' }, // <-- ADD caption
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/edu/gz7.jpg', caption: '张信哲居然在这里开演唱会，还是我家楼下！' },
 
     ]
-    // --- END ADD ---
   },
   {
     id: 'university',
@@ -532,7 +503,7 @@ const experienceData = [
         '英语系'
     ],
     alignment: 'left',
-    galleryImages: [ // <-- MODIFY University Gallery
+    galleryImages: [ // 大学时期相册
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/xisu/XS1.jpg', caption: '油头垢面的我' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/xisu/XS2.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/xisu/XS3.jpg' },
@@ -563,7 +534,7 @@ const experienceData = [
       '产品翻译、校对 | 市场调研'
     ],
     alignment: 'left',
-    galleryImages: [ // <-- ADD Internship Gallery
+    galleryImages: [ // 实习相册
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/shixi/SX1.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/shixi/SX2.jpg', caption: '猛干五千管' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/shixi/SX3.jpg', caption: '然姐请我吃肯德基' },
@@ -586,13 +557,13 @@ const experienceData = [
     galleryImages: [
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan1.jpg' }, 
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan2.jpg' },
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan3.jpg', caption: '请大家喝橙汁' }, // <-- Add caption
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan4.jpg', caption: '薅来的柳叶刀杂志' }, // <-- Add caption
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan3.jpg', caption: '请大家喝橙汁' },
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan4.jpg', caption: '薅来的柳叶刀杂志' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan5.jpg' }, 
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan6.jpg' },
       { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan7.jpg' },
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan8.jpg' }, // <-- ADD zhiyuan8
-      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan9.jpg' }  // <-- ADD zhiyuan9
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan8.jpg' },
+      { src: 'https://rainmorime-1315830626.cos.ap-beijing.myqcloud.com/images/exp/zhiyuan/zhiyuan9.jpg' }
     ]
   },
 ];
@@ -603,7 +574,7 @@ const otherData = [
     id: 'physical-games',
     title: '实体游戏收藏',
     description: '收集一些喜欢的游戏实体版。',
-    imageUrl: '/pictures/collection/SC8.jpg', // <-- Updated cover
+    imageUrl: '/pictures/collection/SC8.jpg',
     tech: ['游戏'],
     // --- ADD articleContent --- 
     articleContent: `
@@ -641,7 +612,7 @@ const otherData = [
     id: 'tarot-cards',
     title: '塔罗牌',
     description: '偶尔用来探索潜意识或作为思考工具。',
-    imageUrl: '/pictures/TR/TR3.jpg', // <-- Updated cover
+    imageUrl: '/pictures/TR/TR3.jpg',
     tech: [],
     // --- ADD articleContent --- 
     articleContent: `
@@ -651,9 +622,9 @@ const otherData = [
     `,
     // --- END ADD --- 
     galleryImages: [
-      { src: '/pictures/TR/TR1.jpg', caption: '朋友给我的塔罗牌' }, // <-- ADD caption
+      { src: '/pictures/TR/TR1.jpg', caption: '朋友给我的塔罗牌' },
       { src: '/pictures/TR/TR2.jpg' },
-      { src: '/pictures/TR/TR3.jpg', caption: '朋友给我的塔罗牌' } // <-- ADD caption
+      { src: '/pictures/TR/TR3.jpg', caption: '朋友给我的塔罗牌' }
     ]
   },
   // --- ADD New Items ---
@@ -780,14 +751,14 @@ export default function Home() {
   const contactSectionRef = useRef(null);
   const blogSectionRef = useRef(null);
   const [activeWorkTab, setActiveWorkTab] = useState('learn'); 
-  const blogViewWrapperRef = useRef(null); // <-- ADD Ref for BlogViewWrapper
-  const [blogScrollPosition, setBlogScrollPosition] = useState(0); // <-- ADD State for Blog scroll position
-  const [hoveredSkillId, setHoveredSkillId] = useState(null); // <-- ADD State for hovered skill
-  const backClickTimeoutRef = useRef(null); // <-- ADD Ref for back click timeout
-  const [isNavigating, setIsNavigating] = useState(false); // <-- ADD isNavigating state
-  const navigationTimeoutRef = useRef(null); // <-- ADD Ref for navigation timeout
+  const blogViewWrapperRef = useRef(null); // Blog 视图包装器 Ref
+  const [blogScrollPosition, setBlogScrollPosition] = useState(0); // Blog 滚动位置
+  const [hoveredSkillId, setHoveredSkillId] = useState(null); // 悬停技能 ID
+  const backClickTimeoutRef = useRef(null); // 返回点击超时 Ref
+  const [isNavigating, setIsNavigating] = useState(false); // 导航状态
+  const navigationTimeoutRef = useRef(null); // 导航超时 Ref
 
-  // --- ADD Refs for content areas --- 
+  // 内容区域 Refs
   const lifeContentAreaRef = useRef(null);
   const workContentAreaRef = useRef(null);
   const lifeGameTabRef = useRef(null);
@@ -796,29 +767,26 @@ export default function Home() {
   const lifeOtherTabRef = useRef(null);
   const workLearnTabRef = useRef(null);
   const workWorkTabRef = useRef(null);
-  // --- END ADD ---
 
-  // --- ADD Navigation Links Data --- 
+  // 导航链接数据
   const navLinks = [
-    // --- 修改顺序: 将 Blog 移到最后 ---
-    // { label: 'Blog', target: 'blog-section', ref: blogSectionRef },
+    // 将 Blog 移到最后
     { label: 'Works', target: 'works-section', ref: worksSectionRef },
     { label: 'Experience', target: 'experience-section', ref: experienceSectionRef },
-    { label: 'Life', target: 'life-section', ref: lifeSectionRef }, // Added Life link
+    { label: 'Life', target: 'life-section', ref: lifeSectionRef },
     { label: 'Contact', target: 'contact-section', ref: contactSectionRef },
     { label: 'About', target: 'about-section', ref: aboutSectionRef }, 
-    { label: 'Blog', target: 'blog-section', ref: blogSectionRef }, // 移动到这里
+    { label: 'Blog', target: 'blog-section', ref: blogSectionRef },
   ];
-  // --- END ADD ---
 
-  // --- ADD useEffect for logging activeSection --- 
+  // 移除: useEffect for logging activeSection
   /*
   useEffect(() => {
     console.log('[activeSection changed]:', activeSection);
   }, [activeSection]);
   */
-  // --- END REMOVE ---
 
+  // 加载完成处理
   const handleLoadingComplete = () => {
     setIsLoading(false);
     setTimeout(() => {
@@ -827,23 +795,24 @@ export default function Home() {
         setLeftPanelAnimated(true);
         setTimeout(() => {
           setLeversVisible(true);
-        }, 800);
-      }, 200);
+        }, 800); // 控制杆动画延迟
+      }, 200); // 左侧面板动画延迟
       setTimeout(() => {
         setLinesAnimated(true);
-      }, 1000);
+      }, 1000); // 垂直线动画延迟
       setTimeout(() => {
         setHudVisible(true);
-      }, 2200);
+      }, 2200); // HUD 元素动画延迟
       setTimeout(() => {
         setTextVisible(true);
-      }, 2500);
+      }, 2500); // 文本动画延迟
       setTimeout(() => {
         setAnimationsComplete(true);
-      }, 4200);
-    }, 100); // 还原延迟为 100ms
+      }, 4200); // 整体动画完成状态
+    }, 100); // 主体内容显示延迟
   };
 
+  // 更新当前时间
   useEffect(() => {
     const intervalId = setInterval(() => {
       const now = new Date();
@@ -856,6 +825,7 @@ export default function Home() {
     return () => clearInterval(intervalId);
   }, []);
 
+  // 垂直线脉冲动画
   useEffect(() => {
     let pulseIntervalId = null;
     let pulseTimeoutIds = [];
@@ -871,13 +841,14 @@ export default function Home() {
         setPulsingReverseIndices(null);
 
         const indices = [];
-        while (indices.length < 3) {
+        while (indices.length < 3) { // 随机选择3条线进行动画
           const randomIndex = Math.floor(Math.random() * 6);
           if (!indices.includes(randomIndex)) {
             indices.push(randomIndex);
           }
         }
         
+        // 错开动画启动时间
         const timeoutId1 = setTimeout(() => {
           setPulsingNormalIndices([indices[0]]);
           setPulsingReverseIndices(null);
@@ -894,6 +865,7 @@ export default function Home() {
         }, staggerDelay * 2);
         pulseTimeoutIds.push(timeoutId3);
 
+        // 重置动画状态
         const resetTimeoutId = setTimeout(() => {
           setPulsingNormalIndices(null);
           setPulsingReverseIndices(null);
@@ -901,15 +873,16 @@ export default function Home() {
         }, staggerDelay * 2 + animationDuration);
         pulseTimeoutIds.push(resetTimeoutId);
 
-      }, 2000 + staggerDelay * 2);
+      }, 2000 + staggerDelay * 2); // 动画间隔
     }
 
-    return () => {
+    return () => { // 清理定时器
       if (pulseIntervalId) clearInterval(pulseIntervalId);
       pulseTimeoutIds.forEach(clearTimeout);
     };
   }, [animationsComplete]); 
 
+  // "命运纠缠"文本打字机效果
   useEffect(() => {
     if (textVisible) {
       const englishText = "You and me, fate is entangled in this moment.";
@@ -924,6 +897,7 @@ export default function Home() {
       let timeouts = [];
       setIsFateTypingActive(true);
 
+      // 逐字打印
       const typeString = (str, index, delay, callback) => {
         if (index < str.length) {
           setDisplayedFateText(prev => prev + str[index]);
@@ -935,6 +909,7 @@ export default function Home() {
         }
       };
 
+      // 逐字删除
       const deleteString = (currentStr, delay, callback) => {
         if (currentStr.length > 0) {
           setDisplayedFateText(prev => prev.slice(0, -1));
@@ -946,6 +921,7 @@ export default function Home() {
         }
       };
 
+      // 打字、暂停、删除、切换语言的序列
       const sequence = () => {
         typeString(englishText, 0, typingDelay, () => {
           const timeoutId1 = setTimeout(() => {
@@ -955,7 +931,7 @@ export default function Home() {
                   const timeoutId3 = setTimeout(() => {
                     deleteString(chineseText, chineseDeleteDelay, () => {
                       const timeoutId4 = setTimeout(() => {
-                        sequence();
+                        sequence(); // 循环执行
                       }, pauseAfterDelete);
                       timeouts.push(timeoutId4);
                     });
@@ -972,7 +948,7 @@ export default function Home() {
 
       sequence();
 
-      return () => {
+      return () => { // 清理
         timeouts.forEach(clearTimeout);
         setDisplayedFateText(''); 
         setIsFateTypingActive(false);
@@ -981,6 +957,7 @@ export default function Home() {
     }
   }, [textVisible]);
 
+  // 环境参数文本打字机效果
   useEffect(() => {
     if (textVisible) {
       const typingDelay = 35;
@@ -989,6 +966,7 @@ export default function Home() {
       let timeouts = [];
       setIsEnvParamsTyping(true);
 
+      // 逐字打印 (复用函数定义)
       const typeString = (str, index, delay, callback) => {
         if (index < str.length) {
           setDisplayedEnvParams(prev => prev + str[index]);
@@ -1000,6 +978,7 @@ export default function Home() {
         }
       };
 
+      // 逐字删除 (复用函数定义)
       const deleteEnvParamsString = (currentStr, delay, callback) => {
         if (currentStr.length > 0) {
           setDisplayedEnvParams(prev => prev.slice(0, -1));
@@ -1011,6 +990,7 @@ export default function Home() {
         }
       };
 
+      // 生成新的环境参数文本
       const generateNewParams = () => {
         const tempChange = (Math.random() * 3) - 1.5; 
         let newTemp = currentTempRef.current + tempChange;
@@ -1039,18 +1019,20 @@ export default function Home() {
         return `TEMP: ${tempStr}°C\nRAD: ${rad}mSv/h\nO2: ${o2}%\nPOLLUTION: ${pollution}\nACID RAIN: ${rain}${warningLine}`;
       };
 
+      // 执行生成和打印的流程
       const generateAndType = () => {
         const newParams = generateNewParams();
         lastGeneratedParamsRef.current = newParams;
         typeString(newParams, 0, typingDelay, () => {
-          const updateTime = 8000 + Math.floor(Math.random() * 7000);
+          const updateTime = 8000 + Math.floor(Math.random() * 7000); // 随机更新间隔
           const restartTimeout = setTimeout(() => {
-            startTyping();
+            startTyping(); // 间隔后重新开始
           }, updateTime);
           timeouts.push(restartTimeout);
         });
       };
 
+      // 开始打字机效果 (删除旧文本，打印新文本)
       const startTyping = () => {
         const textToDelete = lastGeneratedParamsRef.current;
 
@@ -1059,16 +1041,16 @@ export default function Home() {
             generateAndType(); 
           });
         } else {
-          generateAndType();
+          generateAndType(); // 如果没有旧文本，直接开始打印
         }
       };
 
-      const initialDelay = setTimeout(() => {
+      const initialDelay = setTimeout(() => { // 初始延迟启动
         startTyping();
       }, 1000);
       timeouts.push(initialDelay);
 
-      return () => {
+      return () => { // 清理
         timeouts.forEach(clearTimeout);
         setDisplayedEnvParams('');
         setIsEnvParamsTyping(false);
@@ -1077,91 +1059,97 @@ export default function Home() {
     }
   }, [textVisible]);
 
+  // 电量自然消耗效果
   useEffect(() => {
     if (!mainVisible) return;
 
     const intervalId = setInterval(() => {
       setPowerLevel(prevLevel => {
-        if (!isDischarging && prevLevel < 100) {
-          const decrease = Math.floor(Math.random() * 3) + 1;
+        if (!isDischarging && prevLevel < 100) { // 非放电且未满电时消耗
+          const decrease = Math.floor(Math.random() * 3) + 1; // 随机消耗 1-3 点
           return Math.max(0, prevLevel - decrease);
         }
         return prevLevel;
       });
-    }, 5000);
+    }, 5000); // 每5秒消耗一次
 
     return () => clearInterval(intervalId);
   }, [mainVisible, isDischarging]);
 
+  // Tesseract 充电函数
   const chargeBattery = () => {
     setPowerLevel(prevLevel => {
-      if (prevLevel >= 100) return 100;
-      const newLevel = Math.min(100, prevLevel + 5);
-      console.log("Charging... New Power Level:", newLevel);
+      if (prevLevel >= 100) return 100; // 已满则不充
+      const newLevel = Math.min(100, prevLevel + 5); // 每次充 5 点
+      console.log("Charging... New Power Level:", newLevel); // 保留日志用于调试
       return newLevel;
     });
   };
 
+  // 处理放电控制杆拉动
   const handleDischargeLeverPull = () => {
     if (powerLevel === 100 && !isDischarging) {
-      console.log("Discharge Lever Pulled! Starting discharge...");
+      console.log("Discharge Lever Pulled! Starting discharge..."); // 保留日志用于调试
       setIsDischarging(true);
     } else if (isDischarging) {
-        console.log("Already discharging.");
+        console.log("Already discharging."); // 保留日志用于调试
     } else {
-        console.log("Cannot discharge, power level is not 100%.");
+        console.log("Cannot discharge, power level is not 100%."); // 保留日志用于调试
     }
   };
 
+  // 放电过程效果
   useEffect(() => {
     if (isDischarging) {
-      if (dischargeIntervalRef.current) {
+      if (dischargeIntervalRef.current) { // 清理可能存在的旧定时器
         clearInterval(dischargeIntervalRef.current);
       }
       dischargeIntervalRef.current = setInterval(() => {
         setPowerLevel(prevLevel => {
           if (prevLevel > 0) {
-            const decreaseAmount = 1;
+            const decreaseAmount = 1; // 每次减少 1 点
             return Math.max(0, prevLevel - decreaseAmount);
-          } else {
-            console.log("Discharge complete.");
+          } else { // 电量耗尽
+            console.log("Discharge complete."); // 保留日志用于调试
             clearInterval(dischargeIntervalRef.current);
             dischargeIntervalRef.current = null;
-            setIsDischarging(false);
+            setIsDischarging(false); // 结束放电状态
             return 0;
           }
         });
-      }, 80);
+      }, 80); // 放电速度
 
-      return () => {
+      return () => { // 组件卸载或 isDischarging 变为 false 时清理
         if (dischargeIntervalRef.current) {
-          console.log("Cleaning up discharge interval.");
+          console.log("Cleaning up discharge interval."); // 保留日志用于调试
           clearInterval(dischargeIntervalRef.current);
           dischargeIntervalRef.current = null;
         }
       };
-    } else {
+    } else { // 如果 isDischarging 变为 false，确保清理定时器
         if (dischargeIntervalRef.current) {
-             console.log("Clearing discharge interval because isDischarging is false.");
+             console.log("Clearing discharge interval because isDischarging is false."); // 保留日志用于调试
              clearInterval(dischargeIntervalRef.current);
              dischargeIntervalRef.current = null;
         }
     }
   }, [isDischarging]);
 
+  // 根据电量和放电状态切换反色模式
   useEffect(() => {
     if (powerLevel === 100 && !isDischarging && !isInverted) {
-      console.log("Power at 100% and not discharging! Activating inverted mode.");
+      console.log("Power at 100% and not discharging! Activating inverted mode."); // 保留日志用于调试
       setIsInverted(true);
     }
     else if ((powerLevel < 100 || isDischarging) && isInverted) {
-      console.log("Power below 100 or discharging! Deactivating inverted mode.");
+      console.log("Power below 100 or discharging! Deactivating inverted mode."); // 保留日志用于调试
       setIsInverted(false);
     }
   }, [powerLevel, isInverted, isDischarging]);
 
-  const numberOfColumns = 6;
+  const numberOfColumns = 6; // 导航列数量
 
+  // 导航列名称
   const sectionNames = [
     "WORKS",
     "EXPERIENCE",
@@ -1171,6 +1159,7 @@ export default function Home() {
     "BLOG" // 添加BLOG栏目
   ];
 
+  // 更新 ABOUT 列随机 HUD 文本
   const updateRandomHudTexts = () => {
     const newTexts = [];
     for (let i = 0; i < 6; i++) { 
@@ -1181,48 +1170,46 @@ export default function Home() {
     setRandomHudTexts(newTexts);
   };
 
+  // 生成随机字符（用于 EXPERIENCE 列动画）
   const generateRandomChars = (length) => { 
     let targetLength = length;
-    if (typeof length === 'undefined' || length === null) {
+    if (typeof length === 'undefined' || length === null) { // 默认随机长度 3-6
       targetLength = Math.floor(Math.random() * 4) + 3;
     }
     
     const chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:'\",.<>/?~`§±¥₩£¢€©®™×÷≠≤≥∞∑∫√≈≠≡";
     let result = '';
-    targetLength = Math.max(0, targetLength); 
+    targetLength = Math.max(0, targetLength); // 确保长度不为负
     
     for (let i = 0; i < targetLength; i++) { 
       result += chars.charAt(Math.floor(Math.random() * chars.length));
-      if (i < targetLength - 1) { 
+      if (i < targetLength - 1) { // 除最后一个字符外，都添加换行符
         result += '\n';
       }
     }
     return result;
   };
 
+  // 处理导航列鼠标悬停进入事件
   const handleColumnMouseEnter = (index) => {
-    if (index === 4) {
+    if (index === 4) { // ABOUT 列
       updateRandomHudTexts();
       if (intervalRef.current) clearInterval(intervalRef.current);
-      intervalRef.current = setInterval(updateRandomHudTexts, 50);
-    } else if (index === 1) {
+      intervalRef.current = setInterval(updateRandomHudTexts, 50); // 快速更新随机文本
+    } else if (index === 1) { // EXPERIENCE 列
       branchUpdateCounterRef.current = 0; 
       if (branchIntervalRef.current) clearInterval(branchIntervalRef.current);
       
+      // 根据计数器决定分支文本长度
       const getTargetLength = (effectiveCount) => {
-        if (effectiveCount <= 15) {      
-          return 1;
-        } else if (effectiveCount <= 24) { 
-          return 2;
-        } else if (effectiveCount <= 36) { 
-          return 3;
-        } else if (effectiveCount <= 48) { 
-          return 4;
-        } else {                 
-          return Math.floor(Math.random() * 3) + 4;
-        }
+        if (effectiveCount <= 15) return 1;
+        else if (effectiveCount <= 24) return 2;
+        else if (effectiveCount <= 36) return 3;
+        else if (effectiveCount <= 48) return 4;
+        else return Math.floor(Math.random() * 3) + 4; // 后续随机长度 4-6
       };
 
+      // 初始分支文本
       const initialMainCount = 1;
       const initialLength1 = getTargetLength(initialMainCount + 45);
       const initialLength2 = getTargetLength(initialMainCount + 30);
@@ -1235,6 +1222,7 @@ export default function Home() {
       setBranchText4(generateRandomChars(initialLength4));
       branchUpdateCounterRef.current = initialMainCount;
 
+      // 定时更新分支文本
       branchIntervalRef.current = setInterval(() => {
         branchUpdateCounterRef.current += 1;
         const mainCount = branchUpdateCounterRef.current;
@@ -1253,17 +1241,19 @@ export default function Home() {
     }
   };
 
+  // 处理导航列鼠标悬停离开事件
   const handleColumnMouseLeave = (index) => {
-    if (index === 4) {
+    if (index === 4) { // ABOUT 列
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-    } else if (index === 1) {
+    } else if (index === 1) { // EXPERIENCE 列
       if (branchIntervalRef.current) {
         clearInterval(branchIntervalRef.current);
         branchIntervalRef.current = null;
       }
+      // 清空分支文本
       setBranchText1('');
       setBranchText2('');
       setBranchText3('');
@@ -1272,31 +1262,26 @@ export default function Home() {
     }
   };
 
+  // 处理导航列点击事件
   const handleColumnClick = (columnIndex) => {
-    // --- Navigation Lock (keep check, remove logs) --- 
-    if (isNavigating) {
-      // console.log("Navigation locked, animation in progress.");
-      return;
-    }
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
+    // 导航锁定，防止动画期间重复点击
+    if (isNavigating) return;
+    if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     setIsNavigating(true);
     navigationTimeoutRef.current = setTimeout(() => {
       setIsNavigating(false);
       navigationTimeoutRef.current = null;
-      // console.log("Navigation unlocked (column click).");
-    }, 800); // Lock for 0.8 seconds
-    // --- END Lock ---
+    }, 800); // 锁定 0.8 秒
 
-    console.log(`Column ${columnIndex + 1} clicked`); // Keep basic log
+    console.log(`Column ${columnIndex + 1} clicked`); // 保留基础日志
     
-    // 添加BLOG列的点击处理
-    if (columnIndex === 5) { // BLOG列
-      setActiveSection('blog'); // 设置当前区域为blog
+    // 处理 BLOG 列点击
+    if (columnIndex === 5) {
+      setActiveSection('blog');
       return;
     }
     
+    // 其他列点击，滚动到对应内容区域
     const sectionIds = [
       'works-section',
       'experience-section',
@@ -1307,62 +1292,64 @@ export default function Home() {
     
     if (columnIndex < sectionIds.length) {
       const sectionId = sectionIds[columnIndex];
-      setSelectedLifeItem(null);
+      setSelectedLifeItem(null); // 清除可能存在的详情视图状态
       setSelectedWorkItem(null);
       setSelectedExperienceItem(null);
-      setActiveSection('content');
+      setActiveSection('content'); // 切换到内容视图
 
-      requestAnimationFrame(() => {
+      requestAnimationFrame(() => { // 确保 DOM 更新后再滚动
         const targetElement = document.getElementById(sectionId);
         const containerElement = contentWrapperRef.current;
         if (targetElement && containerElement) {
-          if (sectionId === 'life-section') {
+          if (sectionId === 'life-section') { // 如果是 LIFE 列，默认激活 game tab
              setActiveLifeTab('game');
           }
-          const offsetTop = targetElement.offsetTop;
+          const offsetTop = targetElement.offsetTop; // 计算目标元素顶部偏移量
           containerElement.scrollTo({
             top: offsetTop,
-            behavior: 'smooth'
+            behavior: 'smooth' // 平滑滚动
           });
         }
       });
     }
   };
 
+  // 返回主页
   const handleGoHome = () => {
     setActiveSection('home');
-    setSelectedLifeItem(null);
+    setSelectedLifeItem(null); // 清除详情视图状态
   };
 
+  // About 部分入场动画
   useEffect(() => {
     if (activeSection === 'content' && aboutSectionRef.current && aboutContentRef.current) {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: aboutSectionRef.current,
-          scroller: contentWrapperRef.current, 
+          scroller: contentWrapperRef.current, // 指定滚动容器
           start: 'top bottom', 
           end: 'bottom top', 
-          toggleActions: 'play none none reverse', 
-          markers: false, 
+          toggleActions: 'play none none reverse', // 进入视口时播放，离开时反向播放
+          markers: false, // 关闭调试标记
         }
       });
 
       tl.from(aboutSectionRef.current, {
-        x: '100%', 
+        x: '100%', // 从右侧滑入
         opacity: 0,
         immediateRender: false, 
         duration: 0.8, 
         ease: 'power3.out' 
       });
 
-      return () => {
+      return () => { // 清理 GSAP 动画和触发器
         if (tl.scrollTrigger) {
           tl.scrollTrigger.kill();
         }
         tl.kill();
       };
     } 
-    else {
+    else { // 如果不在 content 视图，确保清理可能残留的触发器
         ScrollTrigger.getAll().forEach(st => {
             if (st.trigger === aboutSectionRef.current) {
                 st.kill();
@@ -1371,19 +1358,21 @@ export default function Home() {
     }
   }, [activeSection]); 
 
+  // 处理 Tesseract 激活控制杆拉动
   const handleActivateTesseract = () => {
     if (!isTesseractActivated) {
-      console.log('Activation Lever Pulled! Activating Tesseract...');
+      console.log('Activation Lever Pulled! Activating Tesseract...'); // 保留调试日志
       setIsTesseractActivated(true);
     };
   };
 
+  // 处理复制邮箱地址
   const handleCopyEmail = () => {
     const email = 'rainmorime@qq.com';
     navigator.clipboard.writeText(email).then(() => {
-      console.log('Email copied to clipboard!');
+      console.log('Email copied to clipboard!'); // 保留调试日志
       setIsEmailCopied(true);
-      setTimeout(() => {
+      setTimeout(() => { // 1.5秒后移除复制成功提示
         setIsEmailCopied(false);
       }, 1500);
     }).catch(err => {
@@ -1391,218 +1380,161 @@ export default function Home() {
     });
   };
 
-  const handleLifeItemClick = (item, e) => { // <-- Accept event 'e'
-    // --- Navigation Lock (keep check, remove logs) --- 
-    if (isNavigating) {
-      // console.log("Navigation locked, animation in progress.");
-      return;
-    }
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
+  // 处理 Life 项目点击
+  const handleLifeItemClick = (item, e) => {
+    // 导航锁定
+    if (isNavigating) return;
+    if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     setIsNavigating(true);
     navigationTimeoutRef.current = setTimeout(() => {
       setIsNavigating(false);
       navigationTimeoutRef.current = null;
-      // console.log("Navigation unlocked (life click).");
-    }, 800); // Lock for 0.8 seconds
-    // --- END Lock ---
+    }, 800);
 
-    // --- Clear previous back click timeout (keep check, remove log) --- 
+    // 清除可能存在的返回点击超时
     if (backClickTimeoutRef.current) {
       clearTimeout(backClickTimeoutRef.current);
       backClickTimeoutRef.current = null;
-      // console.log("Cleared pending back click state reset timeout.");
     }
-    // --- END Clear ---
-    // console.log("Received event in handleLifeItemClick:", e); // Remove event log
-    // Try both stopPropagation and stopImmediatePropagation
+    
+    // 阻止事件冒泡
     if (e) {
       e.stopPropagation(); 
       if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
           e.nativeEvent.stopImmediatePropagation();
       }
     } 
-    /* Remove warning block
-    else {
-      console.warn("handleLifeItemClick: Invalid or missing event object.");
-    }
-    */
-    console.log("Life item clicked, switching to detail view:", item); // Keep basic log
-    // console.log("Current activeSection BEFORE set:", activeSection); // Remove state log
-    // Record current scroll position AND current active tab before switching
+    
+    console.log("Life item clicked, switching to detail view:", item); // 保留基础日志
+    
+    // 记录当前滚动位置和激活的 tab
     if (contentWrapperRef.current) {
       setContentScrollPosition(contentWrapperRef.current.scrollTop);
     }
-    setPreviousActiveLifeTab(activeLifeTab); // Store the current tab
+    setPreviousActiveLifeTab(activeLifeTab);
 
-    setSelectedLifeItem(item); // Set the selected life item
-    setActiveSection('lifeDetail'); // Set the active section state
+    setSelectedLifeItem(item);
+    setActiveSection('lifeDetail');
   };
 
-  const handleWorkItemClick = (item, e) => { // <-- Accept event 'e'
-    // --- Navigation Lock (keep check, remove logs) --- 
-    if (isNavigating) {
-      // console.log("Navigation locked, animation in progress.");
-      return;
-    }
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
+  // 处理 Work 项目点击
+  const handleWorkItemClick = (item, e) => {
+    // 导航锁定
+    if (isNavigating) return;
+    if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     setIsNavigating(true);
     navigationTimeoutRef.current = setTimeout(() => {
       setIsNavigating(false);
       navigationTimeoutRef.current = null;
-      // console.log("Navigation unlocked (work click).");
-    }, 800); // Lock for 0.8 seconds
-    // --- END Lock ---
+    }, 800);
 
-    // --- Clear previous back click timeout (keep check, remove log) --- 
+    // 清除可能存在的返回点击超时
     if (backClickTimeoutRef.current) {
       clearTimeout(backClickTimeoutRef.current);
       backClickTimeoutRef.current = null;
-      // console.log("Cleared pending back click state reset timeout.");
     }
-    // --- END Clear ---
-    // console.log("Received event in handleWorkItemClick:", e); // Remove event log
-    // Try both stopPropagation and stopImmediatePropagation
+    
+    // 阻止事件冒泡
     if (e) {
       e.stopPropagation();
       if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
           e.nativeEvent.stopImmediatePropagation();
       }
     }
-    /* Remove warning block
-    else {
-      console.warn("handleWorkItemClick: Invalid or missing event object.");
-    }
-    */
-    console.log("Work item clicked, switching to detail view:", item); // Keep basic log
-    // console.log("Current activeSection BEFORE set:", activeSection); // Remove state log
-    // Record current scroll position before switching
+    
+    console.log("Work item clicked, switching to detail view:", item); // 保留基础日志
+    
+    // 记录当前滚动位置
     if (contentWrapperRef.current) {
       setContentScrollPosition(contentWrapperRef.current.scrollTop); 
     }
-    // No need to store the 'tab' for WORKS as it's a single section
+    // Works 部分没有 tab，无需记录
 
-    setSelectedWorkItem(item); // Set the selected work item
-    setActiveSection('workDetail'); // Set the active section state
+    setSelectedWorkItem(item);
+    setActiveSection('workDetail');
   };
 
-  const handleExperienceItemClick = (item, e) => { // <-- Accept event 'e'
-    // --- Navigation Lock (keep check, remove logs) --- 
-    if (isNavigating) {
-      // console.log("Navigation locked, animation in progress.");
-      return;
-    }
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
+  // 处理 Experience 项目点击
+  const handleExperienceItemClick = (item, e) => {
+    // 导航锁定
+    if (isNavigating) return;
+    if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     setIsNavigating(true);
     navigationTimeoutRef.current = setTimeout(() => {
       setIsNavigating(false);
       navigationTimeoutRef.current = null;
-      // console.log("Navigation unlocked (exp click).");
-    }, 800); // Lock for 0.8 seconds
-    // --- END Lock ---
+    }, 800);
 
-    // --- Clear previous back click timeout (keep check, remove log) --- 
+    // 清除可能存在的返回点击超时
     if (backClickTimeoutRef.current) {
       clearTimeout(backClickTimeoutRef.current);
       backClickTimeoutRef.current = null;
-      // console.log("Cleared pending back click state reset timeout.");
     }
-    // --- END Clear ---
-    // console.log("Received event in handleExperienceItemClick:", e); // Remove event log
-    // Try both stopPropagation and stopImmediatePropagation
+    
+    // 阻止事件冒泡
     if (e) {
       e.stopPropagation();
       if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
           e.nativeEvent.stopImmediatePropagation();
       }
     }
-    /* Remove warning block
-    else {
-      console.warn("handleExperienceItemClick: Invalid or missing event object.");
-    }
-    */
-    console.log("Experience item clicked, switching to detail view:", item); // Keep basic log
-    // console.log("Current activeSection BEFORE set:", activeSection); // Remove state log
-    // Record current scroll position before switching
+    
+    console.log("Experience item clicked, switching to detail view:", item); // 保留基础日志
+    
+    // 记录当前滚动位置
     if (contentWrapperRef.current) {
       setContentScrollPosition(contentWrapperRef.current.scrollTop); 
     }
 
-    setSelectedExperienceItem(item); // Set the selected experience item
-    setActiveSection('experienceDetail'); // Set the active section state
+    setSelectedExperienceItem(item);
+    setActiveSection('experienceDetail');
   };
 
-  // --- ADD Handler for Blog Post Click --- 
-  const handleBlogPostClick = (post, e) => { // <-- Accept event 'e'
-    // --- Navigation Lock (keep check, remove logs) --- 
-    if (isNavigating) {
-      // console.log("Navigation locked, animation in progress.");
-      return;
-    }
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
+  // 处理 Blog 文章点击
+  const handleBlogPostClick = (post, e) => {
+    // 导航锁定
+    if (isNavigating) return;
+    if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     setIsNavigating(true);
     navigationTimeoutRef.current = setTimeout(() => {
       setIsNavigating(false);
       navigationTimeoutRef.current = null;
-      // console.log("Navigation unlocked (blog post click).");
-    }, 800); // Lock for 0.8 seconds
-    // --- END Lock ---
+    }, 800);
 
-    // --- Clear previous back click timeout (keep check, remove log) --- 
+    // 清除可能存在的返回点击超时
     if (backClickTimeoutRef.current) {
       clearTimeout(backClickTimeoutRef.current);
       backClickTimeoutRef.current = null;
-      // console.log("Cleared pending back click state reset timeout.");
     }
-    // --- END Clear ---
-    // console.log("Received event in handleBlogPostClick:", e); // Remove event log
-    // Try both stopPropagation and stopImmediatePropagation
+    
+    // 阻止事件冒泡
     if (e) {
       e.stopPropagation();
       if (e.nativeEvent && typeof e.nativeEvent.stopImmediatePropagation === 'function') {
           e.nativeEvent.stopImmediatePropagation();
       }
     }
-    /* Remove warning block
-    else {
-      console.warn("handleBlogPostClick: Invalid or missing event object.");
-    }
-    */
-    console.log("Blog post clicked, switching to detail view:", post); // Keep basic log
-    // console.log("Current activeSection BEFORE set:", activeSection); // Remove state log
-    // Save scroll position of the blog view wrapper
+    
+    console.log("Blog post clicked, switching to detail view:", post); // 保留基础日志
+    
+    // 记录当前滚动位置
     if (blogViewWrapperRef.current) {
       setBlogScrollPosition(blogViewWrapperRef.current.scrollTop);
     }
     setSelectedBlogPost(post);
-    setActiveSection('blogDetail'); // Switch to the blog detail view
+    setActiveSection('blogDetail');
   };
-  // --- END ADD ---
 
-  // --- MODIFY Global Back Button Logic ---
+  // 处理 Global Back Button 点击
   const handleGlobalBackClick = () => {
-    // --- Navigation Lock (keep check, remove logs) --- 
-    if (isNavigating) {
-      console.log("Navigation locked, animation in progress.");
-      return;
-    }
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
+    // 导航锁定
+    if (isNavigating) return;
+    if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     setIsNavigating(true);
     navigationTimeoutRef.current = setTimeout(() => {
       setIsNavigating(false);
       navigationTimeoutRef.current = null;
-      console.log("Navigation unlocked (back click).");
-    }, 800); // Lock for 0.8 seconds
-    // --- END ADD ---
+    }, 800); // 锁定 0.8 秒
 
     const animationDuration = 1700; // Set delay slightly longer than slideOutToRight (1.6s)
     console.log("Global back clicked. Current activeSection:", activeSection);
@@ -1675,9 +1607,8 @@ export default function Home() {
       handleGoHome(); 
     }
   };
-  // --- END MODIFY ---
 
-  // --- ADD Handler for Life Tab Clicks --- 
+  // 处理 Life Tab 点击
   const handleLifeTabClick = (tabName) => {
     // Scroll to Life section top when a tab is clicked
     if (contentWrapperRef.current && lifeSectionRef.current) {
@@ -1689,9 +1620,8 @@ export default function Home() {
     }
     setActiveLifeTab(tabName);
   };
-  // --- END ADD ---
 
-  // --- ADD Handler for Work Tab Clicks --- 
+  // 处理 Work Tab 点击
   const handleWorkTabClick = (tabName) => {
     if (contentWrapperRef.current && worksSectionRef.current) {
       const worksSectionTop = worksSectionRef.current.offsetTop;
@@ -1702,27 +1632,19 @@ export default function Home() {
     }
     setActiveWorkTab(tabName);
   };
-  // --- END ADD ---
 
-  // --- ADD Handler for Left Nav Link Clicks ---
+  // 处理 Left Nav Link 点击
   const handleLeftNavLinkClick = (link) => {
-    // --- ADD Navigation Lock --- 
-    if (isNavigating) {
-      console.log("Navigation locked, animation in progress.");
-      return;
-    }
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
+    // 添加导航锁定
+    if (isNavigating) return;
+    if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
     setIsNavigating(true);
     navigationTimeoutRef.current = setTimeout(() => {
       setIsNavigating(false);
       navigationTimeoutRef.current = null;
-      console.log("Navigation unlocked (left nav click).");
-    }, 200); // Lock for 0.2 seconds
-    // --- END ADD ---
+    }, 200); // 锁定 0.2 秒
 
-    // 处理Blog链接点击
+    // 处理 Blog 链接点击
     if (link.label === 'Blog') {
       setActiveSection('blog');
       return;
@@ -1750,9 +1672,8 @@ export default function Home() {
         }
       }
   };
-  // --- END ADD ---
 
-  // --- ADD useEffect for Dynamic Height Adjustment --- 
+  // 动态调整高度
   useEffect(() => {
     if (activeSection !== 'content' || !contentWrapperRef.current) {
       // Reset heights when not in content view or refs aren't ready
@@ -2056,16 +1977,17 @@ export default function Home() {
             </div>
           </main>
 
-          {/* --- MODIFY: Conditionally render contentWrapper --- */}
+          {/* 条件渲染内容包装器 */}
           {mainVisible && (
             <div 
               ref={contentWrapperRef} 
               className={`${styles.contentWrapper} ${activeSection === 'content' ? styles.visible : styles.hidden}`}
             >
-              <div id="works-section" ref={worksSectionRef} className={`${styles.contentSection} ${styles.worksSection}`}> {/* <-- ADD Ref */} 
+              {/* Works 区块 */}
+              <div id="works-section" ref={worksSectionRef} className={`${styles.contentSection} ${styles.worksSection}`}> 
                 <h2>WORKS</h2>
-                {/* --- ADD Work Tab Buttons --- */}
-                <div className={styles.workTabButtons}> {/* Use a specific class */} 
+                {/* Work Tab 按钮 */}
+                <div className={styles.workTabButtons}> 
                     <button
                       className={`${styles.workTabButton} ${activeWorkTab === 'learn' ? styles.activeTab : ''}`}
                       onClick={() => handleWorkTabClick('learn')}
@@ -2079,38 +2001,36 @@ export default function Home() {
                       Work
                     </button>
                 </div>
-                {/* --- END ADD --- */}
 
-                {/* --- ADD Work Content Area --- */}
+                {/* Work 内容区域 */}
                 <div ref={workContentAreaRef} className={styles.workContentArea}> 
-                  {/* Learn Tab Content */}
+                  {/* Learn Tab 内容 */}
                   <div ref={workLearnTabRef} className={`${styles.workTabContent} ${activeWorkTab === 'learn' ? styles.activeWorkContent : ''}`}> 
-                      <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
+                      <div className={styles.gameGrid}> 
                           {learnProjects.map(project => (
                             <ProjectCard 
                               key={project.id} 
                               project={project} 
-                              onClick={handleWorkItemClick} // <-- Pass handler directly
+                              onClick={handleWorkItemClick} // 直接传递 handler
                             />
                           ))}
                       </div>
                   </div>
-                  {/* Work Tab Content */}
+                  {/* Work Tab 内容 */}
                   <div ref={workWorkTabRef} className={`${styles.workTabContent} ${activeWorkTab === 'work' ? styles.activeWorkContent : ''}`}> 
-                      <div className={styles.gameGrid}> {/* <-- Change class to gameGrid */} 
+                      <div className={styles.gameGrid}> 
                           {workProjects.map(project => (
                             <ProjectCard 
                               key={project.id} 
                               project={project} 
-                              onClick={handleWorkItemClick} // <-- Pass handler directly
+                              onClick={handleWorkItemClick} // 直接传递 handler
                             />
                           ))}
                       </div>
                   </div>
                 </div>
-                {/* --- END ADD Work Content Area --- */}
 
-                {/* --- ADD Skills Section --- */}
+                {/* 技能熟练度区块 */}
                 <h4 className={styles.subSectionTitle}>技能熟练度 / Skills</h4>
                 <div className={styles.skillGrid}> 
                   {skillsData.map((skill) => (
@@ -2123,17 +2043,18 @@ export default function Home() {
                       <div className={styles.skillCardContent}> 
                         <span className={styles.skillName}>{skill.name}</span> 
                         <div className={styles.skillProgressBar}> 
-                          {/* Render block characters instead of spans */} 
+                          {/* 渲染进度条字符 */}
                           {[...Array(10)].map((_, i) => (
                             <span 
                               key={i} 
                               className={i < skill.level ? styles.filledSegment : styles.emptySegment}
                             >
-                              {i < skill.level ? '█' : '░'} {/* Output characters */} 
+                              {i < skill.level ? '█' : '░'} {/* 输出字符 */}
                             </span>
                           ))}
                         </div>
                       </div>
+                      {/* 悬停显示技能描述 */}
                       {hoveredSkillId === skill.id && skill.description && (
                         <div className={styles.skillHoverDescription}>
                           {skill.description}
@@ -2142,10 +2063,10 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                {/* --- END ADD Skills Section --- */}
               </div>
 
-              <div id="experience-section" ref={experienceSectionRef} className={`${styles.contentSection} ${styles.experienceSection}`}> {/* <-- ADD Ref */} 
+              {/* Experience 区块 */}
+              <div id="experience-section" ref={experienceSectionRef} className={`${styles.contentSection} ${styles.experienceSection}`}> 
                 <h2>EXPERIENCE</h2>
                 <div className={styles.experienceTimeline}>
                   {experienceData.map(item => (
@@ -2157,7 +2078,7 @@ export default function Home() {
                         ${item.type === 'education' ? styles.educationItem : ''}
                         ${styles.clickable}
                       `}
-                      // Ensure item and event are passed correctly
+                      // 确保 item 和 event 正确传递
                       onClick={(e) => handleExperienceItemClick(item, e)} 
                     >
                     <div className={styles.timelinePoint}></div>
@@ -2170,8 +2091,9 @@ export default function Home() {
                         <h3>{item.title}</h3>
                         {item.details.map((detailLine, index) => (
                            <p key={index}>
-                             {detailLine.split(/(\\d{4}(?:\\.\\d{2})?)/g).map((part, partIndex) => 
-                               /\\d{4}(?:\\.\\d{2})?/.test(part) ? 
+                             {/* 处理包含年份的文本 */}
+                             {detailLine.split(/(\d{4}(?:\.\d{2})?)/g).map((part, partIndex) => 
+                               /\d{4}(?:\.\d{2})?/.test(part) ? 
                                <span key={partIndex} className={styles.timelineNumber}>{part}</span> : 
                                part
                              )}
@@ -2183,56 +2105,55 @@ export default function Home() {
                   </div>
                       </div>
 
-              {/* --- MODIFY Add dynamic class based on activeSection --- */}
+              {/* Life 区块 (根据 activeSection 添加动态类) */}
               <div 
                 id="life-section" 
                 ref={lifeSectionRef} 
                 className={`${styles.contentSection} ${styles.lifeSection} ${activeSection === 'lifeDetail' ? styles.detailActive : ''}`}
               > 
                 <h2>LIFE</h2>
-                {/* --- REMOVE Conditional Rendering --- */}
-                {/* {activeSection === 'content' && ( */} 
-                  <div className={styles.lifeTabButtons}>
-                    <button
-                      className={`${styles.lifeTabButton} ${activeLifeTab === 'game' ? styles.activeTab : ''}`}
-                      onClick={() => handleLifeTabClick('game')} // Keep using the (now simpler) handler
-                    >
-                      Game
-                    </button>
-                    <button
-                      className={`${styles.lifeTabButton} ${activeLifeTab === 'travel' ? styles.activeTab : ''}`}
-                      onClick={() => handleLifeTabClick('travel')}
-                    >
-                      Travel
-                    </button>
-                    <button
-                      className={`${styles.lifeTabButton} ${activeLifeTab === 'art' ? styles.activeTab : ''}`}
-                      onClick={() => handleLifeTabClick('art')}
-                    >
-                      Art
-                    </button>
-                    <button
-                      className={`${styles.lifeTabButton} ${activeLifeTab === 'other' ? styles.activeTab : ''}`}
-                      onClick={() => handleLifeTabClick('other')}
-                    >
-                      Other
-                    </button>
-                  </div>
-                {/* )} */} 
-                {/* --- END REMOVE --- */}
+                {/* Life Tab 按钮 */}
+                <div className={styles.lifeTabButtons}>
+                  <button
+                    className={`${styles.lifeTabButton} ${activeLifeTab === 'game' ? styles.activeTab : ''}`}
+                    onClick={() => handleLifeTabClick('game')}
+                  >
+                    Game
+                  </button>
+                  <button
+                    className={`${styles.lifeTabButton} ${activeLifeTab === 'travel' ? styles.activeTab : ''}`}
+                    onClick={() => handleLifeTabClick('travel')}
+                  >
+                    Travel
+                  </button>
+                  <button
+                    className={`${styles.lifeTabButton} ${activeLifeTab === 'art' ? styles.activeTab : ''}`}
+                    onClick={() => handleLifeTabClick('art')}
+                  >
+                    Art
+                  </button>
+                  <button
+                    className={`${styles.lifeTabButton} ${activeLifeTab === 'other' ? styles.activeTab : ''}`}
+                    onClick={() => handleLifeTabClick('other')}
+                  >
+                    Other
+                  </button>
+                </div>
 
+                {/* Life 内容区域 */}
                 <div ref={lifeContentAreaRef} className={styles.lifeContentArea}>
+                  {/* Game Tab 内容 */}
                   <div ref={lifeGameTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'game' ? styles.activeContent : ''}`}>
                     <div className={styles.gameGrid}>
                       {gameData.map(game => (
                         <ProjectCard 
                           key={game.id} 
                           project={game} 
-                          onClick={handleLifeItemClick} // <-- Pass handler directly
+                          onClick={handleLifeItemClick} // 直接传递 handler
                         />
                       ))}
                     </div>
-                    {/* --- ADD Small Game Cards --- */}
+                    {/* 小游戏卡片 */}
                     <h4 className={styles.subSectionTitle}>还有这些也玩 / Also Play These</h4>
                     <div className={styles.smallGameGrid}>
                       {
@@ -2252,42 +2173,45 @@ export default function Home() {
                         ))
                       }
                     </div>
-                    {/* --- END ADD --- */}
                   </div>
+                  {/* Travel Tab 内容 */}
                   <div ref={lifeTravelTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'travel' ? styles.activeContent : ''}`}>
                     <div className={styles.travelGrid}>
                       {travelData.map(place => (
                         <ProjectCard 
                           key={place.id} 
                           project={place} 
-                          onClick={handleLifeItemClick} // <-- Pass handler directly
+                          onClick={handleLifeItemClick} // 直接传递 handler
                         />
                       ))}
                     </div>
                   </div>
+                  {/* Art Tab 内容 */}
                   <div ref={lifeArtTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'art' ? styles.activeContent : ''}`}>
                     <div className={styles.compactTextContainer}>
                     <p>艺术是个好东西，音乐、绘画、设计还是电影我都喜欢，可回想起来能做的能说的却很少，或许我可以晚点再写...</p>
                 </div>
                   </div>
+                  {/* Other Tab 内容 */}
                   <div ref={lifeOtherTabRef} className={`${styles.lifeTabContent} ${activeLifeTab === 'other' ? styles.activeContent : ''} ${styles.compactTabContent}`}>
-                    {/* --- ADD rendering for otherData --- */}
-                    <div className={styles.gameGrid}> {/* Reuse gameGrid style */}
+                    {/* 渲染 otherData */}
+                    <div className={styles.gameGrid}> 
                       {otherData.map(item => (
                         <ProjectCard 
                           key={item.id} 
                           project={item} 
-                          onClick={handleLifeItemClick} // <-- Pass handler directly
+                          onClick={handleLifeItemClick} // 直接传递 handler
                         />
                       ))}
                     </div>
-                    {/* --- END ADD --- */}
-              </div>
+                  </div>
                 </div>
               </div>
 
-              <div id="contact-section" ref={contactSectionRef} className={`${styles.contentSection} ${styles.contactSection}`}> {/* <-- ADD Ref */} 
+              {/* Contact 区块 */}
+              <div id="contact-section" ref={contactSectionRef} className={`${styles.contentSection} ${styles.contactSection}`}> 
                 <h2>CONTACT</h2>
+                {/* 雷达显示 */}
                 <div className={styles.radarDisplay}>
                   <div className={styles.scanner}></div>
                   <div className={`${styles.radarRipple} ${styles.ripple1}`}></div>
@@ -2296,6 +2220,7 @@ export default function Home() {
                   <div className={`${styles.radarRipple} ${styles.radarRippleSmall} ${styles.smallRipple3}`}></div>
                 </div>
 
+                {/* 邮箱复制按钮 */}
                 <button
                   type="button"
                   className={`${styles.logItem} ${styles.radarContact1}`}
@@ -2310,6 +2235,7 @@ export default function Home() {
                   <span className={styles.emailText}>rainmorime@qq.com</span>
                   {isEmailCopied && <span className={styles.copyFeedback}>Copied!</span>}
                 </button>
+                {/* GitHub 链接 */}
                 <div className={`${styles.logItem} ${styles.radarContact2}`}>
                     <a href="https://github.com/RainMorime" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
                       <div className={styles.logIconContainer}>
@@ -2320,6 +2246,7 @@ export default function Home() {
                       <div className={styles.contactIconRipple}></div>
                     </a>
                 </div>
+                {/* Bilibili 链接 */}
                 <div className={`${styles.logItem} ${styles.radarContact3}`}>
                     <a href="https://space.bilibili.com/28913719" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
                       <div className={styles.logIconContainer}>
@@ -2333,22 +2260,21 @@ export default function Home() {
                       <div className={styles.contactIconRipple}></div>
                     </a>
                 </div>
-                {/* --- ADD STEAM ICON --- */}
+                {/* Steam 链接 */}
                 <div className={`${styles.logItem} ${styles.radarContact4}`}>
                     <a href="https://steamcommunity.com/id/RainMorime/" target="_blank" rel="noopener noreferrer" className={styles.logLink}>
                       <div className={styles.logIconContainer}>
-                           {/* --- Use new inline Steam SVG with currentColor --- */}
+                           {/* Steam SVG */}
                            <svg className={styles.logIcon} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                              <path fill="currentColor" d="M15.974 0c-8.401 0-15.292 6.479-15.943 14.714l8.573 3.547c0.729-0.495 1.604-0.786 2.552-0.786 0.083 0 0.167 0.005 0.25 0.005l3.813-5.521v-0.078c0-3.328 2.703-6.031 6.031-6.031s6.036 2.708 6.036 6.036c0 3.328-2.708 6.031-6.036 6.031h-0.135l-5.438 3.88c0 0.073 0.005 0.141 0.005 0.214 0 2.5-2.021 4.526-4.521 4.526-2.177 0-4.021-1.563-4.443-3.635l-6.135-2.542c1.901 6.719 8.063 11.641 15.391 11.641 8.833 0 15.995-7.161 15.995-16s-7.161-16-15.995-16zM10.052 24.281l-1.964-0.813c0.349 0.724 0.953 1.328 1.755 1.667 1.729 0.719 3.724-0.104 4.443-1.833 0.349-0.844 0.349-1.76 0.005-2.599-0.344-0.844-1-1.495-1.839-1.844-0.828-0.349-1.719-0.333-2.5-0.042l2.026 0.839c1.276 0.536 1.88 2 1.349 3.276s-2 1.88-3.276 1.349zM25.271 11.875c0-2.214-1.802-4.021-4.016-4.021-2.224 0-4.021 1.807-4.021 4.021 0 2.219 1.797 4.021 4.021 4.021 2.214 0 4.016-1.802 4.016-4.021zM18.245 11.87c0-1.672 1.349-3.021 3.016-3.021s3.026 1.349 3.026 3.021c0 1.667-1.359 3.021-3.026 3.021s-3.016-1.354-3.016-3.021z"/>
                            </svg>
-                           {/* --- End new Steam SVG --- */}
                       </div>
                       <div className={styles.contactIconRipple}></div>
                     </a>
                 </div>
-                {/* --- END STEAM ICON --- */}
               </div>
 
+              {/* About 区块 */}
               <div id="about-section" ref={aboutSectionRef} className={`${styles.contentSection} ${styles.aboutSection}`}> 
                 <Noise />
                 <div ref={aboutContentRef}>
@@ -2369,6 +2295,7 @@ export default function Home() {
                     </a> 2025-PRESENT © RainMorime
                   </div>
                 </div>
+                {/* 二维码 */}
                 <div className={styles.aboutImageContainer}>
                   <img 
                     src="/pictures/www.rainmorime.com.png" 
@@ -2379,12 +2306,11 @@ export default function Home() {
               </div>
             </div>
           )}
-          {/* --- END MODIFY --- */}
 
-          {/* Detail View Wrappers remain outside contentWrapper */}
-          {/* --- MODIFY: Conditionally render DetailViewWrappers --- */}
+          {/* 详情视图包装器 (条件渲染) */}
           {mainVisible && (
             <>
+              {/* Life 详情视图 */}
               <div 
                 className={`${styles.detailViewWrapper} ${activeSection === 'lifeDetail' ? styles.visible : styles.hidden}`}
               >
@@ -2395,6 +2321,7 @@ export default function Home() {
                 )}
               </div>
 
+              {/* Work 详情视图 */}
               <div 
                 className={`${styles.detailViewWrapper} ${activeSection === 'workDetail' ? styles.visible : styles.hidden}`}
               >
@@ -2405,6 +2332,7 @@ export default function Home() {
                 )}
               </div>
 
+              {/* Experience 详情视图 */}
               <div 
                 className={`${styles.detailViewWrapper} ${activeSection === 'experienceDetail' ? styles.visible : styles.hidden}`}
               >
@@ -2415,7 +2343,7 @@ export default function Home() {
                 )}
               </div>
 
-              {/* Blog详情视图 */}
+              {/* Blog 详情视图 */}
               <div 
                 className={`${styles.detailViewWrapper} ${activeSection === 'blogDetail' ? styles.visible : styles.hidden}`}
               >
@@ -2427,13 +2355,11 @@ export default function Home() {
               </div>
             </>
           )}
-          {/* --- END MODIFY --- */}
 
-          {/* 添加独立的Blog视图容器 */}
-          {/* --- MODIFY: Conditionally render BlogViewWrapper --- */}
+          {/* Blog 视图容器 (条件渲染) */}
           {mainVisible && (
             <div 
-              ref={blogViewWrapperRef} // <-- Assign the ref here
+              ref={blogViewWrapperRef} 
               className={`${styles.blogViewWrapper} ${activeSection === 'blog' ? styles.visible : styles.hidden}`}
             >
               <BlogView 
@@ -2441,7 +2367,6 @@ export default function Home() {
               />
             </div>
           )}
-          {/* --- END MODIFY --- */}
         </>
       )}
     </div>

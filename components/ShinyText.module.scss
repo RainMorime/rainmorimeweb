@@ -1,30 +1,34 @@
 .shinyText {
-  color: #b5b5b5a4; /* Adjust this color to change intensity/style */
+  color: #b5b5b5a4; /* 文本基础颜色 (带透明度) */
+  /* 使用线性渐变创建高光效果 */
   background: linear-gradient(
     120deg,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0) 60%
+    rgba(255, 255, 255, 0) 40%,    /* 渐变开始 (透明) */
+    rgba(255, 255, 255, 0.8) 50%, /* 渐变中间 (高亮白色) */
+    rgba(255, 255, 255, 0) 60%     /* 渐变结束 (透明) */
   );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  display: inline-block;
-  animation: shine 5s linear infinite;
+  background-size: 200% 100%; /* 背景尺寸放大，以便移动产生动画效果 */
+  -webkit-background-clip: text; /* 将背景裁剪为文字形状 (兼容 Webkit) */
+  background-clip: text;         /* 将背景裁剪为文字形状 */
+  display: inline-block;         /* 使背景裁剪生效 */
+  animation: shine 5s linear infinite; /* 应用名为 'shine' 的动画 */
+  /* 继承父元素的字体相关样式 */
   font-family: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
 }
 
+/* 闪光动画定义 */
 @keyframes shine {
   0% {
-    background-position: 100%;
+    background-position: 100%; /* 动画开始时，高光在右侧外部 */
   }
   100% {
-    background-position: -100%;
+    background-position: -100%; /* 动画结束时，高光移动到左侧外部 */
   }
 }
 
+/* 禁用动画时的样式 */
 .shinyText.disabled {
-  animation: none;
+  animation: none; /* 移除动画 */
 } 

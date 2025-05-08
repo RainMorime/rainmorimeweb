@@ -3,16 +3,16 @@ import styles from '../styles/LifeDetailView.module.scss';
 import Lightbox from './Lightbox';
 
 const LifeDetailView = ({ item }) => {
-  if (!item) return null; // Don't render if no item is selected
+  if (!item) return null; // 如果没有选中项，则不渲染
 
   const { title, description, tech, imageUrl, articleContent, galleryImages } = item;
-  const imageStyle = imageUrl ? { backgroundImage: `url(${imageUrl})` } : {};
+  const imageStyle = imageUrl ? { backgroundImage: `url(${imageUrl})` } : {}; // 主图背景样式
 
-  // Split content into paragraphs based on double newline
+  // 根据双换行符分割文章内容为段落
   const paragraphs = articleContent ? articleContent.split('\n\n') : [];
   
-  // Determine which images to use for the gallery and lightbox
-  // Use item.galleryImages if available, otherwise fallback (e.g., for Minecraft)
+  // 确定用于画廊和灯箱的图片数据源
+  // 优先使用 item.galleryImages，否则根据 item.id 提供备用图片 (例如 Minecraft)
   const imagesForGallery = galleryImages && galleryImages.length > 0 
     ? galleryImages 
     : (item.id === 'mc' ? [
@@ -20,88 +20,77 @@ const LifeDetailView = ({ item }) => {
         { src: '/pictures/Minecraft/MC2.png'},
         { src: '/pictures/Minecraft/yh.jpg', caption: '营火服务器图标' },
         { src: '/pictures/Minecraft/MC2025.png', caption: 'MC大家庭2025合照' }
-      ] : []); // Default to empty array if no specific gallery or fallback
+      ] : []); // 若无特定画廊数据或备用数据，则默认为空数组
 
-  // --- Add State for Lightbox --- 
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [currentLightboxImageIndex, setCurrentLightboxImageIndex] = useState(0);
-  const [lightboxImageObject, setLightboxImageObject] = useState(null); // <-- State for lightbox image object
+  // 灯箱状态管理
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false); // 灯箱是否打开
+  const [currentLightboxImageIndex, setCurrentLightboxImageIndex] = useState(0); // 当前灯箱图片索引
+  const [lightboxImageObject, setLightboxImageObject] = useState(null); // 传递给灯箱的图片对象 (包含动态标题)
 
-  // Function to get the dynamic caption for WA images
+  // 获取特定图片在特定 Life Item (如 WA, physical-games, qinghai) 中的动态图片说明
   const getDynamicCaption = (imageSrc) => {
-    if (item.id !== 'wa') return null;
-    switch (imageSrc) {
-      case '/pictures/WHITE_ALBUM/w15.jpg': return '理奈放弃自己的偶像事业后与冬弥来到海边';
-      case '/pictures/WHITE_ALBUM/w18.jpg': return '小夜子和冬弥相互依偎';
-      case '/pictures/WHITE_ALBUM/w16.jpg': return '遥';
-      case '/pictures/WHITE_ALBUM/w20.jpg': return '弥生';
-      case '/pictures/WHITE_ALBUM/w3.jpg': return '小夜子名场面';
-      case '/pictures/WHITE_ALBUM/w12.jpg': return '理奈和由绮的争执';
-      default: return null;
+    if (item.id === 'wa') { // 白色相簿 (WA)
+      switch (imageSrc) {
+        case '/pictures/WHITE_ALBUM/w15.jpg': return '理奈放弃自己的偶像事业后与冬弥来到海边';
+        case '/pictures/WHITE_ALBUM/w18.jpg': return '小夜子和冬弥相互依偎';
+        case '/pictures/WHITE_ALBUM/w16.jpg': return '遥';
+        case '/pictures/WHITE_ALBUM/w20.jpg': return '弥生';
+        case '/pictures/WHITE_ALBUM/w3.jpg': return '小夜子名场面';
+        case '/pictures/WHITE_ALBUM/w12.jpg': return '理奈和由绮的争执';
+        default: return null;
+      }
+    } else if (item.id === 'physical-games') { // 实体游戏收藏
+      if (imageSrc === '/pictures/collection/SC13.jpg') return 'Minecraft黑胶唱片';
+      if (imageSrc === '/pictures/collection/SC7.jpg') return '《樱之诗》实体版';
+    } else if (item.id === 'qinghai') { // 青海旅行
+      if (imageSrc === '/images/travel/qinghai/QH5.jpg') return '凌晨的坎布拉';
+      if (imageSrc === '/images/travel/qinghai/QH6.jpg') return '我俩在黑夜打着手电筒交替前行';
+      if (imageSrc === '/images/travel/qinghai/QH12.jpg') return '青海湖';
+      if (imageSrc === '/images/travel/qinghai/QH18.jpg') return '落日下的茶卡盐湖';
+      if (imageSrc === '/images/travel/qinghai/QH36.jpg') return '岗什卡脚下的信号塔';
+      if (imageSrc === '/images/travel/qinghai/QH40.jpg') return '风雪中的岗什卡';
     }
+    return null;
   };
 
+  // 打开灯箱
   const openLightbox = (index) => {
     if (index >= 0 && index < imagesForGallery.length) {
       const baseImage = imagesForGallery[index];
-      // --- MODIFY: Add check for physical-games captions --- 
-      let dynamicCaption = null;
-      if (item.id === 'wa') { // Existing WA check
-        dynamicCaption = getDynamicCaption(baseImage.src);
-      } else if (item.id === 'physical-games') { // New check for physical games
-        if (baseImage.src === '/pictures/collection/SC13.jpg') {
-          dynamicCaption = 'Minecraft黑胶唱片';
-        } else if (baseImage.src === '/pictures/collection/SC7.jpg') {
-          dynamicCaption = '《樱之诗》实体版';
-        }
-      } else if (item.id === 'qinghai') { // <-- ADD Check for Qinghai
-        // Add captions for specific Qinghai images
-        if (baseImage.src === '/images/travel/qinghai/QH5.jpg') {
-            dynamicCaption = '凌晨的坎布拉';
-        } else if (baseImage.src === '/images/travel/qinghai/QH6.jpg') {
-            dynamicCaption = '我俩在黑夜打着手电筒交替前行';
-        } else if (baseImage.src === '/images/travel/qinghai/QH12.jpg') {
-            dynamicCaption = '青海湖';
-        } else if (baseImage.src === '/images/travel/qinghai/QH18.jpg') {
-            dynamicCaption = '落日下的茶卡盐湖';
-        } else if (baseImage.src === '/images/travel/qinghai/QH36.jpg') {
-            dynamicCaption = '岗什卡脚下的信号塔';
-        } else if (baseImage.src === '/images/travel/qinghai/QH40.jpg') {
-            dynamicCaption = '风雪中的岗什卡';
-        }
-      }
-      // --- END MODIFY ---
+      const dynamicCaption = getDynamicCaption(baseImage.src); // 获取动态图片说明
       
       const imageForLightbox = { 
         ...baseImage, 
-        caption: dynamicCaption || baseImage.caption // Use dynamic caption if available, else original
+        caption: dynamicCaption || baseImage.caption // 优先使用动态说明
       };
       
-      setCurrentLightboxImageIndex(index); // Still needed for index tracking
-      setLightboxImageObject(imageForLightbox); // Set the object with correct caption
+      setCurrentLightboxImageIndex(index);
+      setLightboxImageObject(imageForLightbox); // 设置包含正确说明的图片对象
       setIsLightboxOpen(true);
     }
   };
 
+  // 关闭灯箱
   const closeLightbox = () => {
     setIsLightboxOpen(false);
-    setLightboxImageObject(null); // Clear the object
+    setLightboxImageObject(null); // 清除灯箱图片对象
   };
 
+  // 显示下一张灯箱图片 (重新调用 openLightbox 以确保获取正确的动态说明)
   const showNextImage = () => {
     const nextIndex = (currentLightboxImageIndex + 1) % imagesForGallery.length;
-    openLightbox(nextIndex); // Re-call openLightbox to get correct caption
+    openLightbox(nextIndex);
   };
 
+  // 显示上一张灯箱图片 (同上)
   const showPrevImage = () => {
     const prevIndex = (currentLightboxImageIndex - 1 + imagesForGallery.length) % imagesForGallery.length;
-    openLightbox(prevIndex); // Re-call openLightbox to get correct caption
+    openLightbox(prevIndex);
   };
-  // --- End State --- 
 
   return (
     <div className={styles.detailContainer}>
-      {/* REMOVE THE BACK BUTTON
+      {/* 返回按钮 (已移除) 
       <button className={styles.backButton} onClick={onBack}>
         ← BACK
       </button>
@@ -112,100 +101,65 @@ const LifeDetailView = ({ item }) => {
       <div className={styles.detailContent}>
           <div className={styles.detailImageContainer}>
               <div className={styles.detailImage} style={imageStyle}>
-                 {/* Optional: Placeholder if no image */} 
-                 {!imageUrl && <span>Image not available</span>} 
-                 {/* Add scanlines like ProjectCard? */} 
-                 <div className={styles.imageScanlineOverlay}></div> 
+                 {!imageUrl && <span>Image not available</span>} {/* 无主图时显示占位文本 */}
+                 <div className={styles.imageScanlineOverlay}></div> {/* 图片扫描线覆盖层 */}
               </div>
           </div>
 
           <div className={styles.detailText}>
               <p className={styles.detailDescription}>{description}</p>
               
-              {/* Render article content WITH interspersed images */} 
+              {/* 渲染文章内容，并在段落间插入图片/链接 */}
               {articleContent && (
                 <div className={styles.articleSection}>
                   {paragraphs.map((paragraph, index) => {
-                    let imagesToRenderAfter = []; // Array to hold images for this position
+                    let imagesToRenderAfter = []; // 存储在此段落后渲染的图片或链接对象
 
-                    // Specific logic for Monster Hunter
+                    // --- 特定 Life Item 的图片/链接插入逻辑 ---
+                    // 根据 item.id 和段落索引 (index) 决定插入哪些内容
+                    
+                    // 怪物猎人 (mh)
                     if (item.id === 'mh') {
-                      if (index === paragraphs.length - 1) { 
+                      if (index === paragraphs.length - 1) { // 最后一段后
                         const mh4Index = imagesForGallery.findIndex(img => img.src === '/pictures/Monster_Hunter/MH4.jpg');
-                        if (mh4Index !== -1) {
-                          imagesToRenderAfter.push({ info: imagesForGallery[mh4Index], lightboxIndex: mh4Index });
-                        }
-                        imagesToRenderAfter.push('separator');
-                        imagesToRenderAfter.push({
-                          type: 'link',
-                          href: 'https://www.bilibili.com/video/BV1n5aTebESo',
-                          text: '鏖战冰牙龙'
-                        });
-                        imagesToRenderAfter.push({
-                          type: 'link',
-                          href: 'https://www.bilibili.com/video/BV1uNapeDEcS',
-                          text: '初见冰呪龙'
-                        });
+                        if (mh4Index !== -1) imagesToRenderAfter.push({ info: imagesForGallery[mh4Index], lightboxIndex: mh4Index });
+                        imagesToRenderAfter.push('separator'); // 分隔符，用于后续渲染链接列表
+                        imagesToRenderAfter.push({ type: 'link', href: 'https://www.bilibili.com/video/BV1n5aTebESo', text: '鏖战冰牙龙' });
+                        imagesToRenderAfter.push({ type: 'link', href: 'https://www.bilibili.com/video/BV1uNapeDEcS', text: '初见冰呪龙' });
                       }
                     } 
-                    // Fallback logic for Minecraft - RESTORE image insertion
+                    // Minecraft (mc)
                     else if (item.id === 'mc') { 
-                      // Add image for this paragraph index if it exists
-                      if (imagesForGallery[index]) {
+                      if (imagesForGallery[index]) { // 每个段落后尝试插入对应索引的图片
                          imagesToRenderAfter.push({ info: imagesForGallery[index], lightboxIndex: index });
                       }
-                      // ALSO add links after the very last paragraph
-                      if (index === paragraphs.length - 1) { 
+                      if (index === paragraphs.length - 1) { // 最后一段后加链接
                           imagesToRenderAfter.push('separator'); 
-                          imagesToRenderAfter.push({
-                            type: 'link',
-                            href: 'https://www.bilibili.com/video/BV13G411D7Gq',
-                            text: '营火服务器实况'
-                          });
-                          imagesToRenderAfter.push({
-                            type: 'link',
-                            href: 'https://www.bilibili.com/video/BV1ce411D7dG',
-                            text: '营火高级幻岛'
-                          });
+                          imagesToRenderAfter.push({ type: 'link', href: 'https://www.bilibili.com/video/BV13G411D7Gq', text: '营火服务器实况' });
+                          imagesToRenderAfter.push({ type: 'link', href: 'https://www.bilibili.com/video/BV1ce411D7dG', text: '营火高级幻岛' });
                       }
                     } 
-                    // --- ADD Jilin Image Insertion Logic --- 
+                    // 吉林 (jilin)
                     else if (item.id === 'jilin') {
-                      if (index === 3) { // After the 4th paragraph (index 3)
-                        // Add JL1 insertion with caption here
+                      if (index === 3) { // 第4段后
                         const jilin1Index = imagesForGallery.findIndex(img => img.src === '/images/travel/jilin/JL1.jpg');
-                        if (jilin1Index !== -1) {
-                          imagesToRenderAfter.push({ 
-                            info: { ...imagesForGallery[jilin1Index], caption: '高考结束那天，黑云分界线如刀切一般，太阳也正展现着它的曙光' }, 
-                            lightboxIndex: jilin1Index 
-                          });
-                        }
-                      } else if (index === 4) { // After the 5th paragraph (index 4)
-                        // Keep JL5 insertion
+                        if (jilin1Index !== -1) imagesToRenderAfter.push({ info: { ...imagesForGallery[jilin1Index], caption: '高考结束那天，黑云分界线如刀切一般，太阳也正展现着它的曙光' }, lightboxIndex: jilin1Index });
+                      } else if (index === 4) { // 第5段后
                         const jilin5Index = imagesForGallery.findIndex(img => img.src === '/images/travel/jilin/JL5.jpg');
-                        if (jilin5Index !== -1) {
-                          imagesToRenderAfter.push({ info: imagesForGallery[jilin5Index], lightboxIndex: jilin5Index });
-                        }
-                        // REMOVE JL1 insertion from here
+                        if (jilin5Index !== -1) imagesToRenderAfter.push({ info: imagesForGallery[jilin5Index], lightboxIndex: jilin5Index });
                       }
                     }
-                    // --- END ADD ---
-                    // --- ADD Qinghai Image Insertion Logic --- 
+                    // 青海 (qinghai)
                     else if (item.id === 'qinghai') {
-                      let targetImageSrc = null;
-                      let targetCaption = null;
-                      let isRow = false;
-                      let secondTargetImageSrc = null;
-                      let secondTargetCaption = null;
-                      let multipleImages = []; // For last paragraph
+                      let targetImageSrc = null, targetCaption = null, isRow = false;
+                      let secondTargetImageSrc = null, secondTargetCaption = null;
+                      let multipleImages = [];
 
-                      if (index === 1) { // After 2nd paragraph
+                      if (index === 1) { // 第2段后 (图片行)
                         isRow = true;
-                        targetImageSrc = '/images/travel/qinghai/QH5.jpg';
-                        targetCaption = '凌晨的坎布拉';
-                        secondTargetImageSrc = '/images/travel/qinghai/QH6.jpg';
-                        secondTargetCaption = '我俩在黑夜打着手电筒交替前行';
-                      } else if (index === 4) { // After 5th (last) paragraph
+                        targetImageSrc = '/images/travel/qinghai/QH5.jpg'; targetCaption = '凌晨的坎布拉';
+                        secondTargetImageSrc = '/images/travel/qinghai/QH6.jpg'; secondTargetCaption = '我俩在黑夜打着手电筒交替前行';
+                      } else if (index === 4) { // 第5段 (最后一段) 后 (多图堆叠)
                         multipleImages = [
                           { src: '/images/travel/qinghai/QH12.jpg', caption: '青海湖' },
                           { src: '/images/travel/qinghai/QH18.jpg', caption: '落日下的茶卡盐湖' },
@@ -216,116 +170,73 @@ const LifeDetailView = ({ item }) => {
 
                       if (targetImageSrc) {
                         const imgIndex = imagesForGallery.findIndex(img => img.src === targetImageSrc);
-                        if (imgIndex !== -1) {
-                          imagesToRenderAfter.push({ info: { ...imagesForGallery[imgIndex], caption: targetCaption }, lightboxIndex: imgIndex });
-                        }
+                        if (imgIndex !== -1) imagesToRenderAfter.push({ info: { ...imagesForGallery[imgIndex], caption: targetCaption }, lightboxIndex: imgIndex });
                       }
                       if (isRow && secondTargetImageSrc) {
                         const secondImgIndex = imagesForGallery.findIndex(img => img.src === secondTargetImageSrc);
-                        if (secondImgIndex !== -1) {
-                          imagesToRenderAfter.push({ info: { ...imagesForGallery[secondImgIndex], caption: secondTargetCaption }, lightboxIndex: secondImgIndex });
-                        }
+                        if (secondImgIndex !== -1) imagesToRenderAfter.push({ info: { ...imagesForGallery[secondImgIndex], caption: secondTargetCaption }, lightboxIndex: secondImgIndex });
                       }
                       if (multipleImages.length > 0) {
                         multipleImages.forEach(imgInfo => {
                           const imgIndex = imagesForGallery.findIndex(img => img.src === imgInfo.src);
-                          if (imgIndex !== -1) {
-                            imagesToRenderAfter.push({ info: { ...imagesForGallery[imgIndex], caption: imgInfo.caption }, lightboxIndex: imgIndex });
-                          }
+                          if (imgIndex !== -1) imagesToRenderAfter.push({ info: { ...imagesForGallery[imgIndex], caption: imgInfo.caption }, lightboxIndex: imgIndex });
                         });
                       }
                     }
-                    // --- END ADD ---
-                    // --- ADD Korea Image Insertion Logic ---
+                    // 韩国 (korea)
                     else if (item.id === 'korea') {
-                      if (index === 1) { // After 2nd paragraph - Change image to HG3
-                        const hg3Index = imagesForGallery.findIndex(img => img.src === '/images/travel/hanguo/HG3.jpg'); // Find HG3 now
-                        if (hg3Index !== -1) {
-                          imagesToRenderAfter.push({ 
-                            info: { ...imagesForGallery[hg3Index], caption: '我和父母一起吃烤肉' }, // Use HG3 index, keep caption
-                            lightboxIndex: hg3Index 
-                          });
-                        }
+                      if (index === 1) { // 第2段后
+                        const hg3Index = imagesForGallery.findIndex(img => img.src === '/images/travel/hanguo/HG3.jpg');
+                        if (hg3Index !== -1) imagesToRenderAfter.push({ info: { ...imagesForGallery[hg3Index], caption: '我和父母一起吃烤肉' }, lightboxIndex: hg3Index });
                       }
                     }
-                    // --- END ADD ---
-                    // --- ADD Touhou Image Insertion Logic ---
+                    // 东方凭依华 (thif)
                     else if (item.id === 'thif') {
-                      if (index === paragraphs.length - 1) { // After the last paragraph
+                      if (index === paragraphs.length - 1) { // 最后一段后
                         const cg1Index = imagesForGallery.findIndex(img => img.src === '/pictures/Touhou/CG1.png');
-                        if (cg1Index !== -1) {
-                          imagesToRenderAfter.push({ info: imagesForGallery[cg1Index], lightboxIndex: cg1Index });
-                        }
+                        if (cg1Index !== -1) imagesToRenderAfter.push({ info: imagesForGallery[cg1Index], lightboxIndex: cg1Index });
                       }
                     }
-                    // --- END ADD ---
-                    // --- MODIFY Wukong Logic --- 
+                    // 黑神话：悟空 (bmwk)
                     else if (item.id === 'bmwk') { 
-                      if (index === paragraphs.length - 1) { 
-                        // Just process the paragraph normally, links added after
+                      if (index === paragraphs.length - 1) { // 最后一段后
                         imagesToRenderAfter.push('separator');
-                        imagesToRenderAfter.push({
-                          type: 'link',
-                          href: 'https://www.bilibili.com/video/BV1bKtXeoET6',
-                          text: '实体版开箱' // Text for the link item
-                        });
+                        imagesToRenderAfter.push({ type: 'link', href: 'https://www.bilibili.com/video/BV1bKtXeoET6', text: '实体版开箱' });
                       }
                     }
-                    // --- END MODIFY --- 
-                    // --- ADD Titanfall Image Insertion Logic ---
+                    // 泰坦陨落 (titanfall)
                     else if (item.id === 'titanfall') {
-                      if (index === paragraphs.length - 1) { // After the last paragraph
+                      if (index === paragraphs.length - 1) { // 最后一段后
                         const imgIndex = imagesForGallery.findIndex(img => img.src === '/pictures/Titalfall/titan4.jpg');
-                        if (imgIndex !== -1) {
-                          imagesToRenderAfter.push({ info: imagesForGallery[imgIndex], lightboxIndex: imgIndex });
-                        }
+                        if (imgIndex !== -1) imagesToRenderAfter.push({ info: imagesForGallery[imgIndex], lightboxIndex: imgIndex });
                       }
                     }
-                    // --- END ADD ---
-                    // --- ADD Physical Games Collection Image Insertion Logic ---
+                    // 实体游戏收藏 (physical-games)
                     else if (item.id === 'physical-games') {
-                      if (index === 1) { // After 2nd paragraph ("...三百块...")
+                      if (index === 1) { // 第2段后
                         const sc13Index = imagesForGallery.findIndex(img => img.src === '/pictures/collection/SC13.jpg');
-                        if (sc13Index !== -1) {
-                          imagesToRenderAfter.push({ 
-                            info: { ...imagesForGallery[sc13Index], caption: 'Minecraft黑胶唱片' }, 
-                            lightboxIndex: sc13Index 
-                          });
-                        }
-                      } else if (index === paragraphs.length - 1) { // After last paragraph ("...樱之诗》")
+                        if (sc13Index !== -1) imagesToRenderAfter.push({ info: { ...imagesForGallery[sc13Index], caption: 'Minecraft黑胶唱片' }, lightboxIndex: sc13Index });
+                      } else if (index === paragraphs.length - 1) { // 最后一段后
                         const sc7Index = imagesForGallery.findIndex(img => img.src === '/pictures/collection/SC7.jpg');
-                        if (sc7Index !== -1) {
-                          imagesToRenderAfter.push({ 
-                            info: { ...imagesForGallery[sc7Index], caption: '《樱之诗》实体版' }, 
-                            lightboxIndex: sc7Index 
-                          });
-                        }
+                        if (sc7Index !== -1) imagesToRenderAfter.push({ info: { ...imagesForGallery[sc7Index], caption: '《樱之诗》实体版' }, lightboxIndex: sc7Index });
                       }
                     }
-                    // --- END ADD ---
-                    // Specific logic for WHITE ALBUM
+                    // 白色相簿 (wa)
                     else if (item.id === 'wa') {
-                      let targetImageSrc = null;
-                      let targetCaption = null;
-                      let isRow = false;
-                      let secondTargetImageSrc = null;
-                      let secondTargetCaption = null; // Add caption for the second image in row
+                      let targetImageSrc = null, targetCaption = null, isRow = false;
+                      let secondTargetImageSrc = null, secondTargetCaption = null;
 
-                      if (index === 0) { // After 1st paragraph
+                      if (index === 0) { // 第1段后
                         targetImageSrc = '/pictures/WHITE_ALBUM/w1.jpg';
-                      } else if (index === 3) { // After 4th paragraph
-                        targetImageSrc = '/pictures/WHITE_ALBUM/w15.jpg';
-                        targetCaption = '理奈放弃自己的偶像事业后与冬弥来到海边';
-                      } else if (index === 5) { // After 6th paragraph (previously 5th)
-                        targetImageSrc = '/pictures/WHITE_ALBUM/w18.jpg';
-                        targetCaption = '小夜子和冬弥相互依偎';
-                      } else if (index === 6) { // After 7th paragraph (previously 6th) - ROW
+                      } else if (index === 3) { // 第4段后
+                        targetImageSrc = '/pictures/WHITE_ALBUM/w15.jpg'; targetCaption = '理奈放弃自己的偶像事业后与冬弥来到海边';
+                      } else if (index === 5) { // 第6段后
+                        targetImageSrc = '/pictures/WHITE_ALBUM/w18.jpg'; targetCaption = '小夜子和冬弥相互依偎';
+                      } else if (index === 6) { // 第7段后 (图片行)
                         isRow = true;
-                        targetImageSrc = '/pictures/WHITE_ALBUM/w16.jpg';
-                        targetCaption = '遥'; // Caption for w16
-                        secondTargetImageSrc = '/pictures/WHITE_ALBUM/w20.jpg';
-                        secondTargetCaption = '弥生'; // Caption for w20
-                      } else if (index === 8) { // After 9th paragraph
+                        targetImageSrc = '/pictures/WHITE_ALBUM/w16.jpg'; targetCaption = '遥';
+                        secondTargetImageSrc = '/pictures/WHITE_ALBUM/w20.jpg'; secondTargetCaption = '弥生';
+                      } else if (index === 8) { // 第9段后
                         targetImageSrc = '/pictures/WHITE_ALBUM/w2.jpg';
                       }
 
@@ -339,35 +250,32 @@ const LifeDetailView = ({ item }) => {
                       if (isRow && secondTargetImageSrc) {
                          const secondImgIndex = imagesForGallery.findIndex(img => img.src === secondTargetImageSrc);
                          if (secondImgIndex !== -1) {
-                           // Use provided caption or default from gallery for the second image
                            const caption = secondTargetCaption || imagesForGallery[secondImgIndex].caption;
                            imagesToRenderAfter.push({ info: { ...imagesForGallery[secondImgIndex], caption }, lightboxIndex: secondImgIndex });
                          }
                       }
                     }
+                    // --- 结束特定 Life Item 逻辑 ---
                     
-                    // Render paragraph or blockquote (existing logic)
-                    const isStrayQuote = item.id === 'stray' && paragraph.includes('——《我是猫》，夏目漱石');
+                    const isStrayQuote = item.id === 'stray' && paragraph.includes('——《我是猫》，夏目漱石'); // Stray 项目的特殊引用块处理
 
-                    // Start Fragment
                     return (
                       <React.Fragment key={index}>
-                        {/* Render Paragraph or Blockquote */}
+                        {/* 渲染段落文本或引用块 */}
                         {isStrayQuote ? (
                           <blockquote key={`${index}-text`} className={styles.articleBlockquote}>
-                            {paragraph.split('\n').map((line, lineIndex) => <span key={lineIndex} style={{ display: 'block' }}>{line}</span>)} 
+                            {paragraph.split('\n').map((line, lineIndex) => <span key={lineIndex} style={{ display: 'block' }}>{line}</span>)}
                           </blockquote>
                         ) : (
                           <p key={`${index}-text`}>{paragraph}</p>
                         )}
 
-                        {/* Render Images/Links After Paragraph */} 
+                        {/* 在段落后渲染图片和链接 */}
                         {imagesToRenderAfter.length > 0 && (
                           <>
-                            {/* Render Row Images if applicable */}
-                            {(item.id === 'wa' && index === 6 || 
-                              item.id === 'qinghai' && index === 1) // <-- ADD Qinghai row condition 
-                             && imagesToRenderAfter.every(i => typeof i === 'object' && i.info) && imagesToRenderAfter.length === 2 && (
+                            {/* 渲染图片行 (若适用) */}
+                            {(item.id === 'wa' && index === 6 || item.id === 'qinghai' && index === 1) && 
+                             imagesToRenderAfter.every(i => typeof i === 'object' && i.info) && imagesToRenderAfter.length === 2 && (
                               <div className={styles.inlineImageRow} key={`${index}-img-row`}> 
                                 {imagesToRenderAfter.map(({ info, lightboxIndex }) => (
                                   <figure key={info.src} className={`${styles.articleImageFigure} ${styles.clickableFigure} ${styles.rowFigure}`} onClick={() => openLightbox(lightboxIndex)}>
@@ -378,10 +286,10 @@ const LifeDetailView = ({ item }) => {
                               </div>
                             )}
 
-                            {/* Render Stacked Images */}
+                            {/* 渲染堆叠图片 (排除已在行中渲染的) */}
                             {imagesToRenderAfter
                               .filter(renderItem => typeof renderItem === 'object' && renderItem.info && 
-                                     !(item.id === 'wa' && index === 6 || item.id === 'qinghai' && index === 1)) // <-- ADD Qinghai row condition exclusion
+                                     !(item.id === 'wa' && index === 6 || item.id === 'qinghai' && index === 1))
                               .map(({ info, lightboxIndex }, itemIndex) => (
                                 <figure key={info.src || `${index}-img-${itemIndex}`} className={`${styles.articleImageFigure} ${styles.clickableFigure}`} onClick={() => openLightbox(lightboxIndex)}>
                                   <img src={info.src} alt={info.caption || `${title} illustration`} className={styles.articleImage}/>
@@ -389,46 +297,39 @@ const LifeDetailView = ({ item }) => {
                                 </figure>
                               ))}
                             
-                            {/* Render Link List if separator exists */}
+                            {/* 如果存在分隔符 'separator', 则渲染链接列表 */}
                             {imagesToRenderAfter.includes('separator') && (
                               <div className={styles.articleLinkList} key={`${index}-link-list`}>
                                 {imagesToRenderAfter
                                   .filter(renderItem => typeof renderItem === 'object' && renderItem.type === 'link')
                                   .map(linkItem => (
                                     <div key={linkItem.href} className={styles.articleLinkItem}>
-                                      {/* --- MODIFY: Apply Icon Container and Ripple for Bilibili links --- */}
-                                      {linkItem.href.includes('bilibili.com') ? (
+                                      {linkItem.href.includes('bilibili.com') ? ( // Bilibili 链接特殊处理 (带图标和波纹)
                                         <span className={styles.iconLinkContainer}> 
                                           <a href={linkItem.href} target="_blank" rel="noopener noreferrer" className={styles.inlineIconLink} aria-label={linkItem.text}>
-                                            {/* --- Wrap SVG in a container --- */}
-                                            <span className={styles.inlineIconSvgContainer}> 
+                                            <span className={styles.inlineIconSvgContainer}> {/* SVG 图标容器 */} 
                                               <svg className={styles.inlineIcon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g><path fill="none" d="M0 0h24v24H0z"/><path fill="currentColor" d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768L17.08 5.996h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.166L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.18.199-.258l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.69-.56-1.25-1.25-1.25zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z"/></g></svg>
                                             </span>
-                                            {/* --- MOVE Text inside <a> tag --- */}
-                                            <span className={styles.inlineIconText}>{linkItem.text}</span> 
-                                            <div className={styles.iconRipple}></div> {/* Ripple remains outside the <a> but inside container */}
+                                            <span className={styles.inlineIconText}>{linkItem.text}</span> {/* 链接文本在 a 标签内 */}
+                                            <div className={styles.iconRipple}></div> {/* 点击波纹效果 */}
                                           </a>
-                                          {/* Text removed from here */}
-                                          {/* <span className={styles.articleLinkText}>{linkItem.text}</span> */}
                                         </span>
                                       ) : (
-                                        // Render standard link for non-Bilibili URLs
-                                        <a href={linkItem.href} target="_blank" rel="noopener noreferrer" className={styles.inlineLink}>{linkItem.text}</a>
+                                        <a href={linkItem.href} target="_blank" rel="noopener noreferrer" className={styles.inlineLink}>{linkItem.text}</a> // 普通链接
                                       )}
-                                      {/* --- END MODIFY --- */}
                                     </div>
                                   ))}
                               </div>
                             )}
-                          </> // Closing the outer fragment for images/links
+                          </> 
                         )}
-                      </React.Fragment> // Closing the main fragment for paragraph+images/links
+                      </React.Fragment>
                     );
                   })}
                 </div>
               )}
 
-              {/* --- Add Related Images Section --- */} 
+              {/* 相关图片缩略图展示区域 */}
               {imagesForGallery.length > 0 && (
                 <div className={styles.relatedImagesSection}>
                   <h4 className={styles.relatedImagesTitle}>图片</h4>
@@ -437,7 +338,7 @@ const LifeDetailView = ({ item }) => {
                       <button 
                         key={index} 
                         className={styles.thumbnailButton} 
-                        onClick={() => openLightbox(index)}
+                        onClick={() => openLightbox(index)} // 点击打开灯箱
                       >
                         <img 
                           src={img.src} 
@@ -449,8 +350,8 @@ const LifeDetailView = ({ item }) => {
                   </div>
                 </div>
               )}
-              {/* --- End Related Images --- */} 
 
+              {/* 技术标签展示区域 */}
               {tech && tech.length > 0 && (
                   <div className={styles.detailTechContainer}>
                        <span className={styles.techLabel}>Tags:</span> 
@@ -464,16 +365,15 @@ const LifeDetailView = ({ item }) => {
           </div>
       </div>
 
-      {/* --- Render Lightbox --- */} 
+      {/* 灯箱组件 (当 isLightboxOpen 为 true 且有图片对象时渲染) */}
       {isLightboxOpen && lightboxImageObject && (
         <Lightbox 
-          image={lightboxImageObject}
-          onClose={closeLightbox}
-          onNext={imagesForGallery.length > 1 ? showNextImage : null}
-          onPrev={imagesForGallery.length > 1 ? showPrevImage : null}
+          image={lightboxImageObject} // 传递包含正确标题的图片对象
+          onClose={closeLightbox} // 关闭回调
+          onNext={imagesForGallery.length > 1 ? showNextImage : null} // 下一张回调 (多于一张图时可用)
+          onPrev={imagesForGallery.length > 1 ? showPrevImage : null} // 上一张回调 (同上)
         />
       )}
-      {/* --- End Lightbox --- */} 
 
     </div>
   );

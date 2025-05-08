@@ -5,29 +5,28 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: var(--ark-dark-blue); */ /* Removed this line */
-  color: var(--ark-text); /* Use existing variable */
-  position: relative; /* Ensure content stays above background elements */
-  z-index: 5; /* Ensure content stays above background elements */
+  color: var(--ark-text); 
+  position: relative; 
+  z-index: 5; 
 }
 
 .mainContent {
   width: 100%;
-  max-width: 800px; /* Limit content width */
+  max-width: 800px; 
   text-align: center;
 }
 
 .pageTitle {
-  font-family: 'Dosis', sans-serif; /* Use existing font */
+  font-family: 'Dosis', sans-serif; 
   font-size: 2.5rem;
   font-weight: 300;
   margin-bottom: 1.5rem;
-  color: var(--ark-primary); /* Use existing variable */
+  color: var(--ark-primary); 
 }
 
 .placeholderText {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: var(--ark-text-secondary); /* Use existing variable */
+  color: var(--ark-text-secondary); 
   opacity: 0.8;
 } 

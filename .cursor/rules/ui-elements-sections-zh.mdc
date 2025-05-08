@@ -20,6 +20,10 @@ alwaysApply: false
     *   **Life (`.lifeSection`, `#life-section`):** 显示生活相关卡片 (`ProjectCard`)，包含 Game, Travel, Art, Other 标签页 (`.lifeTabButtons`)。Game 标签页下方还有额外的小游戏卡片列表 (`.smallGameGrid`)。进入 Life 详情页时，标签页按钮会通过 CSS (`.detailActive` 类控制) 淡出。
     *   **Contact (`.contactSection`, `#contact-section`):** 包含雷达显示和联系方式图标 (包括位置调整后的 Steam 图标 `.radarContact4`)。
     *   **About (`.aboutSection`, `#about-section`):** 包含网站信息和备案号。
+*   **Works/Life 内容区高度自适应:**
+    *   Works (`.workContentArea`) 和 Life (`.lifeContentArea`) 的父容器高度会根据当前激活的标签页内容 (`.workTabContent`, `.lifeTabContent`) 的实际高度 (`scrollHeight`) 动态调整。
+    *   此调整通过 `[pages/index.js](mdc:pages/index.js)` 中的 `useEffect` hook 实现，在 `activeLifeTab` 或 `activeWorkTab` 改变后，先将父容器高度设为 `auto`，然后通过 `setTimeout` 延迟获取子元素 `scrollHeight` 并设置父容器高度，以确保内容渲染完成。
+    *   样式上，`.lifeContentArea` 和 `.workContentArea` 的 `height` 设置为 `auto !important`，并添加了过渡效果。`.lifeTabContent` 和 `.workTabContent` 则通过 `display` 和 `opacity` 控制显隐切换。`.compactTabContent` 和 `.compactTextContainer` 样式类用于优化 Art 和 Other 标签页的布局，减少空白。
 *   **博客视图包裹器 (`.blogViewWrapper`):** 新增的独立视图区域，占据右半屏幕，类似于 Life 视图布局。包含 `BlogView` 组件和博客文章卡片 (`BlogPostCard`)。
 *   **全局 HUD (`.hudElement`):** 固定在屏幕四角的文本信息。
 *   **氛围组件:** `CustomCursor`, `RainMorimeEffect`, `Noise` 等。

@@ -1,6 +1,6 @@
 /* styles/BlogPostCard.module.scss */
 
-/* 长条形卡片样式 */
+// 博客卡片
 .card {
   position: relative;
   display: flex;
@@ -16,47 +16,50 @@
   box-sizing: border-box;
   overflow: hidden;
   cursor: pointer;
-  margin-bottom: 15px; /* 卡片间距 */
-  height: auto; /* 自适应高度 */
+  margin-bottom: 15px;
+  height: auto;
 
-  /* 边角装饰 */
-  &::before, &::after { 
+  // 装饰角标
+  &::before, &::after {
     content: '';
     position: absolute;
     width: 8px;
     height: 8px;
-    border-color: var(--ark-primary); 
+    border-color: var(--ark-primary);
     transition: border-color 0.3s ease;
   }
   &::before {
     top: 0;
     left: 0;
-    border-top: 1px solid; 
-    border-left: 1px solid; 
+    border-top: 1px solid;
+    border-left: 1px solid;
   }
   &::after {
     bottom: 0;
     right: 0;
-    border-bottom: 1px solid; 
-    border-right: 1px solid; 
+    border-bottom: 1px solid;
+    border-right: 1px solid;
   }
 
+  // 悬停效果
   &:hover {
     background-color: rgba(var(--ark-primary-rgb), 0.08);
-    border-color: var(--ark-primary); 
+    border-color: var(--ark-primary);
 
     &::before, &::after {
-      border-color: var(--ark-highlight-green); 
+      border-color: var(--ark-highlight-green);
     }
   }
 }
 
+// 卡片内容
 .cardContent {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
+// 卡片标题
 .cardTitle {
   font-family: 'Dosis', monospace;
   font-size: 1.2rem;
@@ -66,6 +69,7 @@
   letter-spacing: 0.5px;
 }
 
+// 卡片摘要
 .cardExcerpt {
   font-family: 'Dosis', sans-serif;
   font-size: 0.95rem;
@@ -80,26 +84,26 @@
   -webkit-box-orient: vertical;
 }
 
-/* 反色模式样式 */
+// 负色模式
 :global(.inverted) {
   .card {
     background-color: rgba(var(--ark-secondary-rgb), 0.04);
-    border-color: var(--ark-border); 
+    border-color: var(--ark-border);
     &::before, &::after {
-        border-color: var(--ark-primary); 
+      border-color: var(--ark-primary);
     }
-     &:hover {
-        background-color: rgba(var(--ark-primary-rgb), 0.1);
+    &:hover {
+      background-color: rgba(var(--ark-primary-rgb), 0.1);
+      border-color: var(--ark-highlight-pink);
+      &::before, &::after {
         border-color: var(--ark-highlight-pink);
-        &::before, &::after {
-          border-color: var(--ark-highlight-pink); 
-        }
-     }
+      }
+    }
   }
   .cardTitle {
-     color: var(--ark-primary);
+    color: var(--ark-primary);
   }
   .cardExcerpt {
-     color: var(--ark-text-secondary);
+    color: var(--ark-text-secondary);
   }
 } 

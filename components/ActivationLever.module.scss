@@ -1,7 +1,7 @@
 /* ActivationLever.module.scss */
 
 .leverContainer {
-  // 移除绝对定位，让其在父容器中流动
+  // 移除绝对定位，使其在父容器中正常排列
   // position: absolute;
   // top: 17.5%;
   // right: 20%;
@@ -9,23 +9,25 @@
   height: 90px;
   z-index: 11;
   cursor: pointer;
-  // transform: skewX(-15deg); // Remove skew as it's relative to the non-skewed left panel
-  // transform-origin: top right; // Remove skew origin
-  // background-color: red !important; // --- REMOVE THIS DEBUG LINE --- 
-  // background-color: rgba(0, 255, 0, 0.1); // Optional faint background
+  // 移除倾斜，因为它现在是相对于未倾斜的左侧面板
+  // transform: skewX(-15deg);
+  // 移除倾斜原点
+  // transform-origin: top right;
+  // background-color: red !important; // --- 移除此调试代码 ---
+  // background-color: rgba(0, 255, 0, 0.1); // 可选的淡背景色
 
   display: flex;
   transition: filter 0.3s ease;
   
-  // --- 新增: 动画初始状态和过渡 ---
-  opacity: 0; // 初始透明
-  transform: translateY(10px); // 初始稍微向下偏移
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.3s ease; // 添加 opacity 和 transform 过渡
+  // --- 新增: 动画初始状态和过渡效果 ---
+  opacity: 0; // 初始状态：透明
+  transform: translateY(10px); // 初始状态：轻微向下偏移
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.3s ease; // 添加 opacity 和 transform 的过渡效果
 }
 
 .leverContainer.disabled {
   cursor: default;
-  filter: brightness(0.7); /* Slightly dim when disabled */
+  filter: brightness(0.7); /* 禁用时略微变暗 */
 }
 
 .leverSvg {
@@ -36,24 +38,24 @@
 
 .base {
   fill: none;
-  stroke: var(--ark-border, #888888); /* Use CSS var, fallback to gray */
+  stroke: var(--ark-border, #888888); /* 使用 CSS 变量，备用值为灰色 */
   stroke-width: 1.5;
 }
 
 .slotLine {
-  stroke: rgba(var(--ark-border-rgb, 136, 136, 136), 0.5); /* Dimmer slot line */
+  stroke: rgba(var(--ark-border-rgb, 136, 136, 136), 0.5); /* 插槽线条颜色变暗 */
   stroke-width: 1;
-  stroke-dasharray: 2 2; /* Dashed line for the slot */
+  stroke-dasharray: 2 2; /* 插槽使用虚线 */
 }
 
-/* Group for handle elements */
+/* 控制杆手柄元素的编组 */
 .leverSvg g {
-   transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Easing for pull effect */
+   transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* 拉动效果的缓动函数 */
 }
 
 .handleTop {
   stroke: var(--ark-border, #888888);
-  stroke-width: 2.5; /* Thicker handle top */
+  stroke-width: 2.5; /* 加粗手柄顶部 */
 }
 
 .handleShaft {
@@ -74,10 +76,10 @@
 }
 
 .indicatorLight.on {
-  fill: var(--ark-highlight-green, #B2F2BB); /* Bright green/cyan on */
+  fill: var(--ark-highlight-green, #B2F2BB); /* 激活时为亮绿色/青色 */
   stroke: var(--ark-highlight-green, #B2F2BB);
   stroke-width: 0.5;
-  /* Optional: Add a subtle glow */
+  /* 可选: 添加细微的光晕效果 */
   filter: drop-shadow(0 0 2px var(--ark-highlight-green, #B2F2BB));
 }
 
@@ -102,7 +104,7 @@
   transition: stroke 0.3s ease;
 
   .leverContainer.activeState & {
-    stroke: var(--ark-highlight-green, #B2F2BB); // 激活时变色
+    stroke: var(--ark-highlight-green, #B2F2BB); // 激活状态时改变颜色
   }
 }
 
@@ -114,22 +116,22 @@
   transition: transform 0.3s ease-in-out;
 
   &.vertical {
-    // Optional: specific styles for vertical line
+    // 可选: 垂直线条的特定样式
   }
 
   &.horizontal {
-    // Optional: specific styles for horizontal line
+    // 可选: 水平线条的特定样式
   }
 }
 */
 
 .leverContainer.activeState {
-  // 可以添加特殊效果，比如轻微发光边框？
+  // 可以添加特殊效果，例如轻微的发光边框
   // filter: drop-shadow(0 0 1px var(--ark-highlight-green, #B2F2BB)); 
 }
 
 // --- 新增: 动画触发后的状态 ---
 .leverContainer.animated {
   opacity: 1; // 完全不透明
-  transform: translateY(0); // 恢复原始位置
+  transform: translateY(0); // 恢复到原始位置
 } 

@@ -1,53 +1,52 @@
 /* MusicPlayer.module.scss */
 
-// --- 新增: 旋转动画 --- 
+// 唱片旋转动画
 @keyframes spinRecord {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-// --- 新增: 波浪动画 --- 
+// 抽屉把手播放指示波浪动画
 @keyframes waveEffect {
-  0%   { width: 30%; } /* Start */
-  50%  { width: 60%; } /* 修改: 减小最大宽度 */
-  100% { width: 30%; } /* End */
+  0%   { width: 30%; }
+  50%  { width: 60%; } // 动画中间状态宽度
+  100% { width: 30%; }
 }
 
 .playerContainer {
   position: fixed;
   left: 0;
   top: 35%;
-  transform: translateY(-50%) translateX(-100%);
-  width: 280px; // 修改: 稍微加宽以容纳唱臂
-  background-color: rgba(var(--ark-dark-blue-rgb), 0.9); // 修改: 背景更不透明
+  transform: translateY(-50%) translateX(-100%); // 默认收起在屏幕左侧
+  width: 280px; // 播放器宽度
+  background-color: rgba(var(--ark-dark-blue-rgb), 0.9); // 背景色，较高不透明度
   border: 1px solid var(--ark-border);
-  border-left: none;
-  z-index: 20;
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  backdrop-filter: blur(4px); // 修改: 稍微增强模糊
-  color: var(--ark-text-secondary);
+  border-left: none; // 左边框不显示 (因为贴近屏幕边缘)
+  z-index: 20; // 确保在其他元素之上
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); // 抽屉展开/收起动画
+  backdrop-filter: blur(4px); // 背景模糊效果
+  color: var(--ark-text-secondary); // 默认文字颜色
   display: flex;
   flex-direction: column;
-  font-family: 'Dosis', monospace;
-  // --- 新增: 限制最大高度，防止过长 --- 
-  max-height: 90vh; // 例如，视口高度的90%
-  // --- 新增: 禁用用户选择，防止拖动时选中文本 ---
-  user-select: none; 
+  font-family: 'Dosis', monospace; // 字体
+  max-height: 90vh; // 限制最大高度，防止内容过长超出屏幕
+  user-select: none; // 禁用用户选择文本，优化拖动体验
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
 
 .playerContainer.open {
-  transform: translateY(-50%) translateX(0);
+  transform: translateY(-50%) translateX(0); // 展开状态，移入屏幕
 }
 
+// 抽屉把手样式
 .handle { 
   position: absolute;
-  right: -25px; /* 修改: 调整以匹配新宽度 */ 
+  right: -25px; // 定位到播放器右侧外部
   top: 0; 
-  width: 25px;  /* 修改: 增加宽度 */
-  height: 100px; // 保持高度
+  width: 25px;  // 把手宽度
+  height: 100px; // 把手默认高度
   background-color: rgba(var(--ark-border-rgb), 0.7);
   border: 1px solid var(--ark-border);
   border-left: none;
@@ -56,49 +55,49 @@
   flex-direction: column; 
   justify-content: center; 
   align-items: center;
-  gap: 3.5px;
-  transition: background-color 0.2s ease, height 0.4s ease-in-out; // 添加 height transition
-  overflow: hidden; // 隐藏溢出内容
+  gap: 3.5px; // 内部元素间距
+  transition: background-color 0.2s ease, height 0.4s ease-in-out; // 高度变化动画
+  overflow: hidden; // 隐藏溢出内容 (例如展开时显示的文字)
   padding: 5px 0; // 上下内边距
 }
 
-// --- 修改: 展开状态样式 ---
+// 抽屉把手展开状态 (收起且播放时)
 .handle.expanded {
-  height: 220px; // 增加高度以容纳线条和文字
-  padding: 10px 0; // 调整展开后的 padding
-  justify-content: flex-start; // 从顶部开始排列
+  height: 220px; // 增加高度以容纳动画条和竖排文字
+  padding: 10px 0;
+  justify-content: flex-start; // 内容从顶部开始排列
 }
 
-.handle:hover { background-color: rgba(var(--ark-border-rgb), 0.9); }
+.handle:hover { background-color: rgba(var(--ark-border-rgb), 0.9); } // 悬停时背景变深
 
-// --- 修改: 水平线条样式 --- 
+// 把手内部的动画线条 (单个)
 .handleBar {
-  width: 30%;
+  width: 30%; // 默认宽度
   height: 2px;
   background-color: #888888;
   opacity: 0.7;
-  transition: width 0.3s ease-in-out, opacity 0.2s ease-out;
-  transform-origin: center;
+  transition: width 0.3s ease-in-out, opacity 0.2s ease-out; // 宽度和透明度变化动画
+  transform-origin: center; // 宽度变化时从中心扩展/收缩
 }
 
-// --- 新增: 线条容器样式 --- 
+// 把手内动画线条的容器
 .handleBarsContainer {
   width: 100%;
-  height: 45px; // 给线条固定高度空间 (50px handle height - 2*padding)
+  height: 45px; // 固定高度，确保线条有足够空间
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 3.5px; 
-  flex-shrink: 0; // 防止被压缩
+  flex-shrink: 0; // 防止被父容器压缩
 }
 
-// --- 修改: 播放时应用动画 (仅在抽屉打开时 .playing 类才有效) --- 
+// 播放时，把手内的动画线条应用 waveEffect 动画
 .handle.playing .handleBar {
-  animation: waveEffect 0.8s ease-in-out infinite;
+  animation: waveEffect 0.8s ease-in-out infinite; // 应用波浪动画
 }
 
-// --- 修改: 为 7 个线条设置新的交错动画延迟 --- 
+// 为7个动画线条设置不同的随机动画延迟，形成交错效果
 .handle.playing .handleBar:nth-child(1) { animation-delay: 0.2s; }
 .handle.playing .handleBar:nth-child(2) { animation-delay: 0.7s; }
 .handle.playing .handleBar:nth-child(3) { animation-delay: 0.4s; }
@@ -107,20 +106,19 @@
 .handle.playing .handleBar:nth-child(6) { animation-delay: 1.1s; }
 .handle.playing .handleBar:nth-child(7) { animation-delay: 0.6s; }
 
-// --- 修改: 歌曲信息容器 --- 
+// 抽屉把手展开时显示的歌曲信息容器
 .handleTrackInfo {
   display: flex;
   flex-direction: column;
   justify-content: flex-start; 
   align-items: center; 
   width: 100%;
-  gap: 8px; // 垂直间距
-  margin-top: 15px; // 与上方线条的间距
-  padding: 0 2px; // 左右留一点空隙
+  gap: 8px; // 元素间垂直间距
+  margin-top: 15px; // 与上方动画线条的间距
+  padding: 0 2px; // 左右留白
 }
 
-// --- 新增: 竖排文字容器 --- 
-.handleTrackTitle,
+// 抽屉把手展开时显示的竖排歌曲标题文字
 .handleTrackTitle {
   display: flex;
   flex-direction: column;
@@ -128,76 +126,77 @@
   color: #888888;
   font-size: 0.75rem;
   line-height: 1.1;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Times New Roman', Times, serif; // 特殊字体
 }
 
+// 竖排文字中的单个字符项
 .charItem {
   display: block;
   text-align: center;
 }
 
-// --- 修改: 黑胶唱片机制容器样式，调整布局位置，增加 overflow hidden --- 
+// 黑胶唱片拖动切换机制的容器
 .vinylMechanismContainer {
   width: 100%;
-  padding: 20px 10px 20px 10px; // 调整上下内边距
+  padding: 20px 10px; // 上下内边距调整
   position: relative; // 用于定位唱臂
   display: flex;
-  justify-content: center; // 中央对齐
+  justify-content: center;
   align-items: center;
-  flex-shrink: 0; // 防止容器被压缩
-  overflow: hidden; // 修改: 隐藏溢出的唱片
-  height: 200px; // 固定高度，确保有足够空间
-  cursor: grab; // 添加抓取光标
+  flex-shrink: 0; // 防止被父容器压缩
+  overflow: hidden; // 隐藏拖动时移出边界的唱片
+  height: 200px; // 固定高度
+  cursor: grab; // 默认光标为抓取手势
 
   &:active {
-    cursor: grabbing; // 拖动时光标变为抓紧
+    cursor: grabbing; // 拖动时光标变为抓紧手势
   }
 }
 
+// 唱盘 (固定部分，唱片在其上旋转和切换)
 .vinylPlatter {
   width: 160px; // 唱盘直径
-  height: 160px; // 唱盘直径
-  margin-left: -32px; // 向左移动，不再向右偏移
-  border: 1px solid var(--ark-border); // 线稿风格边框
+  height: 160px;
+  margin-left: -32px; // 位置调整，使其更居中
+  border: 1px solid var(--ark-border); // 边框
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative; // 用于定位唱片和标签
-  // --- 新增: 确保 platter 能够包含绝对定位的子元素 ---
-  overflow: visible; // Platter 本身不需要裁剪，由 container 裁剪
+  position: relative; // 用于定位内部的唱片
+  overflow: visible; // 唱盘本身不裁剪，由父容器 vinylMechanismContainer 裁剪
 }
 
+// 单个黑胶唱片样式
 .vinylRecord {
-  width: 150px; // 唱片直径，比唱盘稍小
+  width: 150px; // 唱片直径 (比唱盘略小)
   height: 150px;
-  background-color: transparent; // 透明背景
-  // border: 2px solid var(--ark-text-secondary); // Original color, restored
-  border: 2px solid var(--ark-border); // Change to use --ark-border for better contrast
+  background-color: transparent;
+  border: 2px solid var(--ark-border); // 边框颜色
   border-radius: 50%;
-  position: absolute; // 修改为 absolute 以便叠加和独立移动
+  position: absolute; // 绝对定位，以便实现叠加和独立位移
   display: flex;
   justify-content: center;
   align-items: center;
-  // --- 新增: 添加过渡效果 ---
-  transition: transform 0.3s ease-out; 
-  // --- 新增: 确保在最顶层，且可以被拖动 ---
-  z-index: 1; 
-  pointer-events: none; // 避免唱片本身捕获事件，让父容器处理
+  transition: transform 0.3s ease-out; // 松开拖动时的回弹/切换动画
+  z-index: 1; // 当前播放的唱片在最上层
+  pointer-events: none; // 唱片本身不捕获鼠标事件，由父容器处理拖动
 }
 
-// --- 新增: 即将进入的唱片样式 ---
+// 即将通过拖动进入的唱片样式
 .incomingVinylRecord {
   z-index: 0; // 在当前唱片下方
-  opacity: 0; // 默认隐藏
-  pointer-events: none; // 不响应事件
-  // 过渡效果在 JS 中根据 isDragging 控制
+  opacity: 0; // 默认通过透明度隐藏 (JS 中会根据拖动状态调整)
+  pointer-events: none;
+  // 过渡效果在 JS 中根据 isDragging 状态动态添加/移除
 }
 
+// 唱片旋转动画类
 .recordSpinning {
-  animation: spinRecord 3s linear infinite; // 应用旋转动画
+  animation: spinRecord 3s linear infinite;
 }
 
+// 唱片中心标签样式 (包含扫描线效果)
 .vinylLabel {
   width: 50px;
   height: 50px;
@@ -205,35 +204,31 @@
   border: 1px solid var(--ark-border);
   border-radius: 50%;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; // 用于裁剪扫描线伪元素
 
-  // --- 环形绿色扫描线 ---
+  // 环形绿色扫描线效果
   &::before {
     content: '';
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    // 绿色底色+扫描线+环形遮罩
     background:
-      /* 扫描线 */
-      repeating-linear-gradient(
+      repeating-linear-gradient( // 扫描线条纹
         to bottom,
         transparent 0px,
         transparent 2px,
         rgba(0,0,0,0.15) 2px,
         rgba(0,0,0,0.15) 4px
       ),
-      /* 绿色底色 */
-      var(--ark-highlight-green);
+      var(--ark-highlight-green); // 绿色底色
     opacity: 0.7;
     border-radius: 50%;
-    // 环形遮罩
-    -webkit-mask-image: radial-gradient(circle, transparent 0 18%, #000 19% 100%);
+    -webkit-mask-image: radial-gradient(circle, transparent 0 18%, #000 19% 100%); // 环形遮罩
     mask-image: radial-gradient(circle, transparent 0 18%, #000 19% 100%);
-    animation: scanMove 8s linear infinite;
+    animation: scanMove 8s linear infinite; // 扫描线滚动动画
     pointer-events: none;
   }
 
-  // --- 中心小透明圆 ---
+  // 中心小透明圆 (用于覆盖扫描线中心)
   &::after {
     content: '';
     position: absolute;
@@ -242,63 +237,52 @@
     transform: translate(-50%, -50%);
     background: transparent;
     border-radius: 50%;
-    box-shadow: 0 0 0 999px rgba(0,0,0,0.0); // 兼容性hack: 保证中心透明
+    box-shadow: 0 0 0 999px rgba(0,0,0,0.0); // CSS Hack 保证中心透明
     z-index: 2;
   }
 }
 
-// --- 新增: 包裹容器样式 ---
+// 唱臂整体的容器 (用于定位和旋转)
 .tonearmAssembly {
   position: absolute;
-  // 定位旋转中心点 (原唱臂 top center)
-  // right: 55px + (6px / 2) = 58px
-  // bottom: 40px + 145px = 185px
-  right: 58px;
-  bottom: 185px;
-  width: 1px; // 容器本身不需要尺寸
+  right: 58px; // 根据唱盘位置和唱臂尺寸精确计算的右侧定位
+  bottom: 185px; // 精确计算的底部定位
+  width: 1px;  // 容器本身尺寸不重要，作为旋转中心
   height: 1px;
-  transform-origin: top center; // 旋转中心是容器顶部中心 (即 (0,0))
-  transition: transform 0.4s ease-in-out; 
-  // border: 1px solid blue; // 调试用
+  transform-origin: top center; // 旋转中心点 (容器的顶部中心)
+  transition: transform 0.4s ease-in-out; // 唱臂放下/抬起动画
 }
 
-// --- 新增: 包裹容器旋转样式 ---
+// 唱臂播放时 (放下到唱片上) 的旋转状态
 .tonearmAssembly.tonearmPlaying {
-  transform: rotate(20deg);
+  transform: rotate(20deg); // 旋转角度
 }
 
-// --- 修改: 唱臂点击区域样式 (相对父容器定位) ---
+// 唱臂的点击热区 (用于触发播放/暂停)
 .tonearmHitbox {
   position: absolute;
-  // top: 0; left: 50%; transform: translateX(-50%); // 简单方式，可能不完全精确
-  // 根据计算：left 应该是 hitbox 宽度一半再向左移一点
-  left: -10px; // -(26px / 2) + 3px (唱臂中心偏移)
-  top: -10px; // 向上偏移一点
+  left: -10px; // 相对于 tonearmAssembly 定位
+  top: -10px;
   width: 26px; 
   height: 165px; 
-  background-color: transparent; 
+  background-color: transparent; // 透明，仅作为热区
   cursor: pointer;
-  z-index: 6; 
-  // 移除 bottom, right
-  // border: 1px dashed red; 
+  z-index: 6; // 确保在唱臂实体之上
 }
 
-// --- 修改: 唱臂样式 (相对父容器定位, 移除旋转相关) ---
+// 唱臂实体样式
 .tonearm {
   width: 6px; 
   height: 145px; 
-  background-color: transparent; 
-  border: 1px solid #f6b2ff; 
+  background-color: transparent;
+  border: 1px solid #f6b2ff; // 默认边框颜色 (粉色)
   border-radius: 3px; 
-  position: absolute; // 相对父容器
-  // 移除 bottom, right
-  left: -3px; // 唱臂宽度一半
+  position: absolute;
+  left: -3px; // 相对于 tonearmAssembly 定位 (使其中心对齐)
   top: 0;
-  // 移除 transform-origin, transform, transition
   z-index: 5; 
-  // 移除 cursor
 
-  // --- 唱针头部分 (保持不变) --- 
+  // 唱针头部分
   &::after {
     content: '';
     position: absolute;
@@ -312,7 +296,7 @@
     border-radius: 2px; 
   }
   
-  // --- 唱臂底座 (保持不变) --- 
+  // 唱臂底座 (旋转轴心外观)
   &::before {
     content: '';
     position: absolute;
@@ -324,54 +308,53 @@
     background-color: transparent;
     border: 1px solid #f6b2ff; 
     border-radius: 50%;
-    z-index: -1;
+    z-index: -1; // 在唱臂实体之下
   }
 }
 
-// --- 重新添加: 低电量时唱臂样式 ---
+// 低电量时唱臂样式 (边框、唱针、底座变为绿色)
 .tonearmLowPower {
-  border-color: var(--ark-highlight-green); /* 切换为绿色边框 */
-  /* 唱针和底座也切换为绿色 */
+  border-color: var(--ark-highlight-green);
   &::after, &::before {
     border-color: var(--ark-highlight-green);
   }
 }
 
-// --- 修改: 播放器内容区域样式，使用固定边框色 --- 
+// 播放器主要内容区域 (抽屉内部，包含歌曲信息、进度条等)
 .playerContent {
   width: 100%;
-  padding: 10px 15px 15px 15px; 
+  padding: 10px 15px 15px 15px; // 内边距
   display: flex;
   flex-direction: column;
   justify-content: space-between; 
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out 0.2s; 
+  opacity: 0; // 默认隐藏 (抽屉收起时)
+  transition: opacity 0.3s ease-in-out 0.2s; // 淡入动画 (延迟出现)
   flex-shrink: 0;
-  border-top: 1px solid rgba(128, 128, 128, 0.3); // 固定半透明灰色
-  margin-top: 10px;
+  border-top: 1px solid rgba(128, 128, 128, 0.3); // 顶部边框线
+  margin-top: 10px; // 与上方唱片区域的间距
 }
 
-// --- 修改: 让内容在抽屉打开时可见 --- 
+// 抽屉展开时，内容区域可见
 .playerContainer.open .playerContent {
   opacity: 1; 
 }
 
-// --- 新增: 歌曲信息和按钮的容器 --- 
+// 歌曲信息和播放列表切换按钮的容器
 .trackInfoContainer {
   display: flex;
-  justify-content: space-between; // 两端对齐
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
 }
 
+// 歌曲信息文本区域 (标题、艺术家)
 .trackInfo {
   flex-grow: 1; // 占据多余空间
-  text-align: left; // 靠左对齐
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: 10px; // 和按钮之间留点空隙
-  margin-bottom: 0; // 移除之前的下边距
+  text-align: left;
+  white-space: nowrap; // 防止文本换行
+  overflow: hidden;    // 超出部分隐藏
+  text-overflow: ellipsis; // 超出部分显示省略号
+  margin-right: 10px; // 与右侧按钮的间距
 }
 
 .trackTitle {
@@ -381,9 +364,9 @@
   margin-bottom: 2px;
 }
 
-.trackArtist { /* Artist display can be uncommented in JS if needed */ }
+// .trackArtist { /* 艺术家信息的样式 (如果 JS 中启用) */ }
 
-// --- 新增: 播放列表切换按钮样式 (移除边框) --- 
+// 播放列表切换按钮 (三条横线图标)
 .playlistToggleButton {
   background: none;
   border: none; 
@@ -398,153 +381,120 @@
   cursor: pointer;
   transition: background-color 0.2s; 
   padding: 4px; 
-  flex-shrink: 0; 
+  flex-shrink: 0; // 防止被压缩
 }
 
-// --- 修改: 默认悬浮效果 --- 
+// 播放列表切换按钮悬停效果 (正常电量)
 .playlistToggleButton:not(.toggleButtonLowPower):hover {
   background-color: rgba(var(--ark-primary-rgb), 0.1); 
 }
 
-// --- 修改: 低电量悬浮效果 --- 
+// 播放列表切换按钮悬停效果 (低电量)
 .playlistToggleButton.toggleButtonLowPower:hover {
-   background-color: rgba(var(--ark-highlight-green-rgb), 0.1); // 低电量悬浮用绿色背景
+   background-color: rgba(var(--ark-highlight-green-rgb), 0.1);
 }
 
+// 播放列表切换按钮内的横线
 .toggleButtonLine {
   width: 100%; 
   height: 1px;
   background-color: var(--ark-text-secondary); // 默认颜色
   margin: 1.5px 0; 
-  transition: opacity 0.2s, background-color 0.2s; // 添加背景色过渡
+  transition: opacity 0.2s, background-color 0.2s;
   opacity: 0.7; 
 }
 
-// --- 修改: 默认悬浮线条 --- 
+// 播放列表切换按钮悬停时横线效果 (正常电量)
 .playlistToggleButton:not(.toggleButtonLowPower):hover .toggleButtonLine {
     opacity: 1; 
-    background-color: var(--ark-primary); // 默认悬浮是主色
+    background-color: var(--ark-primary); // 变为主题色
 }
 
-// --- 新增: 低电量线条样式 --- 
+// 播放列表切换按钮内横线 (低电量状态)
 .playlistToggleButton.toggleButtonLowPower .toggleButtonLine {
-  background-color: #888888; // 低电量时灰色
+  background-color: #888888; // 灰色
 }
 
-// --- 修改: 低电量悬浮线条 --- 
+// 播放列表切换按钮悬停时横线效果 (低电量)
 .playlistToggleButton.toggleButtonLowPower:hover .toggleButtonLine {
-    opacity: 1; // 低电量悬浮时变亮
-    // background-color: #aaaaaa; // 可以选择不变色或变浅灰
+    opacity: 1; // 仅增加透明度，颜色不变或略微变亮
 }
 
-.controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 12px;
-}
+// .controls { /* 旧的播放控制按钮容器 (已移除) */ }
+// .controlButton { /* 旧的播放控制按钮样式 (已移除) */ }
+// .controlButton:hover { /* ... */ }
+// .controlButton:active { /* ... */ }
+// .controlButton svg { /* ... */ }
 
-.controlButton { /* 样式保持不变 */ 
-  background: none;
-  border: 1px solid var(--ark-border); 
-  color: var(--ark-text-secondary);
-  width: 32px; 
-  height: 32px; 
-  border-radius: 3px; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.1s ease-out; 
-  padding: 0;
-  background-color: rgba(var(--ark-dark-blue-rgb), 0.5);
-}
-
-.controlButton:hover { /* 样式保持不变 */
-  background-color: rgba(var(--ark-primary-rgb), 0.15); 
-  border-color: var(--ark-primary); 
-  color: var(--ark-primary); 
-  box-shadow: 0 0 5px rgba(var(--ark-primary-rgb), 0.3);
-}
-
-.controlButton:active { /* 样式保持不变 */
-  transform: scale(0.96); 
-  background-color: rgba(var(--ark-primary-rgb), 0.1); 
-  box-shadow: inset 0 0 4px rgba(var(--ark-primary-rgb), 0.2); 
-}
-
-.controlButton svg { /* 样式保持不变 */
-  display: block; 
-  width: 12px; 
-  height: 12px;
-}
-
-// --- 修改: 进度条背景色，使用固定颜色 --- 
+// 播放进度条容器
 .progressBarContainer {
   width: 100%;
   height: 4px;
-  background-color: rgba(128, 128, 128, 0.2); // 固定半透明灰色 (比边框稍浅)
+  background-color: rgba(128, 128, 128, 0.2); // 进度条轨道背景色
   border-radius: 2px;
-  overflow: hidden;
+  overflow: hidden; // 隐藏进度条填充部分的溢出
 }
 
-.progressBar { /* 样式保持不变 */ 
+// 播放进度条填充部分
+.progressBar { 
   height: 100%;
-  background-color: var(--ark-highlight-green);
+  background-color: var(--ark-highlight-green); // 进度条颜色
   border-radius: 2px;
-  transition: width 0.1s linear; 
+  transition: width 0.1s linear; // 宽度变化（即进度更新）动画
 }
 
-// --- 修改: 播放列表容器样式，使用固定边框色 --- 
+// 播放列表容器
 .playlistContainer {
   width: 100%;
-  max-height: 0;
-  opacity: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out;
-  border-top: 1px solid rgba(128, 128, 128, 0.3); // 固定半透明灰色
-  background-color: rgba(var(--ark-dark-blue-rgb), 0.1);
+  max-height: 0; // 默认收起 (高度为0)
+  opacity: 0;    // 默认透明
+  overflow-y: auto;  // 内容超出时垂直滚动
+  overflow-x: hidden; // 水平方向不滚动
+  transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out; // 展开/收起动画
+  border-top: 1px solid rgba(128, 128, 128, 0.3); // 顶部边框线
+  background-color: rgba(var(--ark-dark-blue-rgb), 0.1); // 轻微背景色
 }
 
-// --- 修改: 使用 .visible 类控制展开 --- 
+// 播放列表展开状态
 .playlistContainer.visible {
-  max-height: 200px; // 或者你希望的展开高度
+  max-height: 200px; // 展开时的最大高度
   opacity: 1;
 }
 
-// --- 修改: 播放列表项样式，使用固定边框色 --- 
+// 单个播放列表项
 .playlistItem {
   padding: 8px 15px; 
   cursor: pointer;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.3); // 固定半透明灰色
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3); // 底部边框线
   display: flex;
   flex-direction: column; 
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease; // 悬停背景色动画
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  &:last-child { border-bottom: none; }
-  &:hover { background-color: rgba(var(--ark-primary-rgb), 0.1); }
+  &:last-child { border-bottom: none; } // 最后一项无底边框
+  &:hover { background-color: rgba(var(--ark-primary-rgb), 0.1); } // 悬停效果
 }
 
-.playlistItemTitle { /* 样式保持不变 */
+// 播放列表项标题
+.playlistItemTitle {
   font-size: 0.85rem;
   color: var(--ark-text);
   margin-bottom: 1px;
 }
 
-.playlistItemArtist { /* 样式保持不变 */
+// 播放列表项艺术家
+.playlistItemArtist {
   font-size: 0.75rem;
   opacity: 0.7;
 }
 
-.activePlaylistItem { /* 样式保持不变 */
+// 当前播放的列表项的激活样式
+.activePlaylistItem { 
   background-color: rgba(var(--ark-highlight-green-rgb), 0.15); 
-  border-left: 3px solid var(--ark-highlight-green); 
-  padding-left: 12px; 
+  border-left: 3px solid var(--ark-highlight-green); // 左侧高亮边框
+  padding-left: 12px; // 左内边距调整以容纳边框
 
   .playlistItemTitle {
     color: var(--ark-highlight-green); 
@@ -555,12 +505,8 @@
    }
 }
 
-// --- 复用主页的扫描线动画 --- 
+// 扫描线动画 (复用自其他模块，例如 HomeLoadingScreen)
 @keyframes scanMove {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 100px;
-  }
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 100px; }
 } 

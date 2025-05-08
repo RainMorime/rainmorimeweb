@@ -3,3 +3,42 @@ description:
 globs:
 alwaysApply: false
 ---
+# Blog 功能实现概述
+
+本规则概述了网站 Blog 部分的主要组件、数据结构和交互逻辑。
+
+## 组件
+
+*   **`[components/BlogView.js](mdc:components/BlogView.js)`**: Blog 部分的主视图，嵌入在 `[pages/index.js](mdc:pages/index.js)` 的 `.contentWrapper` 中，ID 为 `blog-section`。
+    *   负责显示博客文章卡片列表。
+    *   接收 `onPostClick` 回调函数。
+    *   使用 `.blogPostGrid` 样式 (定义于 `[styles/BlogView.module.scss](mdc:styles/BlogView.module.scss)`) 来布局卡片。
+*   **`[components/BlogPostCard.js](mdc:components/BlogPostCard.js)`**: 单个博客文章的卡片组件。
+    *   显示文章标题 (`.cardTitle`) 和摘要 (`.cardExcerpt`)。
+    *   样式定义在 `[styles/BlogPostCard.module.scss](mdc:styles/BlogPostCard.module.scss)`，风格模仿 `ProjectCard` (无图版本)，包含边框角标和悬停效果。
+    *   接收 `post` 数据和 `onClick` 回调函数，点击时调用 `onClick(post)`。
+*   **`[components/BlogDetailView.js](mdc:components/BlogDetailView.js)`**: 博客文章详情视图组件。
+    *   在 `activeSection === 'blogDetail'` 时，通过 `[pages/index.js](mdc:pages/index.js)` 中的 `.detailViewWrapper` 渲染。
+    *   显示文章标题 (`.detailTitle`)、摘要 (`.detailDescription`) 和完整的文章内容 (`.articleSection`)。
+    *   文章内容 (`articleContent`) 支持 `\n\n` 分段。
+    *   样式定义在 `[styles/BlogDetailView.module.scss](mdc:styles/BlogDetailView.module.scss)`，布局与 `LifeDetailView` 类似。
+
+## 数据结构 (示例)
+
+博客文章数据 (`placeholderPosts` in `[pages/index.js](mdc:pages/index.js)`) 包含以下字段：
+
+```javascript
+{
+  id: 'post-1', // 唯一标识符
+  title: '文章标题',
+  excerpt: '文章摘要...',
+  articleContent: '完整的文章内容...\n\n支持段落。', // 包含换行符的字符串
+  // 未来可能添加： date, tags, featuredImage 等
+}
+```
+
+## 导航与交互
+
+1.  **进入 Blog 列表**: 点击左侧导航 (`.leftNavLink`) 中的 "Blog" 按钮，触发 `handleLeftNavLinkClick`，设置 `activeSection` 为 `'content'` 并将 `.contentWrapper` 滚动到 `#blog-section`。
+2.  **查看文章详情**: 在 `BlogView` 中点击 `BlogPostCard`，触发 `handleBlogPostClick`，设置 `selectedBlogPost` 为当前文章数据，并将 `activeSection` 设为 `'blogDetail'`，从而渲染 `BlogDetailView`。
+3.  **返回列表**: 在 `BlogDetailView` 中点击全局返回按钮 (`.globalBackButton`)，触发 `handleGlobalBackClick`，将 `activeSection` 设回 `'content'`，清空 `selectedBlogPost`，并将 `.contentWrapper` 滚动回 `#blog-section` 的顶部。
