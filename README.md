@@ -2,6 +2,10 @@
 
 这是RainMorime的个人网站项目。
 
+## 网站简介
+
+RainMorime的个人网站
+
 ## 技术栈
 
 - Next.js
@@ -34,6 +38,3 @@ npm run build
 npm start
 ```
 
-## 许可证
-
-GPL-3.0 license
